@@ -1,15 +1,15 @@
 package com.ssafy.materip.model.dto;
 
 public class TravelSpots {
-    int id;
-    float mapX;
-    float mapY;
-    String name;
-    String description;
-    int areaCode;
-    int sigunguCode;
-    int contentTypeId;
-    String address;
+	public int id;
+	public float mapX;
+	public float mapY;
+	public String name;
+	public String description;
+	public int areaCode;
+	public int sigunguCode;
+	public int contentTypeId;
+	public String address;
 
     public int getId() {
         return id;
@@ -82,4 +82,12 @@ public class TravelSpots {
     public void setAddress(String address) {
         this.address = address;
     }
+
+	@Override
+	public String toString() {
+		return "TravelSpots [id=" + id + ", mapX=" + mapX + ", mapY=" + mapY + ", name=" + name + ", description="
+				+ description + ", areaCode=" + areaCode + ", sigunguCode=" + sigunguCode + ", contentTypeId="
+				+ contentTypeId + ", address=" + address + "]";
+	}
+    
 }

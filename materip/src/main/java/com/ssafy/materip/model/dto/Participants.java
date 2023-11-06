@@ -1,8 +1,8 @@
 package com.ssafy.materip.model.dto;
 
 public class Participants {
-    int boardId;
-    String userId;
+	public int boardId;
+	public String userId;
 
     public int getBoardId() {
         return boardId;
@@ -19,4 +19,10 @@ public class Participants {
     public void setUserId(String userId) {
         this.userId = userId;
     }
+
+	@Override
+	public String toString() {
+		return "Participants [boardId=" + boardId + ", userId=" + userId + "]";
+	}
+    
 }

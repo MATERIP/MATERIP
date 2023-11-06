@@ -1,9 +1,9 @@
 package com.ssafy.materip.model.dto;
 
 public class Userlikes {
-    int sequence;
-    String id;
-    String likedBy;
+	public int sequence;
+	public String id;
+	public String likedBy;
 
     public int getSequence() {
         return sequence;
@@ -28,4 +28,10 @@ public class Userlikes {
     public void setLikedBy(String likedBy) {
         this.likedBy = likedBy;
     }
+
+	@Override
+	public String toString() {
+		return "Userlikes [sequence=" + sequence + ", id=" + id + ", likedBy=" + likedBy + "]";
+	}
+    
 }

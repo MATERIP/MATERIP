@@ -3,11 +3,11 @@ package com.ssafy.materip.model.dto;
 import java.sql.Timestamp;
 
 public class Comments {
-    int sequence;
-    int articleId;
-    String author;
-    Timestamp createdAt;
-    Timestamp modifiedAt;
+    public int sequence;
+    public int articleId;
+    public String author;
+    public Timestamp createdAt;
+    public Timestamp modifiedAt;
 
     public int getSequence() {
         return sequence;
@@ -48,4 +48,11 @@ public class Comments {
     public void setModifiedAt(Timestamp modifiedAt) {
         this.modifiedAt = modifiedAt;
     }
+
+	@Override
+	public String toString() {
+		return "Comments [sequence=" + sequence + ", articleId=" + articleId + ", author=" + author + ", createdAt="
+				+ createdAt + ", modifiedAt=" + modifiedAt + "]";
+	}
+    
 }

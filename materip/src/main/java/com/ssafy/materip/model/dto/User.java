@@ -5,17 +5,17 @@ import java.sql.Date;
 import java.sql.Timestamp;
 
 public class User {
-    String id;
-    String password;
-    String email;
-    String name;
-    String nickname;
-    String tel;
-    Date birth;
-    int gender;
-    int admin;
-    Timestamp joinDate;
-    Timestamp modifiedAt;
+    public String id;
+    public String password;
+    public String email;
+    public String name;
+    public String nickname;
+    public String tel;
+    public Date birth;
+    public int gender;
+    public int admin;
+    public Timestamp joinDate;
+    public Timestamp modifiedAt;
 
     public String getId() {
         return id;
@@ -104,4 +104,12 @@ public class User {
     public void setModifiedAt(Timestamp modifiedAt) {
         this.modifiedAt = modifiedAt;
     }
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", password=" + password + ", email=" + email + ", name=" + name + ", nickname="
+				+ nickname + ", tel=" + tel + ", birth=" + birth + ", gender=" + gender + ", admin=" + admin
+				+ ", joinDate=" + joinDate + ", modifiedAt=" + modifiedAt + "]";
+	}
+    
 }
