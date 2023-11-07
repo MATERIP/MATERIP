@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.ssafy.materip.model.dto.User;
+import com.ssafy.materip.model.dto.Userlikes;
 import com.ssafy.materip.model.service.UserService;
 
 import io.swagger.annotations.Api;
@@ -89,4 +90,14 @@ public class AdminUserController {
 		}
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
+	
+	@ApiOperation(value="좋아요", notes="사용자 좋아요")
+	@PostMapping(value="/{userId}/like")
+	public ResponseEntity<?> likeUser(@RequestBody Userlikes userlikes) throws Exception {
+		int result = userService.likeUser(userlikes.getId(), userlikes.getLikedBy());
+		
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
+	
 }

@@ -17,4 +17,6 @@ public interface UserService {
 	int withdrawal(String userId) throws Exception;
 	
 	List<User> getUserList() throws Exception;
+	
+	int likeUser(String likedBy, String userId) throws Exception;
 }
