@@ -1,5 +1,7 @@
 package com.ssafy.materip.model.service;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -28,6 +30,8 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public int joinMember(User user) throws Exception {
+		user.setJoinDate(Timestamp.valueOf(LocalDateTime.now()));
+		user.setModifiedAt(Timestamp.valueOf(LocalDateTime.now()));
 		return userDao.createUser(user);
 	}
 
