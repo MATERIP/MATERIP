@@ -18,11 +18,11 @@
 		<result column="join_date" property="joinDate"/>
 		<result column="modified_at" property="modifiedAt"/>
 	</resultMap>
-	<insert id="createUser">
+	<insert id="createUser" parameterType="user">
 		INSERT INTO users
-		(id, password, email, name, nickname, tel, birth, gender, admin, join_date, modified_at)
+		(id, password, email, name, nickname, tel, birth, gender)
 		VALUES
-		(#{id}, #{password}, #{email}, #{name}, #{nickname}, #{tel}, #{birth}, #{gender}, 0, now(), now())
+		(#{id}, #{password}, #{email}, #{name}, #{nickname}, #{tel}, #{birth}, #{gender})
 	</insert>
 	
 	<select id="idCheck" parameterType="String" resultType="int">
@@ -37,13 +37,13 @@
 		WHERE id = #{id}
 	</select>
 	
-	<update id="updateUser">
+	<update id="updateUser" parameterType="user">
 		UPDATE users
 		SET email = #{email}, nickname = #{nickname}, tel = #{tel}, modified_at = now()
 		WHERE id = #{id}
 	</update>
 	
-	<delete id="deleteUser">
+	<delete id="deleteUser" parameterType="String">
 		DELETE from users
 		where id = #{id}
 	</delete>

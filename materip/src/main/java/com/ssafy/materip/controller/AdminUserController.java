@@ -6,13 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.ssafy.materip.model.dto.User;
 import com.ssafy.materip.model.service.UserService;
 
@@ -25,6 +28,7 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping("/admin/user")
 @CrossOrigin("*")
 @Api(value = "MATERIP", tags = {"User Admin Controller"})
+@JsonAutoDetect
 public class AdminUserController {
 
 	private final UserService userService;
@@ -52,10 +56,35 @@ public class AdminUserController {
 	}
 	
 	@ApiOperation(value="아이디 중복 체크", notes = "등록된 사용자 중 중복되는 아이디의 수를 반환합니다.")
-	@PostMapping(value="/idcheck/{userid}")
+	@PostMapping(value="/{userid}")
 	public ResponseEntity<?> checkId(@RequestBody String userId) throws Exception {
 		int result = userService.idCheck(userId);
 		if(result == 1) { // 중복된 아이디 존재하는 경우...
+			return new ResponseEntity<>(result, HttpStatus.CONFLICT);
+		}
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
+	@ApiOperation(value="회원가입", notes = "회원 가입")
+	@PostMapping(value="/signup")
+	public ResponseEntity<?> createUser(@RequestBody User user) throws Exception {
+		int result = userService.joinMember(user);
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
+	@ApiOperation(value="회원 정보 수정", notes="사용자 정보를 수정합니다.")
+	@PutMapping(value="/modify")
+	public ResponseEntity<?> updateUser(@RequestBody User user) throws Exception {
+		int result = userService.modifyUserInfo(user);
+		
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
+	@ApiOperation(value="계정 삭제", notes = "아이디와 일치하는 사용자 정보를 삭제합니다.")
+	@DeleteMapping(value="/{userid}")
+	public ResponseEntity<?> deleteUser(@RequestBody String userId) throws Exception {
+		int result = userService.withdrawal(userId);
+		if(result == 0) {
 			return new ResponseEntity<>(result, HttpStatus.CONFLICT);
 		}
 		return new ResponseEntity<>(result, HttpStatus.OK);

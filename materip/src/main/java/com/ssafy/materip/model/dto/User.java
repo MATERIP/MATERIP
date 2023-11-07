@@ -4,6 +4,8 @@ package com.ssafy.materip.model.dto;
 import java.sql.Date;
 import java.sql.Timestamp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class User {
     public String id;
     public String password;
@@ -11,10 +13,13 @@ public class User {
     public String name;
     public String nickname;
     public String tel;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     public Date birth;
     public int gender;
     public int admin;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/seoul")
     public Timestamp joinDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/seoul")
     public Timestamp modifiedAt;
 
     public String getId() {
