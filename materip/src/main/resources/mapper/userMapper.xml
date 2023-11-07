@@ -5,6 +5,19 @@
 >
 
 <mapper namespace="com.ssafy.materip.model.dao.UserDao">
+	<resultMap type="user" id="user">
+		<result column="id" property="id"/>
+		<result column="password" property="password"/>
+		<result column="email" property="email"/>
+		<result column="name" property="name"/>
+		<result column="nickname" property="nickname"/>
+		<result column="tel" property="tel"/>
+		<result column="birth" property="birth"/>
+		<result column="gender" property="gender"/>
+		<result column="admin" property="admin"/>
+		<result column="join_date" property="joinDate"/>
+		<result column="modified_at" property="modifiedAt"/>
+	</resultMap>
 	<insert id="createUser">
 		INSERT INTO users
 		(id, password, email, name, nickname, tel, birth, gender, admin, join_date, modified_at)
@@ -30,7 +43,7 @@
 	</delete>
 	
 	<select id="readAllUsers" resultType="User">
-		SELECT id, email, name, nickname, tel, birth, gender, join_date, modified_at
+		SELECT id, password, email, name, nickname, tel, birth, gender, admin, join_date, modified_at
 		FROM users
 	</select>
 </mapper>
