@@ -5,6 +5,9 @@ import java.sql.Timestamp;
 public class Comments {
     public int sequence;
     public int articleId;
+
+    public String contents;
+
     public String author;
     public Timestamp createdAt;
     public Timestamp modifiedAt;
@@ -48,11 +51,23 @@ public class Comments {
     public void setModifiedAt(Timestamp modifiedAt) {
         this.modifiedAt = modifiedAt;
     }
+    public String getContents() {
+        return contents;
+    }
 
-	@Override
-	public String toString() {
-		return "Comments [sequence=" + sequence + ", articleId=" + articleId + ", author=" + author + ", createdAt="
-				+ createdAt + ", modifiedAt=" + modifiedAt + "]";
-	}
-    
+    public void setContents(String contents) {
+        this.contents = contents;
+    }
+
+    @Override
+    public String toString() {
+        return "Comments{" +
+                "sequence=" + sequence +
+                ", articleId=" + articleId +
+                ", contents='" + contents + '\'' +
+                ", author='" + author + '\'' +
+                ", createdAt=" + createdAt +
+                ", modifiedAt=" + modifiedAt +
+                '}';
+    }
 }
