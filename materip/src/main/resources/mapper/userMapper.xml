@@ -25,7 +25,13 @@
 		(#{id}, #{password}, #{email}, #{name}, #{nickname}, #{tel}, #{birth}, #{gender}, 0, now(), now())
 	</insert>
 	
-	<select id="readUserById" resultType="User" resultMap="user">
+	<select id="idCheck" parameterType="String" resultType="int">
+		SELECT COUNT(id)
+		FROM users
+		WHERE id = #{id}
+	</select>
+	
+	<select id="readUserById" resultMap="user">
 		SELECT id, password, email, name, nickname, tel, birth, gender, admin, join_date, modified_at
 		FROM users
 		WHERE id = #{id}

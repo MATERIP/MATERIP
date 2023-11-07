@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -47,5 +49,15 @@ public class AdminUserController {
 	public ResponseEntity<?> getUserById(@PathVariable("userid") String userId) throws Exception {
 		User user = userService.getUser(userId);
 		return new ResponseEntity<User>(user, HttpStatus.OK);
+	}
+	
+	@ApiOperation(value="아이디 중복 체크", notes = "등록된 사용자 중 중복되는 아이디의 수를 반환합니다.")
+	@PostMapping(value="/idcheck/{userid}")
+	public ResponseEntity<?> checkId(@RequestBody String userId) throws Exception {
+		int result = userService.idCheck(userId);
+		if(result == 1) { // 중복된 아이디 존재하는 경우...
+			return new ResponseEntity<>(result, HttpStatus.CONFLICT);
+		}
+		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 }

@@ -11,6 +11,8 @@ import com.ssafy.materip.model.dto.User;
 public interface UserDao {
 	int createUser(User user) throws SQLException;
 	
+	int idCheck(String userId) throws SQLException;
+	
 	User readUserById(String userId) throws SQLException;
 	
 	int updateUser(User user) throws SQLException;

@@ -22,6 +22,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public int idCheck(String userId) throws Exception {
+		return userDao.idCheck(userId);
+	}
+
+	@Override
 	public int joinMember(User user) throws Exception {
 		return userDao.createUser(user);
 	}

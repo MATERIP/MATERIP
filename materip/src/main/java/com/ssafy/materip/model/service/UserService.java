@@ -8,6 +8,8 @@ public interface UserService {
 
 	int joinMember(User user) throws Exception;
 	
+	int idCheck(String userId) throws Exception;
+	
 	User getUser(String userId) throws Exception;
 	
 	int modifyUserInfo(User user) throws Exception;
