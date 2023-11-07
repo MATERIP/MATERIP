@@ -25,8 +25,8 @@
 		(#{id}, #{password}, #{email}, #{name}, #{nickname}, #{tel}, #{birth}, #{gender}, 0, now(), now())
 	</insert>
 	
-	<select id="readUserById" resultType="User">
-		SELECT id, email, name, nickname, tel, birth, gender, join_date, modified_at
+	<select id="readUserById" resultType="User" resultMap="user">
+		SELECT id, password, email, name, nickname, tel, birth, gender, admin, join_date, modified_at
 		FROM users
 		WHERE id = #{id}
 	</select>
@@ -42,7 +42,7 @@
 		where id = #{id}
 	</delete>
 	
-	<select id="readAllUsers" resultType="User">
+	<select id="readAllUsers" resultType="User" resultMap="user">
 		SELECT id, password, email, name, nickname, tel, birth, gender, admin, join_date, modified_at
 		FROM users
 	</select>
