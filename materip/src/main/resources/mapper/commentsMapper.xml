@@ -5,5 +5,38 @@
 >
 
 <mapper namespace="com.ssafy.materip.model.dao.CommentsDao">
+	<resultMap type="comments" id="comments">
+		<result column="sequence" property="sequence"/>
+		<result column="article_id" property="articleId"/>
+		<result column="author" property="author"/>
+		<result column="created_at" property="createdAt"/>
+		<result column="modified_at" property="modifiedAt"/>
+	</resultMap>
+
+	<insert id="createComments" parameterType="comments">
+		INSERT INTO comments
+		(article_id, contents, author, created_at, modified_at)
+		VALUES
+		(#{article_id}, #{contents}, #{author}, now(), now())
+	</insert>
+
+	<update id="updateComments" parameterType="comments">
+		UPDATE comments
+		SET contents = #{contents}, modified_at = now()
+		WHERE sequence = #{sequence}
+	</update>
+
+	<delete id="deleteComments" parameterType="int">
+		DELETE FROM comments
+		where sequence = #{sequence}
+	</delete>
+
+	<select id="readAllComments" parameterType="int" resultType="Comments" resultMap="comment">
+		SELECT author, contents, created_at, modified_at
+		FROM comments
+		WHERE article_id = #{id}
+	</select>
+
 
 </mapper>
+

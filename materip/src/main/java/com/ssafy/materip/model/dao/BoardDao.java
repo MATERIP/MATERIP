@@ -22,20 +22,6 @@ public interface BoardDao {
     int deleteBoard(Board board) throws SQLException;
 
 
-    int createComments(Comments comments) throws SQLException;
-
-    List<Comments> readAllComments(Comments comments) throws SQLException;
-
-    int updateComments(Comments comments) throws SQLException;
-
-    int deleteComments(Comments comments) throws SQLException;
-
-
-    int addParticipants(Participants participants) throws SQLException;
-    List<Participants> getParticipants(String board_id) throws SQLException;
-    int removeParticipants(Participants participants) throws SQLException;
-    int getParticipantsCnt(String board_id) throws  SQLException;
-
 
 
 
