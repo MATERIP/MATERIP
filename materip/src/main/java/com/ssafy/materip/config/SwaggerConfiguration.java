@@ -16,10 +16,11 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
+@EnableSwagger2
 public class SwaggerConfiguration {
 
 	private String version = "V1";
-	private String title = "SSAFY MATERIP API" + version;
+	private String title = "SSAFY MATERIP API"+version;
 
 	@Bean
 	public Docket api() {
@@ -33,14 +34,14 @@ public class SwaggerConfiguration {
 	}
 
 	private Set<String> getConsumeContentTypes() {
-		Set<String> consumes = new HashSet<String>();
+		Set<String> consumes = new HashSet<>();
 		consumes.add("application/json;charset=UTF-8");
 		consumes.add("application/x-www-form-urlencoded");
 		return consumes;
 	}
 
 	private Set<String> getProduceContentTypes() {
-		Set<String> produces = new HashSet<String>();
+		Set<String> produces = new HashSet<>();
 		produces.add("application/json;charset=UTF-8");
 		return produces;
 	}
