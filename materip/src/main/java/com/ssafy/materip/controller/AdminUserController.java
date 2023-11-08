@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.ssafy.materip.model.dto.User;
+import com.ssafy.materip.model.dto.Userlikes;
 import com.ssafy.materip.model.service.UserService;
 
 import io.swagger.annotations.Api;
@@ -89,4 +90,32 @@ public class AdminUserController {
 		}
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
+	
+	@ApiOperation(value="좋아요", notes="사용자 좋아요")
+	@PostMapping(value="/{userid}/like")
+	public ResponseEntity<?> likeUser(@RequestBody Userlikes userlikes) throws Exception {
+		int result = userService.likeUser(userlikes.getLikedBy(), userlikes.getId());
+		
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
+	@ApiOperation(value="좋아요 취소", notes="사용자 좋아요 취소")
+	@DeleteMapping(value="/{userid}/unlike")
+	public ResponseEntity<?> unlikeUser(@RequestBody Userlikes userlike) throws Exception {
+		int result = userService.unlikeUser(userlike.getLikedBy(), userlike.getId());
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
+	@ApiOperation(value="좋아요 수 확인", notes="사용자의 좋아요 수를 반환합니다.")
+	@GetMapping(value="/{userid}/like")
+	public ResponseEntity<?> getUserlikesCount(@PathVariable("userid") String userId) throws Exception {
+		return new ResponseEntity<>(userService.readUserlikesCount(userId), HttpStatus.OK);
+	}
+	
+	@ApiOperation(value="좋아요 수 자세히 보기", notes="좋아요를 누른 사용자 아이디를 모두 반환합니다.")
+	@GetMapping(value="/{userid}/like/detail")
+	public ResponseEntity<?> getUserlikes(@PathVariable("userid") String userId) throws Exception {
+		return new ResponseEntity<>(userService.readUserlikes(userId), HttpStatus.OK);
+	}
+	
 }

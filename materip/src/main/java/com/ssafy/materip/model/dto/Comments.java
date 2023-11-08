@@ -6,6 +6,12 @@ public class Comments {
 	public int sequence;
 	public int articleId;
 
+  public String author;
+  public String contents;
+  public Timestamp createdAt;
+  public Timestamp modifiedAt;
+
+
 	public String contents;
 
 	public String author;
@@ -60,9 +66,20 @@ public class Comments {
 		this.contents = contents;
 	}
 
+	public String getContents() {
+		return contents;
+	}
+
+	public void setContents(String contents) {
+		this.contents = contents;
+	}
+
 	@Override
 	public String toString() {
-		return "Comments{" + "sequence=" + sequence + ", articleId=" + articleId + ", contents='" + contents + '\''
-				+ ", author='" + author + '\'' + ", createdAt=" + createdAt + ", modifiedAt=" + modifiedAt + '}';
+
+		return "Comments [sequence=" + sequence + ", articleId=" + articleId + ", author=" + author + ", contents="
+				+ contents + ", createdAt=" + createdAt + ", modifiedAt=" + modifiedAt + "]";
 	}
+
+
 }

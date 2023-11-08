@@ -1,6 +1,7 @@
 package com.ssafy.materip.model.dto;
 
 public class Userlikes {
+	
 	public int sequence;
 	public String id;
 	public String likedBy;
