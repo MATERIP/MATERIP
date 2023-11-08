@@ -67,4 +67,19 @@ public class UserServiceImpl implements UserService {
 		return userlikesDao.createUserlikes(userId, likedBy);
 	}
 
+	@Override
+	public int unlikeUser(String likedBy, String userId) {
+		return userlikesDao.deleteUserlikes(userId, likedBy);
+	}
+
+	@Override
+	public int readUserlikesCount(String userId) throws Exception {
+		return userlikesDao.readUserlikesCount(userId);
+	}
+
+	@Override
+	public List<String> readUserlikes(String userId) throws Exception {
+		return userlikesDao.readUserlikes(userId);
+	}
+
 }
