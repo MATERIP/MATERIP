@@ -13,20 +13,12 @@ import java.util.List;
 @Mapper
 public interface BoardDao {
 
-    int createBoard(Board board) throws SQLException;
+	int createBoard(Board board) throws SQLException;
 
-    List<Board> readAllBoards() throws SQLException;
+	List<Board> readAllBoards() throws SQLException;
 
-    int updateBoard(Board board) throws  SQLException;
+	int updateBoard(Board board) throws SQLException;
 
-    int deleteBoard(Board board) throws SQLException;
-
-
-
-
-
-
-
-
+	int deleteBoard(int sequence) throws SQLException;
 
 }

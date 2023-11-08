@@ -6,38 +6,46 @@
 
 <mapper namespace="com.ssafy.materip.model.dao.BoardDao">
 	<resultMap type="board" id="board">
-		<result column="id" property="id"/>
-		<result column="title" property="title"/>
-		<result column="author" property="author"/>
-		<result column="contents" property="contents"/>
-		<result column="created_at" property="createdAt"/>
-		<result column="modified_at" property="modifiedAt"/>
-		<result column="hits" property="hits"/>
-		<result column="board_type" property="boardType"/>
-		<result column="travel_date" property="travelDate"/>
+		<result column="id" property="id" />
+		<result column="title" property="title" />
+		<result column="author" property="author" />
+		<result column="contents" property="contents" />
+		<result column="created_at" property="createdAt" />
+		<result column="modified_at" property="modifiedAt" />
+		<result column="hits" property="hits" />
+		<result column="board_type" property="boardType" />
+		<result column="travel_date" property="travelDate" />
 	</resultMap>
 
 
 	<insert id="createBoard" parameterType="board">
-		INSERT INTO boards
-		(title, author, contents, created_at, modified_at, hits, board_type, travel_date)
+		INSERT INTO board
+		(title,
+		author, contents, created_at, modified_at, hits, board_type,
+		travel_date)
 		VALUES
-		(#{title}, #{author}, #{contents}, now(), now(), 0, 0, #{travel_date})
+		(#{title}, #{author}, #{contents}, now(), now(), 0,
+		"review", #{travelDate})
 	</insert>
 
 	<update id="updateBoard" parameterType="board">
-		UPDATE boards
-		SET title = #{title}, author = #{author}, contents = #{contents} , modified_at = now() , travel_date = #{travel_date}
+		UPDATE board
+		SET title =
+		#{title}, author = #{author}, contents = #{contents} , modified_at =
+		now() , travel_date = #{travelDate}
 		WHERE id = #{id}
 	</update>
 
 	<delete id="deleteBoard" parameterType="int">
-		DELETE FROM boards
-		where id = #{id}
+		DELETE FROM board
+		where id
+		= #{id}
 	</delete>
 
 	<select id="readAllBoards" resultType="Board" resultMap="board">
-		SELECT id, title, author, contents,created_at, modified_at, hits, board_type, travel_date
-		FROM boards
+		SELECT
+		id, title, author, contents,created_at, modified_at, hits, board_type,
+		travel_date
+		FROM board
 	</select>
 </mapper>

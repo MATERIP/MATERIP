@@ -9,12 +9,11 @@ import java.util.List;
 @Mapper
 public interface ParticipantsDao {
 
+	int addParticipants(Participants participants) throws SQLException;
 
+	List<Participants> getParticipants(String board_id) throws SQLException;
 
+	int removeParticipants(Participants participants) throws SQLException;
 
-
-    int addParticipants(Participants participants) throws SQLException;
-    List<Participants> getParticipants(String board_id) throws SQLException;
-    int removeParticipants(Participants participants) throws SQLException;
-    int getParticipantsCnt(String board_id) throws  SQLException;
+	int getParticipantsCnt(String board_id) throws SQLException;
 }

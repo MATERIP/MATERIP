@@ -28,7 +28,7 @@ public class SwaggerConfiguration {
 				.consumes(getConsumeContentTypes()).produces(getProduceContentTypes())
 				.apiInfo(apiInfo()).groupName(version).select()
 				.apis(RequestHandlerSelectors.basePackage("com.ssafy.materip.controller"))
-				.paths(regex("/admin/.*"))
+				.paths(regex("/*/.*"))
 				.build()
 				.useDefaultResponseMessages(false);
 	}

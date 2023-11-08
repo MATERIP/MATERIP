@@ -7,46 +7,44 @@ import java.util.List;
 
 public interface BoardService {
 
-    // board write
-    int writeBoard(Board board) throws Exception;
+	// board write
+	int writeBoard(Board board) throws Exception;
 
-    // board edit
-    int editBoard(Board board) throws Exception;
+	// board edit
+	int editBoard(Board board) throws Exception;
 
-    // board remove
-    int deleteBoard(Board board) throws Exception;
+	// board remove
+	int deleteBoard(int board_id) throws Exception;
 
-    // get Board List
-    List<Board> getBoardList() throws Exception;
-    // Comment
+	// get Board List
+	List<Board> getBoardList() throws Exception;
+	// Comment
 
-    // add comment
-    int writeComment(Comments comments, String board_id) throws Exception;
+	// add comment
+	int writeComment(Comments comments, int article_id) throws Exception;
 
-    // remove comment
-    int removeComment(Comments comments) throws Exception;
+	// remove comment
+	int removeComment(int sequence) throws Exception;
 
-    // modify comment
-    int modifyComment(Comments comments) throws Exception;
+	// modify comment
+	int modifyComment(Comments comments) throws Exception;
 
-    // get comment list
-    List<Comments> getCommentList(String board_id);
+	// get comment list
+	List<Comments> getCommentList(int board_id) throws Exception;
+	
+	// get comment count
+	int getCommentCnt(int board_id);
+//
+//    // get comment count from board id when board list show
+//    int getCommentCntByBoardId(String board_id);
+//
+//    // add participants by board_id and user_id ,
+//    // when the board created , we have to add author as participants
+//    int addParticipants(String board_id, String user_id);
+//
+//    // show the participants cnt by board id
+//    int getParticipantsCnt(String board_id);
 
-    // get comment count from board id when board list show
-    int getCommentCntByBoardId(String board_id);
-
-    // add participants by board_id and user_id ,
-    // when the board created , we have to add author as participants
-    int addParticipants(String board_id, String user_id);
-
-    // show the participants cnt by board id
-    int getParticipantsCnt(String board_id);
-
-
-
-
-
-
-
+	
 
 }
