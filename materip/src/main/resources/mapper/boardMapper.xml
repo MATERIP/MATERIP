@@ -48,4 +48,12 @@
 		travel_date
 		FROM board
 	</select>
+	
+	<select id="readBoardById" parameterType="int" resultMap="board">
+		SELECT
+		id, title, author, contents, created_at, modified_at, hits, board_type,
+		travel_date
+		FROM board
+		WHERE id = #{id}
+	</select>
 </mapper>

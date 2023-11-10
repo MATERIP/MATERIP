@@ -14,10 +14,14 @@ public interface BoardService {
 	int editBoard(Board board) throws Exception;
 
 	// board remove
-	int deleteBoard(int board_id) throws Exception;
+	int deleteBoard(int boardId) throws Exception;
 
 	// get Board List
 	List<Board> getBoardList() throws Exception;
+	
+	// get Board By Id
+	Board getBoardById(int boardId) throws Exception; 
+	
 	// Comment
 
 	// add comment

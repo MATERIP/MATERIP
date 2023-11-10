@@ -27,7 +27,7 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping("/board")
 @CrossOrigin("*")
-@Api(value = "MATERIP", tags = { "board Controller" })
+@Api(value = "MATERIP", tags = { "Board Controller" })
 @JsonAutoDetect
 public class BoardController {
 	private final BoardService boardService;
@@ -37,6 +37,13 @@ public class BoardController {
 		this.boardService = boardService;
 	}
 
+	@ApiOperation(value = "보드 상세 정보", notes="보드 아이디로 보드 상세 정보를 반환힙니다.")
+	@GetMapping("/detail/{board_id}")
+	public ResponseEntity<?> getBoardById(@PathVariable("board_id") int board_id) throws Exception {
+		Board board = boardService.getBoardById(board_id);
+		return new ResponseEntity<>(board, HttpStatus.OK);
+	}
+	
 	@ApiOperation(value = "보드 목록", notes = "등록된 모든 보드 정보를 반환합니다.", response = List.class)
 	@GetMapping("/getList")
 	public ResponseEntity<?> getBoardList() throws Exception {
@@ -44,7 +51,7 @@ public class BoardController {
 		return new ResponseEntity<List<Board>>(list, HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "보드 작성", notes = "보드를 작성합니다.")
+	@ApiOperation(value = "보드 수정", notes = "보드를 수정합니다.")
 	@PutMapping(value = "/modify")
 	public ResponseEntity<?> modifyBoard(@RequestBody Board board) throws Exception {
 		System.out.println(board.toString());

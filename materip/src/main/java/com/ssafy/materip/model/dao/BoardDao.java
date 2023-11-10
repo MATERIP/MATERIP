@@ -16,6 +16,8 @@ public interface BoardDao {
 	int createBoard(Board board) throws SQLException;
 
 	List<Board> readAllBoards() throws SQLException;
+	
+	Board readBoardById(int boardId) throws SQLException;
 
 	int updateBoard(Board board) throws SQLException;
 

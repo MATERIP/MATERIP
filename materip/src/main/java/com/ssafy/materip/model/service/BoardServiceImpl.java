@@ -48,6 +48,12 @@ public class BoardServiceImpl implements BoardService {
 
 		return boardDao.readAllBoards();
 	}
+	
+	@Override
+	public Board getBoardById(int boardId) throws Exception {
+		// TODO Auto-generated method stub
+		return boardDao.readBoardById(boardId);
+	}
 
 	@Override
 	public int deleteBoard(int board_id) throws Exception {
@@ -89,6 +95,7 @@ public class BoardServiceImpl implements BoardService {
 		// TODO Auto-generated method stub
 		return commentDao.readCommentsCnt(board_id);
 	}
+
 
 //    @Override
 //    public int getCommentCntByBoardId(String board_id) {
