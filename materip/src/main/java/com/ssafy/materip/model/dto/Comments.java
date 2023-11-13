@@ -34,6 +34,14 @@ public class Comments {
 		this.author = author;
 	}
 
+	public String getContents() {
+		return contents;
+	}
+
+	public void setContents(String contents) {
+		this.contents = contents;
+	}
+
 	public Timestamp getCreatedAt() {
 		return createdAt;
 	}
@@ -49,6 +57,7 @@ public class Comments {
 	public void setModifiedAt(Timestamp modifiedAt) {
 		this.modifiedAt = modifiedAt;
 	}
+
 
 	public String getContents() {
 		return contents;
