@@ -1,6 +1,8 @@
 <script setup>
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 import axios from "axios";
+const router = useRouter();
 const userInfo = ref({
   id: "",
   password: "",
@@ -17,11 +19,11 @@ function signup() {
   console.log(userInfo.value);
   instance
     .post("/admin/user/signup", userInfo.value)
-    .then((response) => {
+    .then(() => {
       // userInfo.value = response.data;
-      console.log(response);
-      alert('회원가입성공')
-      this.$router.push("/login");
+      // console.log(response);
+      alert("회원가입 성공");
+      router.push("/login");
     })
     .catch(function (error) {
       console.log(error);
@@ -38,55 +40,43 @@ function signup() {
             <h3>회원가입</h3>
           </v-layout>
         </v-card-title>
-        <v-form class="mt-5" method="post" onsubmit="return false;">
+        <v-form class="mt-5" @submit.prevent="signup">
           <v-text-field
-            name="id"
             label="아이디"
-            id="id"
             type="text"
             prepend-inner-icon="mdi-account"
             variant="solo"
             v-model="userInfo.id"
           ></v-text-field>
           <v-text-field
-            name="password"
             label="비밀번호"
-            id="password"
             type="password"
             prepend-inner-icon="mdi-lock-outline"
             variant="solo"
             v-model="userInfo.password"
           ></v-text-field>
           <v-text-field
-            name="email"
             label="이메일"
-            id="email"
             type="email"
             prepend-inner-icon="mdi-email"
             variant="solo"
-            v-mode="userInfo.email"
+            v-model="userInfo.email"
           ></v-text-field>
           <v-text-field
-            name="name"
             label="이름"
-            id="name"
             prepend-inner-icon="mdi-account"
             variant="solo"
             v-model="userInfo.name"
           ></v-text-field>
           <v-text-field
-            name="nickname"
             label="닉네임"
-            id="nickname"
             type="text"
             prepend-inner-icon="mdi-account-outline"
             variant="solo"
             v-model="userInfo.nickname"
           ></v-text-field>
           <v-text-field
-            name="birth"
             label="생년월일"
-            id="birth"
             type="date"
             prepend-inner-icon="mdi-calendar"
             variant="solo"
@@ -97,22 +87,14 @@ function signup() {
             <v-radio label="여자" value="female"></v-radio>
           </v-radio-group> -->
           <v-text-field
-            name="tel"
             label="휴대전화번호"
-            id="tel"
             type="tel"
             prepend-inner-icon="mdi-cellphone"
             variant="solo"
             v-model="userInfo.tel"
           ></v-text-field>
           <v-divider></v-divider>
-          <v-btn
-            type="submit"
-            color="light-blue"
-            size="large"
-            block
-            class="mt-5"
-            @click="signup"
+          <v-btn type="submit" color="light-blue" size="large" block class="mt-5"
             >회원가입</v-btn
           >
         </v-form>
