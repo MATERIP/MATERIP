@@ -58,6 +58,15 @@ public class Comments {
 		this.modifiedAt = modifiedAt;
 	}
 
+
+	public String getContents() {
+		return contents;
+	}
+
+	public void setContents(String contents) {
+		this.contents = contents;
+	}
+
 	@Override
 	public String toString() {
 		return "Comments [sequence=" + sequence + ", articleId=" + articleId + ", author=" + author + ", contents="
