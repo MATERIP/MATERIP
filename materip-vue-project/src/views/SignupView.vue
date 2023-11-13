@@ -3,7 +3,7 @@
 <template>
   <v-layout row wrap>
     <v-sheet width="30rem">
-      <v-card elevation="3" class="pa-10">
+      <v-card elevation="3" class="pa-5">
         <v-card-title>
           <v-layout align-center justify-center-between>
             <h3>회원가입</h3>
@@ -17,6 +17,7 @@
             type="text"
             prepend-inner-icon="mdi-account"
             variant="solo"
+            required
           ></v-text-field>
           <v-text-field
             name="password"
@@ -25,6 +26,7 @@
             type="password"
             prepend-inner-icon="mdi-lock-outline"
             variant="solo"
+            required
           ></v-text-field>
           <v-text-field
             name="email"
@@ -40,6 +42,7 @@
             id="name"
             prepend-inner-icon="mdi-account"
             variant="solo"
+            required
           ></v-text-field>
           <v-text-field
             name="nickname"
@@ -48,6 +51,7 @@
             type="text"
             prepend-inner-icon="mdi-account-outline"
             variant="solo"
+            required
           ></v-text-field>
           <v-text-field
             name="birth"
@@ -56,12 +60,22 @@
             type="date"
             prepend-inner-icon="mdi-calendar"
             variant="solo"
+            required
           ></v-text-field>
           <v-radio-group inline>
             <v-radio label="남자" value="male"></v-radio>
             <v-radio label="여자" value="female"></v-radio>
           </v-radio-group>
-
+          <v-text-field
+            name="tel"
+            label="휴대전화번호"
+            id="tel"
+            type="tel"
+            pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}"
+            prepend-inner-icon="mdi-cellphone"
+            variant="solo"
+            required
+          ></v-text-field>
           <v-divider></v-divider>
           <v-btn type="submit" color="light-blue" size="large" block class="mt-5"
             >회원가입</v-btn
