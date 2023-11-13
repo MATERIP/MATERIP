@@ -20,9 +20,9 @@
 	</resultMap>
 	<insert id="createUser" parameterType="user">
 		INSERT INTO users
-		(id, password, email, name, nickname, tel, birth, gender, join_date)
+		(id, password, email, name, nickname, tel, birth, gender, join_date, modified_at)
 		VALUES
-		(#{id}, #{password}, #{email}, #{name}, #{nickname}, #{tel}, #{birth}, #{gender}, now())
+		(#{id}, #{password}, #{email}, #{name}, #{nickname}, #{tel}, #{birth}, #{gender}, now(), now())
 	</insert>
 	
 	<select id="idCheck" parameterType="String" resultType="int">
