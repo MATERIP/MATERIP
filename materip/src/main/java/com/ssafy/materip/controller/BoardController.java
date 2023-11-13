@@ -109,5 +109,7 @@ public class BoardController {
 		int result = boardService.removeComment(sequence);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
+	
+	
 
 }
