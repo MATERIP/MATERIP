@@ -59,13 +59,6 @@ public class Comments {
 	}
 
 
-	public String getContents() {
-		return contents;
-	}
-
-	public void setContents(String contents) {
-		this.contents = contents;
-	}
 
 	@Override
 	public String toString() {
