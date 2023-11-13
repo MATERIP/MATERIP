@@ -1,7 +1,9 @@
 <template>
   <v-app-bar app color="transparent" flat class="px-10">
     <v-toolbar-title min-width="10rem">
+      <RouterLink to="/">
       <v-img src="src/assets/orglogo.png" alt="Logo" max-height="32"></v-img>
+      </RouterLink>
     </v-toolbar-title>
     <v-spacer></v-spacer>
 
@@ -24,12 +26,14 @@
       hide-details
     >
     </v-autocomplete>
-
+    <RouterLink to="/login">
     <v-btn text @click="goToLogin" class="mr-10"><v-icon icon="mdi-account"></v-icon>로그인</v-btn>
+    </RouterLink>
   </v-app-bar>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 const items = ref(['setup', 'settup', 'mainview'])
+
 </script>
