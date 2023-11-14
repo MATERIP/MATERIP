@@ -6,50 +6,70 @@
 
 <mapper namespace="com.ssafy.materip.model.dao.UserDao">
 	<resultMap type="user" id="user">
-		<result column="id" property="id"/>
-		<result column="password" property="password"/>
-		<result column="email" property="email"/>
-		<result column="name" property="name"/>
-		<result column="nickname" property="nickname"/>
-		<result column="tel" property="tel"/>
-		<result column="birth" property="birth"/>
-		<result column="gender" property="gender"/>
-		<result column="admin" property="admin"/>
-		<result column="join_date" property="joinDate"/>
-		<result column="modified_at" property="modifiedAt"/>
+		<result column="id" property="id" />
+		<result column="password" property="password" />
+		<result column="email" property="email" />
+		<result column="name" property="name" />
+		<result column="nickname" property="nickname" />
+		<result column="tel" property="tel" />
+		<result column="birth" property="birth" />
+		<result column="gender" property="gender" />
+		<result column="admin" property="admin" />
+		<result column="join_date" property="joinDate" />
+		<result column="modified_at" property="modifiedAt" />
 	</resultMap>
 	<insert id="createUser" parameterType="user">
 		INSERT INTO users
-		(id, password, email, name, nickname, tel, birth, gender, join_date, modified_at)
+		(id,
+		password, email, name, nickname, tel, birth, gender, join_date,
+		modified_at)
 		VALUES
-		(#{id}, #{password}, #{email}, #{name}, #{nickname}, #{tel}, #{birth}, #{gender}, now(), now())
+		(#{id}, #{password}, #{email}, #{name}, #{nickname},
+		#{tel}, #{birth}, #{gender}, now(), now())
 	</insert>
-	
+
 	<select id="idCheck" parameterType="String" resultType="int">
-		SELECT COUNT(id)
+		SELECT
+		COUNT(id)
 		FROM users
 		WHERE id = #{id}
 	</select>
-	
+
 	<select id="readUserById" resultMap="user">
-		SELECT id, password, email, name, nickname, tel, birth, gender, admin, join_date, modified_at
-		FROM users
+		SELECT id, password, email,
+		name, nickname, tel, birth, gender, admin, join_date, modified_at
+		FROM
+		users
 		WHERE id = #{id}
 	</select>
-	
+
+	<select id="readUser" resultMap="user">
+		SELECT
+		id,
+		email, name, nickname, tel, birth, gender, join_date,
+		modified_at
+		FROM
+		users
+		WHERE id = #{id} and password = #{password}
+	</select>
+
 	<update id="updateUser" parameterType="user">
 		UPDATE users
-		SET email = #{email}, nickname = #{nickname}, tel = #{tel}, modified_at = now()
+		SET email =
+		#{email}, nickname = #{nickname}, tel = #{tel}, modified_at = now()
 		WHERE id = #{id}
 	</update>
-	
+
 	<delete id="deleteUser" parameterType="String">
 		DELETE from users
-		where id = #{id}
+		where id
+		= #{id}
 	</delete>
-	
-	<select id="readAllUsers" resultType="User" resultMap="user">
-		SELECT id, password, email, name, nickname, tel, birth, gender, admin, join_date, modified_at
+
+	<select id="readAllUsers" resultMap="user">
+		SELECT id,
+		password, email, name, nickname, tel, birth, gender, admin, join_date,
+		modified_at
 		FROM users
 	</select>
 </mapper>

@@ -7,9 +7,7 @@
     </v-toolbar-title>
     <v-spacer></v-spacer>
     <RouterLink to="/review">
-      <v-btn text @click="goToReview"
-        ><v-icon icon="mdi-note-edit"></v-icon>여행지 리뷰</v-btn
-      >
+      <v-btn text @click="goToReview"><v-icon icon="mdi-note-edit"></v-icon>여행지 리뷰</v-btn>
     </RouterLink>
     <RouterLink to="/mate">
       <v-btn text @click="goToMate"
@@ -29,6 +27,7 @@
       theme="light"
       variant="solo"
       hide-details
+      @keyup=""
     >
     </v-autocomplete>
     <RouterLink to="/login">
@@ -40,6 +39,6 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-const items = ref(["setup", "settup", "mainview"]);
+import { ref } from 'vue'
+const items = ref(['setup', 'settup', 'mainview'])
 </script>
