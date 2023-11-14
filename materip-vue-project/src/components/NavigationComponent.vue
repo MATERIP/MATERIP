@@ -15,21 +15,21 @@
       >
     </RouterLink>
     <v-autocomplete
-      :items="items"
+      :items="travelStore.searchResult"
       auto-select-first
       class="flex-full-width align-self-center transparent-background px-7"
       density="comfortable"
       item-props
       menu-icon=""
-      placeholder="search Travel "
+      placeholder="search Travel"
       prepend-inner-icon="mdi-magnify"
       rounded
       theme="light"
       variant="solo"
       hide-details
-      @keyup=""
     >
     </v-autocomplete>
+
     <RouterLink to="/login">
       <v-btn text @click="goToLogin" class="mr-10"
         ><v-icon icon="mdi-account"></v-icon>로그인</v-btn
@@ -39,6 +39,14 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-const items = ref(['setup', 'settup', 'mainview'])
+import { ref, onMounted } from 'vue'
+import { useTravelStore } from '@/stores/travel-store'
+const items = ref()
+const travelStore = useTravelStore()
+
+onMounted(() => {
+  console.log(' apfhd')
+  console.log(travelStore.searchTravelSpot())
+  items.value = travelStore.searchResult
+})
 </script>
