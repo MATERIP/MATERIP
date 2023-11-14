@@ -1,6 +1,7 @@
 package com.ssafy.materip.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -57,12 +58,13 @@ public class AdminUserController {
 	}
 	
 	@ApiOperation(value="아이디 중복 체크", notes = "등록된 사용자 중 중복되는 아이디의 수를 반환합니다.")
-	@PostMapping(value="/{userid}")
-	public ResponseEntity<?> checkId(@RequestBody String userId) throws Exception {
-		int result = userService.idCheck(userId);
-		if(result == 1) { // 중복된 아이디 존재하는 경우...
-			return new ResponseEntity<>(result, HttpStatus.CONFLICT);
-		}
+	@PostMapping("")
+	public ResponseEntity<?> checkId(@RequestBody Map<String, String> userIdMap) throws Exception {
+		int result = userService.idCheck(userIdMap.get("id"));
+		System.out.println(userIdMap.toString());
+//			if(result == 1) { // 중복된 아이디 존재하는 경우...
+//				return new ResponseEntity<>(result, HttpStatus.CONFLICT);
+//			}
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
