@@ -117,7 +117,7 @@ console.log(userInfo.value.id);
 <template>
   <v-layout row wrap>
     <v-sheet width="30rem">
-      <v-card elevation="3">
+      <v-card elevation="3" class="mx-auto pa-12 pb-8">
         <v-card-title>
           <v-layout align-center justify-center-between>
             <p style="font-weight: bold">회원가입</p>
@@ -227,6 +227,7 @@ console.log(userInfo.value.id);
             prepend-inner-icon="mdi-cellphone"
             variant="solo"
             required
+            v-model="userInfo.tel"
           ></v-text-field>
           <v-divider></v-divider>
           <v-btn type="submit" color="light-blue" size="large" block class="mt-5"
