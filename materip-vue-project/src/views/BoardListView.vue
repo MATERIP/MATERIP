@@ -9,6 +9,8 @@ const instance = axios.create({
   baseURL: "http://localhost:8080/",
 });
 
+const title = ref('여행 메이트')
+
 const itemsPerPage = ref(10);
 const page = ref(1);
 const headers = [
@@ -20,12 +22,30 @@ const headers = [
   },
   
   { title: "작성자", key: "author", align: "center", sortable: false },
-  { title: "작성일", key: "createdAt", align: "center", value: (item) => item.createdAt.substring(0, 10), sortable: false },
+  { title: "작성일", key: "createdAt", align: "center", value: (item) => formatDate(item), sortable: false },
   { title: "조회", key: "hits", align: "center", sortable: false },
 
 ];
 
-
+const formatDate = function(item){
+  console.log(item.createdAt.substring(0, 4))
+  console.log(item.createdAt.substring(5, 7))
+  console.log(item.createdAt.substring(8, 10))
+  let today = new Date();
+  let year = today.getUTCFullYear();
+  let month = today.getUTCMonth()+1;
+  let date = today.getUTCDate();
+  console.log(year);
+  console.log(month);
+  console.log(date);
+  if(year == item.createdAt.substring(0, 4) && month == item.createdAt.substring(5, 7) && date == item.createdAt.substring(8, 10)){
+    item.createdAt = item.createdAt.substring(11, 19)
+  }
+  else {
+    item.createdAt =  item.createdAt.substring(0, 10).replaceAll('-','.')
+  }
+  return item.createdAt
+}
 
 const pageCount = computed(() => Math.ceil(boardList.value.length / itemsPerPage.value));
 
@@ -45,8 +65,10 @@ fetchData();
 </script>
 
 <template>
-  
-  <div style="height: 10rem"></div>
+  <div style="height: 8rem">
+    
+  </div>
+  <h1>{{ title }}</h1>
   <v-data-table
     v-model:page="page"
     :headers="headers"
@@ -76,4 +98,12 @@ fetchData();
   </v-data-table>
 </template>
 
-<style scoped></style>
+<style scoped>
+  h1 {
+    justify-content: center;
+    padding-left: 10%;
+    margin-top: 0;
+    margin-bottom: 1rem;
+  }
+
+</style>
