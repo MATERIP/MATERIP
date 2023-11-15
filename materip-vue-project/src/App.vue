@@ -1,18 +1,16 @@
 <script setup>
-import NavigationComponent from './components/NavigationComponent.vue';
-import FooterComponent from './components/FooterComponent.vue';
+import NavigationComponent from './components/NavigationComponent.vue'
+import FooterComponent from './components/FooterComponent.vue'
 </script>
 
 <template>
   <v-app>
-    <NavigationComponent/>
-  
-    <RouterView/>
+    <NavigationComponent />
 
-    <FooterComponent/>
-    </v-app>
+    <RouterView />
+
+    <FooterComponent />
+  </v-app>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

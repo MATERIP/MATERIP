@@ -28,7 +28,6 @@ import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/attraction")
-@CrossOrigin("*")
 @Api(value = "MATERIP", tags = { "Attraction Controller" })
 @JsonAutoDetect
 public class AttractionController {
@@ -46,6 +45,13 @@ public class AttractionController {
 	public ResponseEntity<?> getBoardById() throws Exception {
 		
 		return new ResponseEntity<>(attractionInfoService.getTravelNameList(), HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "보드 상세 정보", notes="보드 아이디로 보드 상세 정보를 반환힙니다.")
+	@GetMapping("/searchinfo/{title}")
+	public ResponseEntity<?> searchByTitle(String title) throws Exception {
+		
+		return new ResponseEntity<>(attractionInfoService.getTravelNameSearchList(title), HttpStatus.OK);
 	}
 	
 }
