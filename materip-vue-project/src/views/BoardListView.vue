@@ -122,18 +122,6 @@ const goWrite = () => {
     <v-btn text @click="goToDetail(item)" variant="flat">{{ item.title }}</v-btn>
     </template>
 
-    <v-text-field
-      :model-value="itemsPerPage"
-      class="pa-2"
-      hide-details
-      label="Items per page"
-      min="5"
-      max="20"
-      type="number"
-      @update:model-value="itemsPerPage = parseInt($event, 10)"
-      ></v-text-field>
-  </template> -->
-
     <template v-slot:bottom>
       <div class="text-center pt-2">
         <v-pagination v-model="page" :length="pageCount"></v-pagination>
