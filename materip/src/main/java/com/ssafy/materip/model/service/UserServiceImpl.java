@@ -16,12 +16,12 @@ public class UserServiceImpl implements UserService {
 
 	private final UserDao userDao;
 	private final UserlikesDao userlikesDao;
-	
+
 	public UserServiceImpl(UserDao userDao, UserlikesDao userlikesDao) {
 		this.userDao = userDao;
 		this.userlikesDao = userlikesDao;
 	}
-	
+
 	@Override
 	public List<User> getUserList() throws Exception {
 		return userDao.readAllUsers();
@@ -37,6 +37,11 @@ public class UserServiceImpl implements UserService {
 		user.setJoinDate(Timestamp.valueOf(LocalDateTime.now()));
 		user.setModifiedAt(Timestamp.valueOf(LocalDateTime.now()));
 		return userDao.createUser(user);
+	}
+
+	@Override
+	public User login(User user) throws Exception {
+		return userDao.readUser(user);
 	}
 
 	@Override
@@ -57,10 +62,10 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public int likeUser(String likedBy, String userId) throws Exception {
-		if(likedBy.equals(userId)) {
+		if (likedBy.equals(userId)) {
 			throw new IllegalArgumentException("자기 자신은 좋아요를 누를 수 없습니다!");
 		}
-		
+
 		Userlikes userlikes = new Userlikes();
 		userlikes.setId(userId);
 		userlikes.setLikedBy(likedBy);

@@ -21,13 +21,20 @@
 		<result column="latitude" property="latitude" />
 		<result column="longitude" property="longitude" />
 		<result column="mlevel" property="mlevel" />
-	
+
 	</resultMap>
 
-	
+
 	<select id="getAttractionNameList" resultType="String">
 		SELECT
 		title
-		FROM attraction_info;
+		FROM
+		attraction_info;
 	</select>
+
+	<select id="getAttractionSearchNameList" parameterType="String" resultType="String">
+		SELECT title FROM `attraction_info`
+		WHERE title LIKE  CONCAT('%', #{title}, '%');
+	</select>
+
 </mapper>

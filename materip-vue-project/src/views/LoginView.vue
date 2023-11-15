@@ -1,5 +1,22 @@
 <script setup>
 
+import { ref } from 'vue';
+import { useRouter } from "vue-router";
+import { useUserStore } from '@/stores/user-store';
+const router = useRouter();
+const userStore = useUserStore()
+
+const userInfo = ref({
+    id: '',
+    password:''
+})
+
+const login = async () => { 
+    await userStore.login(userInfo.value)
+    router.push("/")
+}
+
+
 </script>
 
 <template>
@@ -11,7 +28,7 @@
                 <h3>로그인</h3>
             </v-layout>
         </v-card-title>
-        <v-form class = "mt-5" method="post">
+        
             <v-text-field
                 name="id"
                 label="아이디"
@@ -20,6 +37,7 @@
                 prepend-inner-icon="mdi-account"
                 variant="solo"
                 required
+                v-model = "userInfo.id"
             ></v-text-field>
             <v-text-field
                 name="password"
@@ -29,10 +47,11 @@
                 prepend-inner-icon="mdi-lock-outline"
                 variant="solo"
                 required
+                v-model = "userInfo.password"
             ></v-text-field>
             <v-divider></v-divider>
-            <v-btn type="submit" color="light-blue" size="large" block class = "mt-5">로그인</v-btn>
-        </v-form>
+            <v-btn type="submit" color="light-blue" size="large" block class = "mt-5" @click="login">로그인</v-btn>
+        
         </v-card>
         <v-layout row wrap style="display: flex; justify-content: space-around; margin:1rem">
                 <a href="">비밀번호 찾기</a> |
