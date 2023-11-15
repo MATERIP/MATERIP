@@ -80,6 +80,7 @@ function goToDetail(item) {
 const goWrite = () => {
   router.push({ name: "write" });
 };
+
 </script>
 
 <template>
@@ -120,19 +121,6 @@ const goWrite = () => {
   <template v-slot:item.title="{ item }">
     <v-btn text @click="goToDetail(item)" variant="flat">{{ item.title }}</v-btn>
     </template>
-    
-    <!-- <template v-slot:top>
-    <v-text-field
-      :model-value="itemsPerPage"
-      class="pa-2"
-      hide-details
-      label="Items per page"
-      min="5"
-      max="20"
-      type="number"
-      @update:model-value="itemsPerPage = parseInt($event, 10)"
-      ></v-text-field>
-  </template> -->
 
     <template v-slot:bottom>
       <div class="text-center pt-2">
