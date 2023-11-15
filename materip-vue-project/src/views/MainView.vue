@@ -1,12 +1,7 @@
-<script>
-export default {
-  data() {
-    return {
-      colors: ['#edfaf7', '#b7efe3', '#9ee4d9', '#85ebbb', '#8cdbec'],
-      slides: ['First', 'Second', 'Third', 'Fourth', 'Fifth']
-    }
-  }
-}
+<script setup>
+import { ref } from 'vue'
+const colors = ref(['#edfaf7', '#b7efe3', '#9ee4d9', '#85ebbb', '#8cdbec'])
+const slides = ref(['First', 'Second', 'Third', 'Fourth', 'Fifth'])
 </script>
 
 <template>

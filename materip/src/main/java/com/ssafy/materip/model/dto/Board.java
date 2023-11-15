@@ -2,16 +2,21 @@ package com.ssafy.materip.model.dto;
 
 import java.sql.Timestamp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class Board {
 	public int id;
 	public String title;
 	public String contents;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/seoul")
 	public Timestamp createdAt;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/seoul")
 	public Timestamp modifiedAt;
 	public String author;
 	public int hits;
 	public String boardType;
 	public int travelSpot;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/seoul")
 	public Timestamp travelDate;
 
 	public int getId() {

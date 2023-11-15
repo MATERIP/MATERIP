@@ -6,4 +6,25 @@
 
 <mapper namespace="com.ssafy.materip.model.dao.UserlikesDao">
 
+	<insert id="createUserlikes">
+		INSERT INTO userlikes (id, liked_by)
+		VALUES (#{userId}, #{likedBy})
+	</insert>
+	
+	<select id="readUserlikes" resultType="String">
+		SELECT liked_by
+		FROM userlikes
+		WHERE id = #{userId}
+	</select>
+	
+	<select id="readUserlikesCount" resultType="int">
+		SELECT COUNT(liked_by)
+		FROM userlikes
+		WHERE id = #{userId}
+	</select>
+	
+	<delete id="deleteUserlikes">
+		DELETE FROM userlikes
+		WHERE id = #{userId} AND liked_by = #{likedBy}
+	</delete>
 </mapper>

@@ -20,4 +20,6 @@ public interface UserDao {
 	int deleteUser(String userId) throws SQLException;
 	
 	List<User> readAllUsers() throws SQLException;
+	
+	User readUser(User user) throws SQLException;
 }
