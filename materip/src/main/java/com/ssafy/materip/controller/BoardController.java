@@ -26,7 +26,6 @@ import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/board")
-@CrossOrigin("*")
 @Api(value = "MATERIP", tags = { "Board Controller" })
 @JsonAutoDetect
 public class BoardController {

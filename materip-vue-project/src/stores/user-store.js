@@ -55,8 +55,10 @@ export const useUserStore = defineStore(
     const getUserInfo = async () => {
       console.log("getUserInfo");
       await axios.get('/admin/user/myPage').then((response) => {
-        console.log(response)
+        console.log(response);
+        userInfo.value = response.data;
         console.log(axios.defaults.headers.common['Authorization']);
+        return response.value;
       }).catch((response) => { 
         alert(response.message);
       })
