@@ -30,23 +30,47 @@
     >
     </v-autocomplete>
 
-    <RouterLink to="/login">
-      <v-btn text @click="goToLogin" class="mr-10"
-        ><v-icon icon="mdi-account"></v-icon>로그인</v-btn
-      >
-    </RouterLink>
+    <template v-for="menu in menuList" :key="menu.name">
+      <template v-if="menu.show">
+        <template v-if="menu.routeName === 'logout'">
+          <v-list-item>
+            <RouterLink to="/" @click.prevent="logout" class="menu mr-10">
+              <v-btn> <v-icon icon="mdi-logout"></v-icon>{{ menu.name }} </v-btn>
+            </RouterLink>
+          </v-list-item>
+        </template>
+        <template v-if="menu.routeName === 'login'">
+          <v-list-item>
+            <RouterLink to="/login">
+              <v-btn text @click="goToLogin" class="mr-10"
+                ><v-icon icon="mdi-login"></v-icon>로그인</v-btn
+              >
+            </RouterLink>
+          </v-list-item>
+        </template>
+        <template v-if="menu.routeName === 'mypage'">
+          <v-list-item>
+            <RouterLink :to="{ name: menu.routeName }" class="menu">
+              <v-btn> <v-icon icon="mdi-account"></v-icon>{{ menu.name }} </v-btn>
+            </RouterLink>
+          </v-list-item>
+        </template>
+      </template>
+    </template>
   </v-app-bar>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { onMounted } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useUserStore } from '@/stores/user-store'
 import { useTravelStore } from '@/stores/travel-store'
-const items = ref()
-const travelStore = useTravelStore()
 
+const travelStore = useTravelStore()
+const userStore = useUserStore()
+const { logout } = useUserStore()
+const { menuList } = storeToRefs(userStore)
 onMounted(() => {
-  console.log(' apfhd')
-  console.log(travelStore.searchTravelSpot())
-  items.value = travelStore.searchResult
+  travelStore.searchTravelSpot()
 })
 </script>

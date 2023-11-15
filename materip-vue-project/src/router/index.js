@@ -4,6 +4,7 @@ import MainView from '../views/MainView.vue'
 import LoginView from '../views/LoginView.vue'
 import SignupView from '../views/SignupView.vue'
 import BoardListView from '../views/BoardListView.vue'
+import MypageView from '../views/MypageView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -12,6 +13,7 @@ const router = createRouter({
       path: '/',
       component: MainView
     },
+    
     {
       name: 'review',
       path: '/board',
@@ -31,6 +33,16 @@ const router = createRouter({
       name: 'signup',
       path: '/signup',
       component: SignupView
+    },
+    
+    {
+      name: 'mypage',
+      path: '/mypage',
+      component: MypageView 
+    }, {
+      name: 'logout',
+      path: '/'
+      
     }
   ]
 })

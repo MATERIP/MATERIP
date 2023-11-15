@@ -11,18 +11,16 @@ export const useUserStore = defineStore(
 
     const menuList = ref([
       { name: '로그인', show: true, routeName: 'login' },
-      { name: '회원가입', show: true, routeName: 'signUp' },
-      { name: '게시판', show: false, routeName: 'list' },
-      { name: '마이페이지', show: false, routeName: 'myPage' },
+      { name: '마이페이지', show: false, routeName: 'mypage' },
       { name: '로그아웃', show: false, routeName: 'logout' }
     ])
-
+    const userInfo = ref();
     const changeMenuState = () => {
       menuList.value.forEach((menu) => {
         menu.show = !menu.show
       })
     }
-
+    
     // **************** actions ****************
     const login = async (userInfo) => {
       // 서버로 요청
@@ -36,17 +34,31 @@ export const useUserStore = defineStore(
         // accessToken을 storage에 저장하는 경우 취약점이 발생할 수 있다.
         // pinia-plugin-persistedstate 를 사용하는 경우 storage에 저장되는 것을 막아야한다.
         axios.defaults.headers.common['Authorization'] = accessToken
-
+        
         // 로그인을 성공하여 토큰이 정상적으로 저장된 경우
         // 메뉴 표시를 수정.
+        alert("로그인!");
         changeMenuState()
       })
     }
 
     const logout = async () => {
+      changeMenuState()
       await axios.delete('admin/user/logout').then(() => {
+
         axios.defaults.headers.common['Authorization'] = ''
-        changeMenuState()
+        alert("로그아웃!");
+        
+      })
+    }
+
+    const getUserInfo = async () => {
+      console.log("getUserInfo");
+      await axios.get('/admin/user/myPage').then((response) => {
+        console.log(response)
+        console.log(axios.defaults.headers.common['Authorization']);
+      }).catch((response) => { 
+        alert(response.message);
       })
     }
 
@@ -71,6 +83,8 @@ export const useUserStore = defineStore(
       logout,
       modify,
       withdrawal,
+      userInfo,
+      getUserInfo,
       menuList
     }
   },

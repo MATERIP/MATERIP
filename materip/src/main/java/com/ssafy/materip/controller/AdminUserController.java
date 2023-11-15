@@ -126,8 +126,36 @@ public class AdminUserController {
 		result.put("accessToken", accessToken);
 		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.CREATED);
 	}
-	
-	
+
+
+
+
+	@ApiOperation(value="로그아웃", notes="해당 사용자의 refresh token을 삭제합니다.")
+	@ApiResponses({
+			// https://stackoverflow.com/questions/11714485/restful-login-failure-return-401-or-custom-response
+			@ApiResponse(code = 200, message = "로그아웃 성공"),
+			@ApiResponse(code = 401, message = "로그아웃 실패")
+	})
+	@ResponseBody
+	@DeleteMapping("/logout")
+	public ResponseEntity<Map<String, Object>> logout(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, ParseException {
+		Map<String, Object> result = new HashMap<String, Object>();
+		System.out.println(request.getHeader("Authorization") + " authorization");
+		System.out.println("=============================");
+
+		String userId = jwtUtil.getUserId(request.getHeader("Authorization"));
+
+		// RefreshToken은 HttpOnly Cookie로 발급
+		Cookie cookie = new Cookie("refreshToken", "");
+		cookie.setMaxAge(0);
+		cookie.setHttpOnly(true);
+		cookie.setPath("/");
+		response.addCookie(cookie);
+
+		authService.updateRefreshToken(new AuthDto(userId, ""));
+
+		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+	}
 	
 	
 	
@@ -188,6 +216,59 @@ public class AdminUserController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
+
+	@ApiOperation(value="마이페이지", notes="사용자 정보를 반환합니다.")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "사용자 정보 반환 성공"),
+			@ApiResponse(code = 403, message = "권한 없음"),
+			@ApiResponse(code = 404, message = "사용자 정보 없음")
+	})
+	@ResponseBody
+	@AuthRequired
+	@GetMapping("/myPage")
+	public ResponseEntity<Map<String, Object>> myPage(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		System.out.println("메롱");
+		Map<String, Object> result = new HashMap<String, Object>();
+
+		System.out.println("arrived");
+		// Authorization에 포함된 accessToken의 userId를 가져온다.
+		String userId = jwtUtil.getUserId(request.getHeader("Authorization"));
+
+		Cookie[] cookieList = request.getCookies();
+
+		String requestRefreshToken = "";
+
+		for(Cookie cookie : cookieList) {
+			if(cookie.getName().equals("refreshToken")) {
+				requestRefreshToken = cookie.getValue();
+			}
+		}
+		System.out.println(requestRefreshToken);
+		// 요청으로 들어온 refreshToken이 Database의 refreshToken과 일치하는지 확인.
+		String dbRefreshToken = authService.getRefreshToken(userId).getRefreshToken();
+
+		if(!requestRefreshToken.equals(dbRefreshToken)) {
+			// RefreshToken은 HttpOnly Cookie로 발급
+			Cookie cookie = new Cookie("refreshToken", "");
+			cookie.setMaxAge(0);
+			cookie.setHttpOnly(true);
+			cookie.setPath("/");
+			System.out.println("토큰이 다름");
+			response.addCookie(cookie);
+
+			result.put("message", "로그인이 필요합니다.");
+			return new ResponseEntity<Map<String, Object>>(result, HttpStatus.FORBIDDEN);
+		}
+
+		// 해당 userId의 정보를 획득.
+		User user = userService.getUser(userId);
+
+		// 사용자 정보 중 비밀번호는 전송하지 말아야한다.
+		user.setPassword("");
+
+		result.put("userInfo", user);
+		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+	}
 	@ApiOperation(value = "좋아요", notes = "사용자 좋아요")
 	@PostMapping(value = "/{userid}/like")
 	public ResponseEntity<?> likeUser(@RequestBody Userlikes userlikes) throws Exception {

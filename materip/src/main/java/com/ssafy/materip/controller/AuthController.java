@@ -25,7 +25,7 @@ import com.ssafy.materip.util.JWTUtil;
 // https://velog.io/@cloud_oort/Next.js-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EA%B5%AC%ED%98%84-Silent-refresh
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/admin/user")
 public class AuthController {
 	
 	@Value("${jwt.accesstoken.expiretime}")
