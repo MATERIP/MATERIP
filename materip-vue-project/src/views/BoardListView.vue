@@ -62,6 +62,13 @@ function fetchData() {
     });
 }
 fetchData();
+
+function goToDetail(item) {
+  console.log(item)
+  
+  router.push({ name: "boardDetail", params: { id: item.id } });
+}
+
 </script>
 
 <template>
@@ -77,6 +84,9 @@ fetchData();
     class="elevation-0" style="width: 80%; margin: 0 auto;"
     hover
   >
+  <template v-slot:item.title="{ item }">
+    <v-btn text @click="goToDetail(item)" variant="flat">{{ item.title }}</v-btn>
+    </template>
   <!-- <template v-slot:top>
     <v-text-field
       :model-value="itemsPerPage"
