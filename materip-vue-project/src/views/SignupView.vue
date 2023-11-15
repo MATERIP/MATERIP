@@ -143,13 +143,16 @@ console.log(userInfo.value.id);
               </v-btn>
             </template>
           </v-text-field>
+
           <v-text-field
             density="comfortable"
             label="비밀번호"
             type="password"
             prepend-inner-icon="mdi-lock-outline"
             variant="solo"
+
             v-model="userInfo.password"
+
             required
           ></v-text-field>
           <v-text-field
@@ -166,7 +169,9 @@ console.log(userInfo.value.id);
             label="이름"
             prepend-inner-icon="mdi-account"
             variant="solo"
+
             v-model="userInfo.name"
+
             required
           ></v-text-field>
           <v-text-field
@@ -179,6 +184,7 @@ console.log(userInfo.value.id);
             required
             lazy-validation="between:3, 15"
             validation-visibility="live"
+
           ></v-text-field>
           <v-text-field
             density="comfortable"
@@ -213,12 +219,13 @@ console.log(userInfo.value.id);
           </v-radio-group>
 
           <v-text-field
-            density="comfortable"
+            name="tel"
             label="휴대전화번호"
+            id="tel"
             type="tel"
+            pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}"
             prepend-inner-icon="mdi-cellphone"
             variant="solo"
-            v-model="userInfo.tel"
             required
           ></v-text-field>
           <v-divider></v-divider>
