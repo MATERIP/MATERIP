@@ -46,7 +46,11 @@ const router = createRouter({
       path: '/signup',
       component: SignupView
     },
-    
+    {
+      name: 'boardDetail',
+      path: '/board/:id',
+      component: BoardDetailView
+    },
     {
       name: 'mypage',
       path: '/mypage',
