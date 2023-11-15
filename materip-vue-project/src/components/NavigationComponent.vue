@@ -2,7 +2,7 @@
   <v-app-bar app color="transparent" flat class="px-10">
     <v-toolbar-title min-width="10rem">
       <RouterLink to="/">
-        <v-img src="src/assets/orglogo.png" alt="Logo" max-height="32"></v-img>
+        <v-img src="../src/assets/orglogo.png" alt="Logo" max-height="32"></v-img>
       </RouterLink>
     </v-toolbar-title>
     <v-spacer></v-spacer>
