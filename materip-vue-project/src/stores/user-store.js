@@ -51,19 +51,21 @@ export const useUserStore = defineStore(
     }
 
     const getUserInfo = async () => {
-      console.log('getUserInfo')
+
+
       await axios
         .get('/admin/user/mypage')
         .then((response) => {
-          console.log('데이터!!!')
+
           userInfo.value = response.data
-          console.log(userInfo.value)
+
           return response.value
 
         })
         .catch((response) => {
           alert(response.message)
         })
+
     }
 
     // 회원 정보를 수정하면 axios header에 저장된 accessToken을 삭제한다.

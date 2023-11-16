@@ -3,6 +3,7 @@ package com.ssafy.materip.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -49,6 +51,20 @@ public class BoardController {
 		List<Board> list = boardService.getBoardList();
 		return new ResponseEntity<List<Board>>(list, HttpStatus.OK);
 	}
+	
+	@ApiOperation(value = "리뷰 목록", notes = "등록된 모든 리뷰 정보를 반환합니다.", response = List.class)
+	@GetMapping("/getReviewList")
+	public ResponseEntity<?> getReviewList() throws Exception {
+		List<Board> list = boardService.getReviewList();
+		return new ResponseEntity<List<Board>>(list, HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "모집글 목록", notes = "등록된 모든 모집글 정보를 반환합니다.", response = List.class)
+	@GetMapping("/getRecruitmentList")
+	public ResponseEntity<?> getRecruitmentList() throws Exception {
+		List<Board> list = boardService.getRecruitmentList();
+		return new ResponseEntity<List<Board>>(list, HttpStatus.OK);
+	}
 
 	@ApiOperation(value = "보드 수정", notes = "보드를 수정합니다.")
 	@PutMapping(value = "/modify")
@@ -68,8 +84,8 @@ public class BoardController {
 	}
 
 	@ApiOperation(value = "보드 제거", notes = "보드 아이디에 따라 보드 삭제를 진행합니다", response = Integer.class)
-	@DeleteMapping("/delete")
-	public ResponseEntity<?> deleteBoard(@RequestBody int board_id) throws Exception {
+	@DeleteMapping("/delete/{board_id}")
+	public ResponseEntity<?> deleteBoard(@PathVariable("board_id") int board_id) throws Exception {
 		int result = boardService.deleteBoard(board_id);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
@@ -109,6 +125,11 @@ public class BoardController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
-	
+	@ApiOperation(value = "조회수 증가", notes = "게시판 조회수 증가")
+	@GetMapping("/updateHits/{board_id}")
+	public ResponseEntity<?> updateHits(@PathVariable("board_id") int board_id) throws Exception {
+		boardService.updateBoardHits(board_id);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 
 }

@@ -2,14 +2,14 @@
   <v-app-bar app color="transparent" flat class="px-10">
     <v-toolbar-title min-width="10rem">
       <RouterLink to="/">
-        <v-img src="src/assets/orglogo.png" alt="Logo" max-height="32"></v-img>
+        <v-img src="../src/assets/orglogo.png" alt="Logo" max-height="32"></v-img>
       </RouterLink>
     </v-toolbar-title>
     <v-spacer></v-spacer>
-    <RouterLink to="/review">
+    <RouterLink to="/board/review" replace>
       <v-btn text @click="goToReview"><v-icon icon="mdi-note-edit"></v-icon>여행지 리뷰</v-btn>
     </RouterLink>
-    <RouterLink to="/mate">
+    <RouterLink to="/board/recruitment" replace>
       <v-btn text @click="goToMate"
         ><v-icon icon="mdi-account-multiple-plus"></v-icon>여행 메이트</v-btn
       >
@@ -81,3 +81,9 @@ const searchFunction = function () {
   console.log(inputValue.value)
 }
 </script>
+
+<style scoped>
+.v-btn {
+  color: black;
+}
+</style>
