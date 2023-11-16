@@ -26,7 +26,7 @@ const fetchData = () => {
     .get(`/board/detail/${router.currentRoute.value.params.id}`)
     .then((response) => {
       board.value = response.data;
-      console.log(response);
+      // console.log(response);
     })
     .catch(function (error) {
       console.log(error);

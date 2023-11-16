@@ -32,7 +32,7 @@ const items = ref([
 onMounted(() => {
   userStore.getUserInfo();
   board.value.author = userInfo.value.userInfo.id;
-  console.log(board.value);
+  // console.log(board.value);
 })
 
 watch(() => board.value.boardType, (newValue) => {

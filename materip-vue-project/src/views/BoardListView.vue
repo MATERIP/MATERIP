@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
 
@@ -15,7 +15,7 @@ const title = ref({
   "recruitment" : "여행 메이트 모집",
 });
 const apiRoute = ref({
-  "notice" : "/board/getReviewList",
+  
   "review" : "/board/getReviewList",
   "recruitment" : "/board/getRecruitmentList"
 })
@@ -73,24 +73,31 @@ const formatDate = function (item) {
 
 const pageCount = computed(() => Math.ceil(boardList.value.length / itemsPerPage.value))
 
-function fetchData() {
-  console.log(router.currentRoute.value.name)
-  instance
+const fetchData =  async () => {
+  // console.log(router.currentRoute.value.name)
+  let api = apiRoute.value[router.currentRoute.value.name];
+  if(api == null){
+    return;
+  }
+  await instance
     .get(apiRoute.value[router.currentRoute.value.name])
     .then((response) => {
       boardList.value = response.data;
-      console.log(response);
+      // console.log(response);
     })
     .catch(function (error) {
       console.log(error)
     })
 }
 
-
-watch(() => router.currentRoute.value.name, (newValue) => {
-  console.log(newValue);
+onMounted(() => {
   fetchData();
-}, { immediate: true });
+});
+
+watch(() => router.currentRoute.value.name, () => {
+  // console.log(newValue); 
+  fetchData();
+})
 
 function updateBoardHits(item) {
   instance
