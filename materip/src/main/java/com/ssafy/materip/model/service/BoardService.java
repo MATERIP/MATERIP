@@ -22,6 +22,9 @@ public interface BoardService {
 	// get Board By Id
 	Board getBoardById(int boardId) throws Exception; 
 	
+	// update Board hits by Id
+	void updateBoardHits(int boardId) throws Exception;
+	
 	// Comment
 
 	// add comment

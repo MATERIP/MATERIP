@@ -61,6 +61,11 @@ public class BoardServiceImpl implements BoardService {
 		boardDao.deleteBoard(board_id);
 		return 0;
 	}
+	
+	@Override
+	public void updateBoardHits(int boardId) throws Exception {
+		boardDao.updateBoardHits(boardId);
+	}
 
 	@Override
 	public int writeComment(Comments comments, int article_id) throws Exception {

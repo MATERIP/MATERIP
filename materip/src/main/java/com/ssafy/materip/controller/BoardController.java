@@ -109,6 +109,11 @@ public class BoardController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
-	
+	@ApiOperation(value = "조회수 증가", notes = "게시판 조회수 증가")
+	@GetMapping("/updateHits/{board_id}")
+	public ResponseEntity<?> updateHits(@PathVariable("board_id") int board_id) throws Exception {
+		boardService.updateBoardHits(board_id);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 
 }

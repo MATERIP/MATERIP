@@ -56,4 +56,11 @@
 		FROM board
 		WHERE id = #{id}
 	</select>
+	
+	<update id="updateBoardHits" parameterType="int">
+		UPDATE board
+		SET hits = hits + 1
+		WHERE id = #{id}
+	</update>
+	
 </mapper>

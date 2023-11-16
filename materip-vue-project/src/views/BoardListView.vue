@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
 
@@ -69,11 +69,25 @@ function fetchData() {
       console.log(error);
     });
 }
-fetchData();
+
+onMounted(() => {
+  fetchData();
+});
+
+function updateBoardHits(item) {
+  instance
+  .get(`/board/updateHits/${item.id}`)
+  .then((response) => {
+    console.log(response);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
 
 function goToDetail(item) {
   console.log(item)
-  
+  updateBoardHits(item);
   router.push({ name: "boardDetail", params: { id: item.id } });
 }
 
