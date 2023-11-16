@@ -41,12 +41,24 @@ const displayBoardType = computed(() => {
   } else if (board.value.boardType === "review") {
     return "여행지 리뷰";
   }
+  return "";
 });
 
 const displayTime = computed(() => {
-  
   return board.value.createdAt.replace('T',' ').replaceAll('-','.')
 });
+
+const deleteBoard = () => {
+  instance
+    .delete(`/board/delete/${board.value.id}`)
+    .then(() => {
+      alert("삭제 성공");
+      router.push(`/board/${board.value.boardType}`);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+};
 
 onMounted(() => {
   fetchData();
@@ -77,8 +89,18 @@ onMounted(() => {
           {{ board.contents }}
         </v-card-text>
       </v-card>
+      <div class="button">
+      <v-btn prepend-icon="mdi-update" color="green" variant="plain" @click="">수정</v-btn>
+      <v-btn prepend-icon="mdi-delete" style="margin-left: 1rem;" color="red" variant="plain" @click="deleteBoard">삭제</v-btn>
+      </div>
     </v-sheet>
   </v-layout>
 </template>
 
-<style scoped></style>
+<style scoped>
+.button {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+</style>

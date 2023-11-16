@@ -28,13 +28,13 @@ const router = createRouter({
     },
     {
       name: 'write',
-      path: '/board/recruitment/write',
+      path: '/board/write',
       component: BoardWriteView,
     },
     {
-      name: 'detail',
-      path: '/board/recruitment/detail/:id',
-      component: BoardDetailView,
+      name: 'boardDetail',
+      path: '/board/:id',
+      component: BoardDetailView
     },
     {
       name: 'login',
@@ -47,15 +47,11 @@ const router = createRouter({
       component: SignupView
     },
     {
-      name: 'boardDetail',
-      path: '/board/:id',
-      component: BoardDetailView
-    },
-    {
       name: 'mypage',
       path: '/mypage',
       component: MypageView 
-    }, {
+    }, 
+    {
       name: 'logout',
       path: '/'
       

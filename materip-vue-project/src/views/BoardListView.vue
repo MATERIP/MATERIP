@@ -119,8 +119,8 @@ const goWrite = () => {
     style="
       display: flex;
       justify-content: space-between;
-      margin-right: 10%;
-      margin-left: 10%;
+      margin-right: 15%;
+      margin-left: 15%;
     "
   >
     <h1>{{ title[router.currentRoute.value.name] }}</h1>
@@ -130,6 +130,7 @@ const goWrite = () => {
       color="primary"
       width="fit-content"
       @click="goWrite"
+      prepend-icon="mdi-pencil"
       >{{ writeBtn }}</v-btn
     >
   </div>
@@ -139,7 +140,7 @@ const goWrite = () => {
     :items="boardList"
     :items-per-page="itemsPerPage"
     class="elevation-0"
-    style="width: 80%; margin: 0 auto"
+    style="width: 70%; margin: 0 auto"
     hover
   >
 
@@ -165,4 +166,9 @@ h1 {
   color: red;
   font-weight: bold;
 }
+
+.v-btn {
+  text-transform: none;
+}
+
 </style>

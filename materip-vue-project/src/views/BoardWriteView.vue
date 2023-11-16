@@ -9,7 +9,7 @@ const board = ref({
   title: "",
   contents: "",
   author: "",
-  boardType: "recruitment",
+  boardType: null,
 });
 const userStore = useUserStore();
 const { userInfo } = storeToRefs(userStore);
@@ -49,7 +49,7 @@ function write() {
     .post("/board/write", board.value)
     .then(() => {
       alert("글쓰기 성공");
-      router.push("/board");
+      router.push(`/board/${board.value.boardType}`);
     })
     .catch(function (error) {
       console.log(error);
