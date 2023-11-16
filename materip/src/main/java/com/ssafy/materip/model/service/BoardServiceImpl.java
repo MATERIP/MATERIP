@@ -53,7 +53,14 @@ public class BoardServiceImpl implements BoardService {
 	public List<Board> getReviewList() throws Exception {
 		return boardDao.readAllReview();
 	}
-
+	
+	@Override
+	public List<Board> getBoardList(String userId) throws Exception {
+		// TODO Auto-generated method stub
+		return boardDao.readBoardsByUserId(userId);
+	}
+	
+	
 	@Override
 	public List<Board> getRecruitmentList() throws Exception {
 		return boardDao.readAllRecruitment();
@@ -110,6 +117,8 @@ public class BoardServiceImpl implements BoardService {
 		// TODO Auto-generated method stub
 		return commentDao.readCommentsCnt(board_id);
 	}
+
+	
 
 
 //    @Override

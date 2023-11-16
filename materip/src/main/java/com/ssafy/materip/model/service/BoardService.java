@@ -31,6 +31,7 @@ public interface BoardService {
 	// update Board hits by Id
 	void updateBoardHits(int boardId) throws Exception;
 	
+	List<Board> getBoardList(String userId) throws Exception;
 	// Comment
 
 	// add comment

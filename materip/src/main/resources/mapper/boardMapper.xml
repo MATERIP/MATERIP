@@ -51,6 +51,17 @@
 		DESC
 	</select>
 	
+	<select id="readBoardsByUserId" parameterType="String" resultType="Board" resultMap="board">
+		SELECT
+		id, title, author, contents,created_at, modified_at, hits, board_type,
+		travel_date
+		FROM board
+		WHERE author = #{user_id}
+		ORDER BY board_type
+		DESC
+	</select>
+	
+	
 	<select id="readAllReview" resultType="board" resultMap="board">
 		SELECT
 		id, title, author, contents,created_at, modified_at, hits, board_type,

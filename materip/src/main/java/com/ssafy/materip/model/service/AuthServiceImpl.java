@@ -26,6 +26,7 @@ public class AuthServiceImpl implements AuthService {
 	
 	@Override
 	public int updateRefreshToken(AuthDto authDto) {
+		System.out.println("here!!");
 		return authDao.update(authDto);
 	}
 	

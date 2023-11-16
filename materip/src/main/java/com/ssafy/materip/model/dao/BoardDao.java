@@ -22,7 +22,9 @@ public interface BoardDao {
 	List<Board> readAllRecruitment() throws SQLException;
 	
 	Board readBoardById(int boardId) throws SQLException;
-
+	
+	List<Board> readBoardsByUserId(String userId) throws SQLException;
+	
 	int updateBoard(Board board) throws SQLException;
 
 	int deleteBoard(int sequence) throws SQLException;

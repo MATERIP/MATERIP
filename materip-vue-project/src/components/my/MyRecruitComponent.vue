@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
 
@@ -58,10 +58,11 @@ const pageCount = computed(() => Math.ceil(boardList.value.length / itemsPerPage
 
 function fetchData() {
   instance
-    .get('/board/getList', boardList.value)
+    .get('/board/myboard')
     .then((response) => {
       boardList.value = response.data
-      console.log(response)
+
+      console.log(response.data)
     })
     .catch(function (error) {
       console.log(error)

@@ -54,7 +54,6 @@ public class AdminUserController {
 	private final AuthService authService;
 
 	public AdminUserController(UserService userService, JWTUtil jwtUtil, AuthService authService) {
-
 		this.userService = userService;
 		this.jwtUtil = jwtUtil;
 		this.authService = authService;
@@ -138,8 +137,6 @@ public class AdminUserController {
 
 		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
 	}
-	
-	
 	
 	
 	

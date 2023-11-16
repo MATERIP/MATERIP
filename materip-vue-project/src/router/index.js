@@ -30,12 +30,12 @@ const router = createRouter({
     {
       name: 'recruitment',
       path: '/board/recruitment',
-      component: BoardListView,
+      component: BoardListView
     },
     {
       name: 'write',
       path: '/board/write',
-      component: BoardWriteView,
+      component: BoardWriteView
     },
     {
       name: 'boardDetail',
@@ -79,7 +79,6 @@ const router = createRouter({
       path: '/attraction/:attractionId', // Correct dynamic parameter syntax
       component: AttractionView
     }
-
   ]
 })
 

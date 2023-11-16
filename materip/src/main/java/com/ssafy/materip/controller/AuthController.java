@@ -49,7 +49,7 @@ public class AuthController {
 		// slientRefresh가 발생하는 경우
 		// HttpOnly Cookie를 가져온다.
 		Cookie[] cookieList = request.getCookies();
-
+		
 		String refreshToken = "";
 
 		for (Cookie cookie : cookieList) {
@@ -62,7 +62,7 @@ public class AuthController {
 		long admin = jwtUtil.getUserAdmin(refreshToken);
 
 		String dbRefreshToken = authService.getRefreshToken(userId).getRefreshToken();
-
+		
 		Map<String, Object> result = new HashMap<String, Object>();
 
 		// Cookie에 담겨있는 refreshToken을 검증하고,

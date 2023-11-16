@@ -8,30 +8,21 @@ export const useBoardStore = defineStore(
   () => {
     // ***************** state *****************
     const axios = inject('axios')
-
-    const searchInput = ref('')
-    const searchResult = ref([])
+    var userBoardList = ref()
     // **************** actions ****************
-    const searchTravelSpot = async () => {
-      // 서버로 요청
-      if (searchResult.value != [] && searchResult.value.length != 0) {
-        console.log('안빔!')
-        console.log()
-        return searchResult.value
-      } else {
-        await axios.get('/attraction/info', searchInput.value).then((response) => {
-          console.log(response.data)
-          searchResult.value = response.data
-          console.log(searchResult.value)
-          return response.data
+    const myBoard = async () => {
+      await axios
+        .get('board/myboard')
+        .then((response) => {
+          console.log(response.data['boardList'])
+          userBoardList.value = response.data['boardList']
         })
-      }
+        .catch((response) => {})
     }
 
     return {
-      searchInput,
-      searchTravelSpot,
-      searchResult
+      myBoard,
+      userBoardList
     }
   },
   {
