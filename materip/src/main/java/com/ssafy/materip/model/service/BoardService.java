@@ -24,6 +24,8 @@ public interface BoardService {
 	
 	// get Recruitment List
 	List<Board> getRecruitmentList() throws Exception;
+
+
 	
 	// get Board By Id
 	Board getBoardById(int boardId) throws Exception; 
@@ -31,7 +33,9 @@ public interface BoardService {
 	// update Board hits by Id
 	void updateBoardHits(int boardId) throws Exception;
 	
-	List<Board> getBoardList(String userId) throws Exception;
+	List<Board> getReviewListById(String userId) throws Exception;
+
+	List<Board> getMateListById(String userId) throws Exception;
 	// Comment
 
 	// add comment

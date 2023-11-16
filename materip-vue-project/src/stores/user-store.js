@@ -57,11 +57,11 @@ export const useUserStore = defineStore(
       await axios
         .get('/admin/user/mypage')
         .then((response) => {
-          alert(response.message)
-          userInfo.value = response.data
+          
+          userInfo.value = response.data["userInfo"]
         })
         .catch((response) => {
-          alert(response.message + ' 1')
+          
         })
     }
 

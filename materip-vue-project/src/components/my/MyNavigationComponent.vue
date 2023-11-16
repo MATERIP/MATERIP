@@ -8,11 +8,11 @@
         ><v-icon icon="mdi-account-multiple-plus"></v-icon>나의 여행 메이트</v-btn
       >
     </RouterLink>
-    <RouterLink to="/mate">
+    <!-- <RouterLink to="/mate">
       <v-btn text @click="goToMate"
         ><v-icon icon="mdi-account-multiple-plus"></v-icon>나의 여행 메이트</v-btn
       >
-    </RouterLink>
+    </RouterLink> -->
   </v-app-bar>
 </template>
 

@@ -23,7 +23,8 @@ public interface BoardDao {
 	
 	Board readBoardById(int boardId) throws SQLException;
 	
-	List<Board> readBoardsByUserId(String userId) throws SQLException;
+	List<Board> readMateBoardsByUserId(String userId) throws SQLException;
+	List<Board> readReviewBoardsByUserId(String userId) throws SQLException;
 	
 	int updateBoard(Board board) throws SQLException;
 

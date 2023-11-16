@@ -1,14 +1,14 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
-import { useRouter } from 'vue-router'
-import axios from 'axios'
-
-const boardList = ref([])
-const instance = axios.create({
-  baseURL: 'http://localhost:8080/'
+import { ref, onMounted, computed } from 'vue'
+import { useMateStore } from '../../stores/board-store.js'
+import { storeToRefs } from 'pinia'
+const mateStore = useMateStore()
+const { userBoardList } = storeToRefs(mateStore)
+onMounted(() => {
+  mateStore.myMate()
 })
 
-const title = ref('여행 메이트')
+const title = ref('나의 리뷰')
 
 const itemsPerPage = ref(10)
 const page = ref(1)
@@ -54,21 +54,7 @@ const formatDate = function (item) {
   return item.createdAt
 }
 
-const pageCount = computed(() => Math.ceil(boardList.value.length / itemsPerPage.value))
-
-function fetchData() {
-  instance
-    .get('/board/myboard')
-    .then((response) => {
-      boardList.value = response.data
-
-      console.log(response.data)
-    })
-    .catch(function (error) {
-      console.log(error)
-    })
-}
-fetchData()
+const pageCount = computed(() => Math.ceil(userBoardList.value.length / itemsPerPage.value))
 </script>
 
 <template>
@@ -76,7 +62,7 @@ fetchData()
   <v-data-table
     v-model:page="page"
     :headers="headers"
-    :items="boardList"
+    :items="userBoardList"
     :items-per-page="itemsPerPage"
     class="elevation-0"
     style="width: 80%; margin: 0 auto"

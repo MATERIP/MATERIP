@@ -54,12 +54,6 @@ public class BoardServiceImpl implements BoardService {
 		return boardDao.readAllReview();
 	}
 	
-	@Override
-	public List<Board> getBoardList(String userId) throws Exception {
-		// TODO Auto-generated method stub
-		return boardDao.readBoardsByUserId(userId);
-	}
-	
 	
 	@Override
 	public List<Board> getRecruitmentList() throws Exception {
@@ -82,6 +76,16 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public void updateBoardHits(int boardId) throws Exception {
 		boardDao.updateBoardHits(boardId);
+	}
+
+	@Override
+	public List<Board> getReviewListById(String userId) throws Exception {
+		return boardDao.readReviewBoardsByUserId(userId);
+	}
+
+	@Override
+	public List<Board> getMateListById(String userId) throws Exception {
+		return boardDao.readMateBoardsByUserId(userId);
 	}
 
 	@Override

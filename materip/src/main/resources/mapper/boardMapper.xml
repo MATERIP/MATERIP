@@ -51,16 +51,29 @@
 		DESC
 	</select>
 	
-	<select id="readBoardsByUserId" parameterType="String" resultType="Board" resultMap="board">
+	<select id="readMateBoardsByUserId" parameterType="String" resultType="Board" resultMap="board">
 		SELECT
 		id, title, author, contents,created_at, modified_at, hits, board_type,
 		travel_date
 		FROM board
 		WHERE author = #{user_id}
+		board_type = `recruitment`
 		ORDER BY board_type
 		DESC
 	</select>
-	
+
+	<select id="readReviewBoardsByUserId" parameterType="String" resultType="Board" resultMap="board">
+		SELECT
+		id, title, author, contents,created_at, modified_at, hits, board_type,
+		travel_date
+		FROM board
+		WHERE
+		author = #{user_id}
+		and
+		board_type = `review`
+		ORDER BY board_type
+		DESC
+	</select>
 	
 	<select id="readAllReview" resultType="board" resultMap="board">
 		SELECT

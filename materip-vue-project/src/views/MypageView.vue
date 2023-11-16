@@ -71,10 +71,10 @@ const animateProgressBar = () => {
                   <v-list-item color="#0000" class="profile-text-name ma-4 pt-16">
                     <v-list-item-content>
                       <v-list-item-title class="text-h2 max-v-list-height">
-                        {{ userInfo.userInfo.nickname }}</v-list-item-title
+                        {{ userInfo.nickname }}</v-list-item-title
                       >
                       <v-list-item-subtitle class="max-v-list-height">{{
-                        userInfo.userInfo.id
+                        userInfo.name
                       }}</v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>

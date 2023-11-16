@@ -303,7 +303,7 @@ public class AdminUserController {
 		result.put("admin", user.getAdmin());
 		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
 	}
-	
+
 	@ApiOperation(value = "좋아요", notes = "사용자 좋아요")
 	@PostMapping(value = "/{userid}/like")
 	public ResponseEntity<?> likeUser(@RequestBody Userlikes userlikes) throws Exception {
