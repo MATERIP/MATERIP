@@ -5,8 +5,11 @@ import LoginView from '../views/LoginView.vue'
 import SignupView from '../views/SignupView.vue'
 import BoardListView from '../views/BoardListView.vue'
 import MypageView from '../views/MypageView.vue'
+import MyRecruitView from '../views/MyRecruitView.vue'
+import MyReviewView from '../views/MyReviewView.vue'
 import ProfileView from '../views/ProfileView.vue'
 import AttracionView from '../views/AttractionView.vue'
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -40,6 +43,24 @@ const router = createRouter({
     {
       name: 'mypage',
       path: '/mypage',
+      component: MypageView,
+      children: [
+        {
+          name: 'myreview',
+          path: '/myreview',
+          component: MyReviewView
+        },
+        {
+          name: 'mymate',
+          path: '/mymate',
+          component: MyRecruitView
+        }
+      ]
+    },
+
+    {
+      name: 'logout',
+      path: '/'
       component: MypageView
     },
     {

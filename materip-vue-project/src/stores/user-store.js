@@ -53,12 +53,13 @@ export const useUserStore = defineStore(
     const getUserInfo = async () => {
       console.log('getUserInfo')
       await axios
-        .get('/admin/user/myPage')
+        .get('/admin/user/mypage')
         .then((response) => {
           console.log('데이터!!!')
           userInfo.value = response.data
           console.log(userInfo.value)
           return response.value
+
         })
         .catch((response) => {
           alert(response.message)
