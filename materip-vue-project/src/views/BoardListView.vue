@@ -110,9 +110,10 @@ function updateBoardHits(item) {
   });
 }
 
-function goToDetail(item) {
+async function goToDetail(item) {
   console.log(item)
-  updateBoardHits(item);
+  // 상세 페이지 이동 전에 조회수를 1 증가시킨다.
+  await updateBoardHits(item);
   router.push({ name: "boardDetail", params: { id: item.id } });
 }
 
