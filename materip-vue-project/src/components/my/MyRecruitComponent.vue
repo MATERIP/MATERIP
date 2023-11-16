@@ -71,7 +71,6 @@ fetchData()
 </script>
 
 <template>
-  <div style="height: 8rem"></div>
   <h1>{{ title }}</h1>
   <v-data-table
     v-model:page="page"

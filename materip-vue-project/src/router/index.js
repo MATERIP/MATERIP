@@ -5,11 +5,10 @@ import LoginView from '../views/LoginView.vue'
 import SignupView from '../views/SignupView.vue'
 import BoardListView from '../views/BoardListView.vue'
 import MypageView from '../views/MypageView.vue'
-import MyRecruitView from '../views/MyRecruitView.vue'
-import MyReviewView from '../views/MyReviewView.vue'
-import ProfileView from '../views/ProfileView.vue'
-import AttracionView from '../views/AttractionView.vue'
-
+import MyRecruitView from '../components/my/MyRecruitComponent.vue'
+import MyReviewView from '../components/my/MyReviewComponent.vue'
+import AttractionView from '../views/AttractionView.vue'
+// import ProfileView from '../views/ProfileView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -18,7 +17,6 @@ const router = createRouter({
       path: '/',
       component: MainView
     },
-
     {
       name: 'review',
       path: '/board',
@@ -46,13 +44,11 @@ const router = createRouter({
       component: MypageView,
       children: [
         {
-          name: 'myreview',
-          path: '/myreview',
+          path: 'myreview', // Remove the leading '/'
           component: MyReviewView
         },
         {
-          name: 'mymate',
-          path: '/mymate',
+          path: 'mymate', // Remove the leading '/'
           component: MyRecruitView
         }
       ]
@@ -61,16 +57,12 @@ const router = createRouter({
     {
       name: 'logout',
       path: '/'
-      component: MypageView
     },
-    {
-      name: 'logout',
-      path: '/'
-    },
+
     {
       name: 'attractionInfo',
-      path: '/attraction/{}',
-      component: AttracionView
+      path: '/attraction/:attractionId', // Correct dynamic parameter syntax
+      component: AttractionView
     }
   ]
 })
