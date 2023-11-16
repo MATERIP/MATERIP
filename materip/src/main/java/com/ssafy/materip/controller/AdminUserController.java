@@ -3,10 +3,8 @@ package com.ssafy.materip.controller;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,34 +27,17 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Base64;
 import java.util.HashMap;
-import java.util.Map;
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.ssafy.materip.annotation.AuthRequired;
 import com.ssafy.materip.model.dto.AuthDto;
-import com.ssafy.materip.model.dto.User;
 import com.ssafy.materip.model.service.AuthService;
-import com.ssafy.materip.model.service.UserService;
 import com.ssafy.materip.util.JWTUtil;
 
 @RestController
@@ -101,8 +82,8 @@ public class AdminUserController {
 		
 		// AccessToken, RefreshToken 발급
 		// https://velog.io/@yaytomato/%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%90%EC%84%9C-%EC%95%88%EC%A0%84%ED%95%98%EA%B2%8C-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EC%B2%98%EB%A6%AC%ED%95%98%EA%B8%B0
-		String accessToken = jwtUtil.createAccessToken(validUser.getId());
-		String refreshToken = jwtUtil.createRefreshToken(validUser.getId());
+		String accessToken = jwtUtil.createAccessToken(validUser.getId(), validUser.getAdmin());
+		String refreshToken = jwtUtil.createRefreshToken(validUser.getId(), validUser.getAdmin());
 		
 		// RefreshToken은 HttpOnly Cookie로 발급
 		Cookie cookie = new Cookie("refreshToken", refreshToken);
@@ -228,12 +209,65 @@ public class AdminUserController {
 	})
 	@ResponseBody
 	@AuthRequired
-	@GetMapping("/myPage")
+	@GetMapping("/mypage")
 	public ResponseEntity<Map<String, Object>> myPage(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		System.out.println("메롱");
+		
 		Map<String, Object> result = new HashMap<String, Object>();
 
-		System.out.println("arrived");
+		
+		// Authorization에 포함된 accessToken의 userId를 가져온다.
+		String userId = jwtUtil.getUserId(request.getHeader("Authorization"));
+
+		Cookie[] cookieList = request.getCookies();
+
+		String requestRefreshToken = "";
+
+		for(Cookie cookie : cookieList) {
+			if(cookie.getName().equals("refreshToken")) {
+				requestRefreshToken = cookie.getValue();
+			}
+		}
+
+		// 요청으로 들어온 refreshToken이 Database의 refreshToken과 일치하는지 확인.
+		String dbRefreshToken = authService.getRefreshToken(userId).getRefreshToken();
+
+		if(!requestRefreshToken.equals(dbRefreshToken)) {
+			// RefreshToken은 HttpOnly Cookie로 발급
+			Cookie cookie = new Cookie("refreshToken", "");
+			cookie.setMaxAge(0);
+			cookie.setHttpOnly(true);
+			cookie.setPath("/");
+			System.out.println("토큰이 다름");
+			response.addCookie(cookie);
+
+			result.put("message", "로그인이 필요합니다.");
+			return new ResponseEntity<Map<String, Object>>(result, HttpStatus.FORBIDDEN);
+		}
+
+		// 해당 userId의 정보를 획득.
+		User user = userService.getUser(userId);
+
+		// 사용자 정보 중 비밀번호는 전송하지 말아야한다.
+		user.setPassword("");
+
+		result.put("userInfo", user);
+		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+	}
+	
+	@ApiOperation(value="관리자 여부", notes="관리자 여부인지를 반환합니다.")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "사용자 정보 반환 성공"),
+			@ApiResponse(code = 403, message = "권한 없음"),
+			@ApiResponse(code = 404, message = "사용자 정보 없음")
+	})
+	@ResponseBody
+	@AuthRequired
+	@GetMapping("/isAdmin")
+	public ResponseEntity<Map<String, Object>> isAdmin(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		Map<String, Object> result = new HashMap<String, Object>();
+
+		
 		// Authorization에 포함된 accessToken의 userId를 가져온다.
 		String userId = jwtUtil.getUserId(request.getHeader("Authorization"));
 
@@ -267,11 +301,12 @@ public class AdminUserController {
 		User user = userService.getUser(userId);
 
 		// 사용자 정보 중 비밀번호는 전송하지 말아야한다.
-		user.setPassword("");
+		
 
-		result.put("userInfo", user);
+		result.put("admin", user.getAdmin());
 		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
 	}
+	
 	@ApiOperation(value = "좋아요", notes = "사용자 좋아요")
 	@PostMapping(value = "/{userid}/like")
 	public ResponseEntity<?> likeUser(@RequestBody Userlikes userlikes) throws Exception {

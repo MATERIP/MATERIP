@@ -17,7 +17,7 @@ buildNumber.properties
 .project
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
-
+*.mp4
 Servers/
 .metadata
 # Created by https://www.toptal.com/developers/gitignore/api/vue,vuejs,visualstudiocode,visualstudio
