@@ -82,8 +82,8 @@ public class AdminUserController {
 		
 		// AccessToken, RefreshToken 발급
 		// https://velog.io/@yaytomato/%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%90%EC%84%9C-%EC%95%88%EC%A0%84%ED%95%98%EA%B2%8C-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EC%B2%98%EB%A6%AC%ED%95%98%EA%B8%B0
-		String accessToken = jwtUtil.createAccessToken(validUser.getId(), validUser.getAdmin());
-		String refreshToken = jwtUtil.createRefreshToken(validUser.getId(), validUser.getAdmin());
+		String accessToken = jwtUtil.createAccessToken(validUser.getId());
+		String refreshToken = jwtUtil.createRefreshToken(validUser.getId());
 		
 		// RefreshToken은 HttpOnly Cookie로 발급
 		Cookie cookie = new Cookie("refreshToken", refreshToken);

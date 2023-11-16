@@ -13,6 +13,7 @@ import AttractionView from '../views/AttractionView.vue'
 
 import BoardWriteView from '../views/BoardWriteView.vue'
 import BoardDetailView from '../views/BoardDetailView.vue'
+import BoardUpdateView from '../views/BoardUpdateView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -41,6 +42,11 @@ const router = createRouter({
       name: 'boardDetail',
       path: '/board/:id',
       component: BoardDetailView
+    },
+    {
+      name: 'boardUpdate',
+      path: '/board/update/:id',
+      component: BoardUpdateView
     },
     {
       name: 'login',

@@ -26,7 +26,7 @@ const fetchData = () => {
     .get(`/board/detail/${router.currentRoute.value.params.id}`)
     .then((response) => {
       board.value = response.data;
-      console.log(response);
+      // console.log(response);
     })
     .catch(function (error) {
       console.log(error);
@@ -49,16 +49,26 @@ const displayTime = computed(() => {
 });
 
 const deleteBoard = () => {
+  let boardType = board.value.boardType;
   instance
     .delete(`/board/delete/${board.value.id}`)
     .then(() => {
       alert("삭제 성공");
-      router.push(`/board/${board.value.boardType}`);
+      if(boardType === 'notice'){
+        router.push(`/board/review`);
+      }
+      else {
+        router.push(`/board/${board.value.boardType}`);
+      }
     })
     .catch(function (error) {
       console.log(error);
     });
 };
+
+const goToUpdate = () => {
+  router.push(`/board/update/${board.value.id}`);
+}
 
 onMounted(() => {
   fetchData();
@@ -66,7 +76,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div></div>
+  <div><RouterView/></div>
   <v-layout row wrap style="display: flex; justify-content: center; margin-top: 10rem">
     <v-sheet>
       <v-card class="mx-auto pa-12 pb-8" min-width="80rem" rounded="lg">
@@ -90,7 +100,7 @@ onMounted(() => {
         </v-card-text>
       </v-card>
       <div class="button">
-      <v-btn prepend-icon="mdi-update" color="green" variant="plain" @click="">수정</v-btn>
+      <v-btn prepend-icon="mdi-update" color="green" variant="plain" @click="goToUpdate">수정</v-btn>
       <v-btn prepend-icon="mdi-delete" style="margin-left: 1rem;" color="red" variant="plain" @click="deleteBoard">삭제</v-btn>
       </div>
     </v-sheet>

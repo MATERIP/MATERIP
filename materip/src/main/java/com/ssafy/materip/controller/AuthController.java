@@ -42,7 +42,7 @@ public class AuthController {
 		this.authService = authService;
 	}
 
-	@PostMapping("/slient-refresh")
+	@PostMapping("/silent-refresh")
 	public ResponseEntity<Map<String, Object>> slientRefresh(HttpServletRequest request, HttpServletResponse response)
 			throws ParseException, UnsupportedEncodingException {
 
@@ -59,7 +59,7 @@ public class AuthController {
 		}
 
 		String userId = jwtUtil.getUserId(refreshToken);
-		long admin = jwtUtil.getUserAdmin(refreshToken);
+//		long admin = jwtUtil.getUserAdmin(refreshToken);
 
 		String dbRefreshToken = authService.getRefreshToken(userId).getRefreshToken();
 
@@ -81,8 +81,8 @@ public class AuthController {
 		}
 
 		// 유효한 경우에는 refreshToken과 accessToken을 재발급
-		String newAccessToken = jwtUtil.createAccessToken(userId, admin);
-		String newRefreshToken = jwtUtil.createRefreshToken(userId, admin);
+		String newAccessToken = jwtUtil.createAccessToken(userId);
+		String newRefreshToken = jwtUtil.createRefreshToken(userId);
 
 		// RefreshToken은 HttpOnly Cookie로 발급
 		Cookie cookie = new Cookie("refreshToken", newRefreshToken);

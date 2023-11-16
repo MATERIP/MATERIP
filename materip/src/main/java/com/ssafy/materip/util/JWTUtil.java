@@ -26,7 +26,7 @@ public class JWTUtil {
 	@Value("${jwt.refreshtoken.expiretime}")
 	private Long refreshTokenExpireTime;
 	
-	public String createAccessToken(String userId, long admin) throws UnsupportedEncodingException {
+	public String createAccessToken(String userId) throws UnsupportedEncodingException {
 	
 		// 현재 시간을 저장한다.
 		long currentTimeMillis = System.currentTimeMillis();
@@ -34,7 +34,7 @@ public class JWTUtil {
 		// accessToken을 생성한다.
 		JwtBuilder jwtAccessTokenBuilder = Jwts.builder();
 		jwtAccessTokenBuilder.claim("userId", userId);
-		jwtAccessTokenBuilder.claim("admin", admin);
+//		jwtAccessTokenBuilder.claim("admin", admin);
 		jwtAccessTokenBuilder.setIssuedAt(new Date(currentTimeMillis));
 		jwtAccessTokenBuilder.setExpiration(new Date(currentTimeMillis + accessTokenExpireTime*1000));
 		jwtAccessTokenBuilder.signWith(SignatureAlgorithm.HS256, jwtKey.getBytes("UTF-8"));
@@ -43,7 +43,7 @@ public class JWTUtil {
 	}
 	
 	
-	public String createRefreshToken(String userId, long admin) throws UnsupportedEncodingException {
+	public String createRefreshToken(String userId) throws UnsupportedEncodingException {
 		
 		// 현재 시간을 저장한다.
 		long currentTimeMillis = System.currentTimeMillis();
@@ -52,7 +52,7 @@ public class JWTUtil {
 		// refreshToken을 생성한다.
 		JwtBuilder jwtRefreshTokenBuilder = Jwts.builder();
 		jwtRefreshTokenBuilder.claim("userId", userId);
-		jwtRefreshTokenBuilder.claim("admin", admin);
+//		jwtRefreshTokenBuilder.claim("admin", admin);
 		jwtRefreshTokenBuilder.setIssuedAt(new Date(currentTimeMillis));
 		jwtRefreshTokenBuilder.setExpiration(new Date(currentTimeMillis + refreshTokenExpireTime*1000));
 		jwtRefreshTokenBuilder.signWith(SignatureAlgorithm.HS256, jwtKey.getBytes("UTF-8"));
@@ -79,27 +79,27 @@ public class JWTUtil {
 		return userId;
 	}
 	
-	public long getUserAdmin(String authorization) throws ParseException {
-		// accessToken을 파싱한다.
-		String[] chunks = authorization.split("\\.");
-		Base64.Decoder decoder = Base64.getUrlDecoder();
-		
-		// payload에 저장된 admin를 획득한다.
-		String payload = new String(decoder.decode(chunks[1]));
-		JSONParser parser = new JSONParser();
-		JSONObject obj = (JSONObject) parser.parse(payload);
-		
-		long userId = (long) obj.get("admin");
-		
-		return userId;
-	}
-	
-	public String getUserIdandAdmin(String authorization) throws ParseException{
-		
-		
-		return authorization;
-		
-	}
+//	public long getUserAdmin(String authorization) throws ParseException {
+//		// accessToken을 파싱한다.
+//		String[] chunks = authorization.split("\\.");
+//		Base64.Decoder decoder = Base64.getUrlDecoder();
+//		
+//		// payload에 저장된 admin를 획득한다.
+//		String payload = new String(decoder.decode(chunks[1]));
+//		JSONParser parser = new JSONParser();
+//		JSONObject obj = (JSONObject) parser.parse(payload);
+//		
+//		long userId = (long) obj.get("admin");
+//		
+//		return userId;
+//	}
+//	
+//	public String getUserIdandAdmin(String authorization) throws ParseException{
+//		
+//		
+//		return authorization;
+//		
+//	}
 	
 	public boolean vaildCheck(String token) {
 		
