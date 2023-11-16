@@ -19,8 +19,17 @@ public interface BoardService {
 	// get Board List
 	List<Board> getBoardList() throws Exception;
 	
+	// get Review List
+	List<Board> getReviewList() throws Exception;
+	
+	// get Recruitment List
+	List<Board> getRecruitmentList() throws Exception;
+	
 	// get Board By Id
 	Board getBoardById(int boardId) throws Exception; 
+	
+	// update Board hits by Id
+	void updateBoardHits(int boardId) throws Exception;
 	
 	// Comment
 

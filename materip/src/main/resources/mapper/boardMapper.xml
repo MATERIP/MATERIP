@@ -47,6 +47,28 @@
 		id, title, author, contents,created_at, modified_at, hits, board_type,
 		travel_date
 		FROM board
+		ORDER BY board_type
+		DESC
+	</select>
+	
+	<select id="readAllReview" resultType="board" resultMap="board">
+		SELECT
+		id, title, author, contents,created_at, modified_at, hits, board_type,
+		travel_date
+		FROM board
+		WHERE board_type != 'recruitment'
+		ORDER BY board_type
+		DESC
+	</select>
+	
+	<select id="readAllRecruitment" resultType="board" resultMap="board">
+		SELECT
+		id, title, author, contents,created_at, modified_at, hits, board_type,
+		travel_date
+		FROM board
+		WHERE board_type != 'review'
+		ORDER BY board_type
+		DESC
 	</select>
 	
 	<select id="readBoardById" parameterType="int" resultMap="board">
@@ -56,4 +78,11 @@
 		FROM board
 		WHERE id = #{id}
 	</select>
+	
+	<update id="updateBoardHits" parameterType="int">
+		UPDATE board
+		SET hits = hits + 1
+		WHERE id = #{id}
+	</update>
+	
 </mapper>

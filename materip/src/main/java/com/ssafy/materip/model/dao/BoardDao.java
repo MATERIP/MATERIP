@@ -17,10 +17,15 @@ public interface BoardDao {
 
 	List<Board> readAllBoards() throws SQLException;
 	
+	List<Board> readAllReview() throws SQLException;
+	
+	List<Board> readAllRecruitment() throws SQLException;
+	
 	Board readBoardById(int boardId) throws SQLException;
 
 	int updateBoard(Board board) throws SQLException;
 
 	int deleteBoard(int sequence) throws SQLException;
 
+	void updateBoardHits(int boardId) throws SQLException;
 }
