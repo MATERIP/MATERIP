@@ -55,8 +55,11 @@ export const useUserStore = defineStore(
       await axios
         .get('/admin/user/mypage')
         .then((response) => {
-          console.log(response)
-          console.log(axios.defaults.headers.common['Authorization'])
+          console.log('데이터!!!')
+          userInfo.value = response.data
+          console.log(userInfo.value)
+          return response.value
+
         })
         .catch((response) => {
           alert(response.message)
