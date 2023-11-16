@@ -1,13 +1,14 @@
 <script setup>
-import { ref, computed, onMounted, watch } from "vue";
-import { useRouter } from "vue-router";
-import axios from "axios";
 
-const router = useRouter();
-const boardList = ref([]);
+import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import axios from 'axios'
+
+
+const boardList = ref([])
 const instance = axios.create({
-  baseURL: "http://localhost:8080/",
-});
+  baseURL: 'http://localhost:8080/'
+})
 
 const title = ref({
   "review" : "여행지 리뷰",
@@ -21,15 +22,16 @@ const apiRoute = ref({
 
 const writeBtn = ref("글쓰기");
 
-const itemsPerPage = ref(10);
-const page = ref(1);
+const itemsPerPage = ref(10)
+const page = ref(1)
 const headers = [
   {
-    align: "center",
-    key: "title",
+    align: 'center',
+    key: 'title',
     sortable: false,
     title: "제목",
   },
+
 
   { title: "작성자", key: "author", align: "center", sortable: false },
   {
@@ -53,19 +55,22 @@ const formatDate = function (item) {
   // console.log(year);
   // console.log(month);
   // console.log(date);
+
   if (
     year == item.createdAt.substring(0, 4) &&
     month == item.createdAt.substring(5, 7) &&
     date == item.createdAt.substring(8, 10)
   ) {
+
     item.createdAt = item.createdAt.substring(11, 19);
   } else {
     item.createdAt = item.createdAt.substring(0, 10).replaceAll("-", ".");
+
   }
   return item.createdAt;
 };
 
-const pageCount = computed(() => Math.ceil(boardList.value.length / itemsPerPage.value));
+const pageCount = computed(() => Math.ceil(boardList.value.length / itemsPerPage.value))
 
 function fetchData() {
   console.log(router.currentRoute.value.name)
@@ -76,9 +81,10 @@ function fetchData() {
       console.log(response);
     })
     .catch(function (error) {
-      console.log(error);
-    });
+      console.log(error)
+    })
 }
+
 
 watch(() => router.currentRoute.value.name, (newValue) => {
   console.log(newValue);
@@ -119,8 +125,8 @@ const goWrite = () => {
     style="
       display: flex;
       justify-content: space-between;
-      margin-right: 10%;
-      margin-left: 10%;
+      margin-right: 15%;
+      margin-left: 15%;
     "
   >
     <h1>{{ title[router.currentRoute.value.name] }}</h1>
@@ -130,22 +136,25 @@ const goWrite = () => {
       color="primary"
       width="fit-content"
       @click="goWrite"
+      prepend-icon="mdi-pencil"
       >{{ writeBtn }}</v-btn
     >
   </div>
+
   <v-data-table
     v-model:page="page"
     :headers="headers"
     :items="boardList"
     :items-per-page="itemsPerPage"
     class="elevation-0"
-    style="width: 80%; margin: 0 auto"
+    style="width: 70%; margin: 0 auto"
     hover
   >
 
   <template v-slot:item.title="{ item }">
     <v-btn text @click="goToDetail(item)" variant="flat" :class="[item.boardType]">{{ item.title }}</v-btn>
     </template>
+
 
     <template v-slot:bottom>
       <div class="text-center pt-2">
@@ -157,6 +166,7 @@ const goWrite = () => {
 
 <style scoped>
 h1 {
+
   margin-top: 0;
   align-self: center;
 }
@@ -165,4 +175,10 @@ h1 {
   color: red;
   font-weight: bold;
 }
+
+.v-btn {
+  text-transform: none;
+}
+
+
 </style>

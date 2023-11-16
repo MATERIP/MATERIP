@@ -27,6 +27,8 @@
       theme="light"
       variant="solo"
       hide-details
+      v-model="inputValue"
+      @keydown.enter="searchFunction"
     >
     </v-autocomplete>
 
@@ -61,7 +63,7 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useUserStore } from '@/stores/user-store'
 import { useTravelStore } from '@/stores/travel-store'
@@ -73,4 +75,15 @@ const { menuList } = storeToRefs(userStore)
 onMounted(() => {
   travelStore.searchTravelSpot()
 })
+
+const inputValue = ref('')
+const searchFunction = function () {
+  console.log(inputValue.value)
+}
 </script>
+
+<style scoped>
+.v-btn {
+  color: black;
+}
+</style>
