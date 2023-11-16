@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
 
@@ -9,7 +9,16 @@ const instance = axios.create({
   baseURL: "http://localhost:8080/",
 });
 
-const title = ref("여행 메이트 모집");
+const title = ref({
+  "review" : "여행지 리뷰",
+  "recruitment" : "여행 메이트 모집",
+});
+const apiRoute = ref({
+  "review" : "/board/getReviewList",
+  "recruitment" : "/board/getRecruitmentList"
+})
+
+
 const writeBtn = ref("글쓰기");
 
 const itemsPerPage = ref(10);
@@ -59,8 +68,9 @@ const formatDate = function (item) {
 const pageCount = computed(() => Math.ceil(boardList.value.length / itemsPerPage.value));
 
 function fetchData() {
+  console.log(router.currentRoute.value.name)
   instance
-    .get("/board/getList", boardList.value)
+    .get(apiRoute.value[router.currentRoute.value.name])
     .then((response) => {
       boardList.value = response.data;
       console.log(response);
@@ -70,9 +80,10 @@ function fetchData() {
     });
 }
 
-onMounted(() => {
+watch(() => router.currentRoute.value.name, (newValue) => {
+  console.log(newValue);
   fetchData();
-});
+}, { immediate: true });
 
 function updateBoardHits(item) {
   instance
@@ -112,7 +123,7 @@ const goWrite = () => {
       margin-left: 10%;
     "
   >
-    <h1>{{ title }}</h1>
+    <h1>{{ title[router.currentRoute.value.name] }}</h1>
     <v-btn
       style="align-self: center"
       variant="elevated"
@@ -133,7 +144,7 @@ const goWrite = () => {
   >
 
   <template v-slot:item.title="{ item }">
-    <v-btn text @click="goToDetail(item)" variant="flat">{{ item.title }}</v-btn>
+    <v-btn text @click="goToDetail(item)" variant="flat" :class="[item.boardType]">{{ item.title }}</v-btn>
     </template>
 
     <template v-slot:bottom>
@@ -148,5 +159,10 @@ const goWrite = () => {
 h1 {
   margin-top: 0;
   align-self: center;
+}
+
+.notice {
+  color: red;
+  font-weight: bold;
 }
 </style>

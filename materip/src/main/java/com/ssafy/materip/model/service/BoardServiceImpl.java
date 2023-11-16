@@ -50,6 +50,16 @@ public class BoardServiceImpl implements BoardService {
 	}
 	
 	@Override
+	public List<Board> getReviewList() throws Exception {
+		return boardDao.readAllReview();
+	}
+
+	@Override
+	public List<Board> getRecruitmentList() throws Exception {
+		return boardDao.readAllRecruitment();
+	}
+	
+	@Override
 	public Board getBoardById(int boardId) throws Exception {
 		// TODO Auto-generated method stub
 		return boardDao.readBoardById(boardId);

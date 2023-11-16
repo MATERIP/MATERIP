@@ -49,6 +49,20 @@ public class BoardController {
 		List<Board> list = boardService.getBoardList();
 		return new ResponseEntity<List<Board>>(list, HttpStatus.OK);
 	}
+	
+	@ApiOperation(value = "리뷰 목록", notes = "등록된 모든 리뷰 정보를 반환합니다.", response = List.class)
+	@GetMapping("/getReviewList")
+	public ResponseEntity<?> getReviewList() throws Exception {
+		List<Board> list = boardService.getReviewList();
+		return new ResponseEntity<List<Board>>(list, HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "모집글 목록", notes = "등록된 모든 모집글 정보를 반환합니다.", response = List.class)
+	@GetMapping("/getRecruitmentList")
+	public ResponseEntity<?> getRecruitmentList() throws Exception {
+		List<Board> list = boardService.getRecruitmentList();
+		return new ResponseEntity<List<Board>>(list, HttpStatus.OK);
+	}
 
 	@ApiOperation(value = "보드 수정", notes = "보드를 수정합니다.")
 	@PutMapping(value = "/modify")

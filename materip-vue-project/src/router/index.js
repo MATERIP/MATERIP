@@ -18,22 +18,22 @@ const router = createRouter({
     
     {
       name: 'review',
-      path: '/board',
+      path: '/board/review',
       component: BoardListView
     },
     {
-      name: 'mate',
-      path: '/mate',
+      name: 'recruitment',
+      path: '/board/recruitment',
       component: BoardListView,
     },
     {
       name: 'write',
-      path: '/mate/write',
+      path: '/board/recruitment/write',
       component: BoardWriteView,
     },
     {
       name: 'detail',
-      path: '/mate/detail/:id',
+      path: '/board/recruitment/detail/:id',
       component: BoardDetailView,
     },
     {
