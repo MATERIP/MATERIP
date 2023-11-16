@@ -1,10 +1,10 @@
 <script setup>
 
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
 
-
+const router = useRouter();
 const boardList = ref([])
 const instance = axios.create({
   baseURL: 'http://localhost:8080/'
@@ -15,6 +15,7 @@ const title = ref({
   "recruitment" : "여행 메이트 모집",
 });
 const apiRoute = ref({
+  "notice" : "/board/getReviewList",
   "review" : "/board/getReviewList",
   "recruitment" : "/board/getRecruitmentList"
 })
@@ -118,7 +119,7 @@ const goWrite = () => {
   
   <div style="height: 8rem"></div>
   <div>
-    <router-view></router-view>
+    
   </div>
   
   <div

@@ -31,8 +31,8 @@
 	<update id="updateBoard" parameterType="board">
 		UPDATE board
 		SET title =
-		#{title}, author = #{author}, contents = #{contents} , modified_at =
-		now() , travel_date = #{travelDate}
+		#{title}, contents = #{contents} , modified_at =
+		now(), travel_date = #{travelDate}
 		WHERE id = #{id}
 	</update>
 

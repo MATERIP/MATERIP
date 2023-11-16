@@ -49,7 +49,12 @@ function write() {
     .post("/board/write", board.value)
     .then(() => {
       alert("글쓰기 성공");
-      router.push(`/board/${board.value.boardType}`);
+      if(`${board.value.boardType}` === 'notice'){
+        router.push(`/board/review`);
+      }
+      else {
+        router.push(`/board/${board.value.boardType}`);
+      }
     })
     .catch(function (error) {
       console.log(error);
