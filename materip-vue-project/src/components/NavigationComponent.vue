@@ -74,3 +74,9 @@ onMounted(() => {
   travelStore.searchTravelSpot()
 })
 </script>
+
+<style scoped>
+.v-btn {
+  color: black;
+}
+</style>
