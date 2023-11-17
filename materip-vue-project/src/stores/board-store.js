@@ -18,9 +18,7 @@ export const useMateStore = defineStore(
           console.log(response.data['boardList'])
           userBoardList.value = response.data['boardList']
         })
-        .catch((response) => {
-          
-        })
+        .catch((response) => {})
     }
 
     return {
@@ -43,12 +41,14 @@ export const useBoardReview = defineStore(
     var userReviewList = ref([])
     // **************** actions ****************
     const myReview = async () => {
+      console.log('myreview!')
       await axios
         .get('board/myboard/review')
         .then((response) => {
-          
-          console.log(response.data['boardList'])
           userReviewList.value = response.data['boardList']
+          for (let index = 0; index < userReviewList.value.length; index++) {
+            const element = userReviewList.value[index]
+          }
         })
         .catch((response) => {})
     }
