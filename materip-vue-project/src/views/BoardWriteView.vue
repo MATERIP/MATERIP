@@ -1,9 +1,10 @@
 <script setup>
-import axios from 'axios'
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, inject, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../stores/user-store'
 import { storeToRefs } from 'pinia'
+
+const axios = inject('axios')
 const router = useRouter()
 const board = ref({
   title: '',
@@ -11,28 +12,40 @@ const board = ref({
   author: '',
   boardType: null
 })
+
 const userStore = useUserStore()
 const { userInfo } = storeToRefs(userStore)
+const { isAdmin } = storeToRefs(userStore)
 
 const items = ref([
   {
     name: '공지사항',
-    value: 'notice'
+    value: 'notice',
+    show: false
   },
   {
     name: '여행 메이트 모집',
-    value: 'recruitment'
+    value: 'recruitment',
+    show: true
   },
   {
     name: '여행 리뷰',
-    value: 'review'
+    value: 'review',
+    show: true
   }
 ])
 
-onMounted(() => {
-  userStore.getUserInfo()
 
+
+onMounted(() => {
+  // console.log(userInfo.value)
+  console.log(isAdmin.value)
+  if(isAdmin.value === true){
+    items.value[0].show = true;
+  }
+  
   board.value.author = userInfo.value.id
+  
   // console.log(board.value);
 })
 
@@ -43,13 +56,9 @@ watch(
   }
 )
 
-const instance = axios.create({
-  baseURL: 'http://localhost:8080/'
-})
-
-function write() {
+const write = async () => {
   console.log(board.value)
-  instance
+  await axios
     .post('/board/write', board.value)
     .then(() => {
       alert('글쓰기 성공')
@@ -60,6 +69,7 @@ function write() {
       }
     })
     .catch(function (error) {
+      alert('로그인 후 이용해주세요.')
       console.log(error)
     })
 }
@@ -84,7 +94,7 @@ function write() {
             variant="underlined"
             single-line
             clearable
-            :items="items"
+            :items="items.filter(item => item.show)"
             item-title="name"
             item-value="value"
             style="width: 15rem; justify-content: end"

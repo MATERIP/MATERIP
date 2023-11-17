@@ -14,13 +14,20 @@ export const useUserStore = defineStore(
       { name: '마이페이지', show: false, routeName: 'mypage' },
       { name: '로그아웃', show: false, routeName: 'logout' }
     ])
+
+
+
+    const isLogin = ref(false)
+
+    const isAdmin = ref(false)
+
     const userInfo = ref()
     const changeMenuState = () => {
       menuList.value.forEach((menu) => {
         menu.show = !menu.show
       })
     }
-
+    
     // **************** actions ****************
     const login = async (userInfo) => {
       // 서버로 요청
@@ -28,6 +35,7 @@ export const useUserStore = defineStore(
       await axios.post('/admin/user/login', userInfo).then((response) => {
         console.log(response)
         const { accessToken } = response.data
+        isAdmin.value = response.data['isAdmin']
 
         // 이미 페이지가 로드된 시점에 로그인을 수행 했으므로
         // axios 객체의 아래 값은 초기화가 되어있지 않음으로 값을 저장.
@@ -38,14 +46,18 @@ export const useUserStore = defineStore(
         // 로그인을 성공하여 토큰이 정상적으로 저장된 경우
         // 메뉴 표시를 수정.
         alert('로그인!')
+        isLogin.value = true
         changeMenuState()
       })
     }
 
     const logout = async () => {
       changeMenuState()
+
       await axios.delete('admin/user/logout').then(() => {
         axios.defaults.headers.common['Authorization'] = ''
+        isLogin.value = false
+        isAdmin.value = false
         alert('로그아웃!')
       })
     }
@@ -60,7 +72,7 @@ export const useUserStore = defineStore(
           
           userInfo.value = response.data["userInfo"]
         })
-        .catch((response) => {
+        .catch(() => {
           
         })
     }
@@ -81,6 +93,7 @@ export const useUserStore = defineStore(
       })
     }
 
+
     return {
       login,
       logout,
@@ -88,7 +101,10 @@ export const useUserStore = defineStore(
       withdrawal,
       userInfo,
       getUserInfo,
-      menuList
+      menuList,
+      isAdmin,
+      isLogin,
+
     }
   },
   {

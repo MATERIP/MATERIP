@@ -103,8 +103,11 @@ public class AdminUserController {
 			authService.setRefreshToken(new AuthDto(validUser.getId(), refreshToken));
 		}
 		
+		
+		
 		// AccessToken은 JSON으로 전달
 		result.put("accessToken", accessToken);
+		result.put("isAdmin", validUser.admin == 1);
 		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.CREATED);
 	}
 
@@ -268,31 +271,6 @@ public class AdminUserController {
 		// Authorization에 포함된 accessToken의 userId를 가져온다.
 		String userId = jwtUtil.getUserId(request.getHeader("Authorization"));
 
-		Cookie[] cookieList = request.getCookies();
-
-		String requestRefreshToken = "";
-
-		for(Cookie cookie : cookieList) {
-			if(cookie.getName().equals("refreshToken")) {
-				requestRefreshToken = cookie.getValue();
-			}
-		}
-		System.out.println(requestRefreshToken);
-		// 요청으로 들어온 refreshToken이 Database의 refreshToken과 일치하는지 확인.
-		String dbRefreshToken = authService.getRefreshToken(userId).getRefreshToken();
-
-		if(!requestRefreshToken.equals(dbRefreshToken)) {
-			// RefreshToken은 HttpOnly Cookie로 발급
-			Cookie cookie = new Cookie("refreshToken", "");
-			cookie.setMaxAge(0);
-			cookie.setHttpOnly(true);
-			cookie.setPath("/");
-			System.out.println("토큰이 다름");
-			response.addCookie(cookie);
-
-			result.put("message", "로그인이 필요합니다.");
-			return new ResponseEntity<Map<String, Object>>(result, HttpStatus.FORBIDDEN);
-		}
 
 		// 해당 userId의 정보를 획득.
 		User user = userService.getUser(userId);
@@ -300,7 +278,7 @@ public class AdminUserController {
 		// 사용자 정보 중 비밀번호는 전송하지 말아야한다.
 		
 
-		result.put("admin", user.getAdmin());
+		result.put("admin", user.admin == 1);
 		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
 	}
 
