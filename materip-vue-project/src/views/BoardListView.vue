@@ -99,21 +99,13 @@ watch(() => router.currentRoute.value.name, () => {
   fetchData();
 })
 
-function updateBoardHits(item) {
-  instance
-  .get(`/board/updateHits/${item.id}`)
-  .then((response) => {
-    console.log(response);
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
-}
+
 
 async function goToDetail(item) {
   console.log(item)
   // 상세 페이지 이동 전에 조회수를 1 증가시킨다.
-  await updateBoardHits(item);
+  // await updateBoardHits(item);
+
   router.push({ name: "boardDetail", params: { id: item.id } });
 }
 

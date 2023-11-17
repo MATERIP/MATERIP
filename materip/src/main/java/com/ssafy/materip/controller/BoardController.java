@@ -41,7 +41,9 @@ public class BoardController {
 	@ApiOperation(value = "보드 상세 정보", notes="보드 아이디로 보드 상세 정보를 반환힙니다.")
 	@GetMapping("/detail/{board_id}")
 	public ResponseEntity<?> getBoardById(@PathVariable("board_id") int board_id) throws Exception {
+		boardService.updateBoardHits(board_id); // 게시판 조회 시 조회수 1 증가
 		Board board = boardService.getBoardById(board_id);
+		
 		return new ResponseEntity<>(board, HttpStatus.OK);
 	}
 	
