@@ -1,12 +1,11 @@
 <script setup>
 
-import { ref, computed, onMounted } from "vue";
-import axios from "axios";
+import { ref, computed, onMounted, inject } from "vue";
 import { useRouter } from "vue-router";
 
-const instance = axios.create({
-  baseURL: "http://localhost:8080/",
-});
+const axios = inject("axios");
+
+
 
 const router = useRouter();
 
@@ -21,11 +20,14 @@ const board = ref({
   modifiedAt: "",
 });
 
-const fetchData = () => {
-  instance
+const auth = ref(false)
+
+const fetchData = async() => {
+  await axios
     .get(`/board/detail/${router.currentRoute.value.params.id}`)
     .then((response) => {
-      board.value = response.data;
+      board.value = response.data["board"];
+      auth.value = response.data["auth"];
       // console.log(response);
     })
     .catch(function (error) {
@@ -48,9 +50,9 @@ const displayTime = computed(() => {
   return board.value.createdAt.replace('T',' ').replaceAll('-','.')
 });
 
-const deleteBoard = () => {
+const deleteBoard = async() => {
   let boardType = board.value.boardType;
-  instance
+  await axios
     .delete(`/board/delete/${board.value.id}`)
     .then(() => {
       alert("삭제 성공");
@@ -99,10 +101,12 @@ onMounted(() => {
           {{ board.contents }}
         </v-card-text>
       </v-card>
+      <template v-if="auth">
       <div class="button">
       <v-btn prepend-icon="mdi-update" color="green" variant="plain" @click="goToUpdate">수정</v-btn>
       <v-btn prepend-icon="mdi-delete" style="margin-left: 1rem;" color="red" variant="plain" @click="deleteBoard">삭제</v-btn>
       </div>
+      </template>
     </v-sheet>
   </v-layout>
 </template>

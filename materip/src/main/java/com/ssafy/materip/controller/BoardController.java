@@ -51,23 +51,40 @@ public class BoardController {
 
 	private final JWTUtil jwtUtil;
 	private final AuthService authService;
+	private final UserService userService;
 	
-	
-	public BoardController(BoardService boardService, JWTUtil jwtUtil, AuthService authService) {
+	public BoardController(BoardService boardService, JWTUtil jwtUtil, AuthService authService, UserService userService) {
 
 		this.boardService = boardService;
 		this.jwtUtil = jwtUtil;
 		this.authService = authService;
+		this.userService = userService;
 	}
 	
 
 	@ApiOperation(value = "보드 상세 정보", notes="보드 아이디로 보드 상세 정보를 반환힙니다.")
 	@GetMapping("/detail/{board_id}")
-	public ResponseEntity<?> getBoardById(@PathVariable("board_id") int board_id) throws Exception {
+	@AuthRequired
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> getBoardById(@PathVariable("board_id") int board_id, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		Map<String, Object> result = new HashMap<String, Object>();
+		
+		// Authorization에 포함된 accessToken의 userId를 가져온다.
+		String userId = (request.getHeader("Authorization") == null) || request.getHeader("Authorization").equals("") ? 
+				"" : jwtUtil.getUserId(request.getHeader("Authorization"));
+		
+		
+		
 		boardService.updateBoardHits(board_id); // 게시판 조회 시 조회수 1 증가
 		Board board = boardService.getBoardById(board_id);
 		
-		return new ResponseEntity<>(board, HttpStatus.OK);
+		result.put("board", board);
+		result.put("auth", userId.equals(board.author) || userService.getUser(userId).admin == 1);
+		
+		System.out.println(result.toString());
+		
+		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "보드 목록", notes = "등록된 모든 보드 정보를 반환합니다.", response = List.class)

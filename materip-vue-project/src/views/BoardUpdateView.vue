@@ -1,9 +1,9 @@
 <script setup>
-import axios from 'axios'
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, inject } from 'vue'
 import { useRouter } from 'vue-router'
-import { useUserStore } from '../stores/user-store'
-import { storeToRefs } from 'pinia'
+
+const axios = inject('axios')
+
 const router = useRouter()
 const board = ref({
   id: '',
@@ -15,14 +15,12 @@ const board = ref({
   createdAt: '',
   modifiedAt: ''
 })
-const userStore = useUserStore()
-const { userInfo } = storeToRefs(userStore)
 
 const fetchData = async () => {
-  await instance
+  await axios
     .get(`/board/detail/${router.currentRoute.value.params.id}`)
     .then((response) => {
-      board.value = response.data
+      board.value = response.data['board']
       console.log(response)
     })
     .catch(function (error) {
@@ -31,7 +29,7 @@ const fetchData = async () => {
 }
 
 function modify() {
-  instance
+  axios
     .put('/board/modify', board.value)
     .then(() => {
       alert('수정 성공')
@@ -62,16 +60,14 @@ const items = ref([
 ])
 
 onMounted(() => {
-  userStore.getUserInfo()
+  // userStore.getUserInfo()
   // 게시판 정보 가져오기
   fetchData()
-  board.value.author = userInfo.value.id
+  // board.value.author = userInfo.value.id
   console.log(board.value)
 })
 
-const instance = axios.create({
-  baseURL: 'http://localhost:8080/'
-})
+
 </script>
 
 <template>
