@@ -51,21 +51,18 @@ export const useUserStore = defineStore(
     }
 
     const getUserInfo = async () => {
-
+      const refreshToken = sessionStorage.getItem('refreshToken')
+      axios.defaults.headers.common['Authorization'] = refreshToken
 
       await axios
         .get('/admin/user/mypage')
         .then((response) => {
-
-          userInfo.value = response.data
-
-          return response.value
-
+          
+          userInfo.value = response.data["userInfo"]
         })
         .catch((response) => {
-          alert(response.message)
+          
         })
-
     }
 
     // 회원 정보를 수정하면 axios header에 저장된 accessToken을 삭제한다.

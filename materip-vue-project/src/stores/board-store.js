@@ -3,35 +3,59 @@ import { defineStore } from 'pinia'
 
 // Pinia Composing Store
 // https://pinia.vuejs.org/cookbook/composing-stores.html
-export const useBoardStore = defineStore(
+export const useMateStore = defineStore(
+  'mateStore',
+  () => {
+    // ***************** state *****************
+    const axios = inject('axios')
+    var userBoardList = ref([])
+    // **************** actions ****************
+    const myMate = async () => {
+      await axios
+        .get('board/myboard/mate')
+        .then((response) => {
+          console.log(response)
+          console.log(response.data['boardList'])
+          userBoardList.value = response.data['boardList']
+        })
+        .catch((response) => {})
+    }
+
+    return {
+      myMate,
+      userBoardList
+    }
+  },
+  {
+    persist: {
+      storage: localStorage
+    }
+  }
+)
+
+export const useBoardReview = defineStore(
   'boardStore',
   () => {
     // ***************** state *****************
     const axios = inject('axios')
-
-    const searchInput = ref('')
-    const searchResult = ref([])
+    var userReviewList = ref([])
     // **************** actions ****************
-    const searchTravelSpot = async () => {
-      // 서버로 요청
-      if (searchResult.value != [] && searchResult.value.length != 0) {
-        console.log('안빔!')
-        console.log()
-        return searchResult.value
-      } else {
-        await axios.get('/attraction/info', searchInput.value).then((response) => {
-          console.log(response.data)
-          searchResult.value = response.data
-          console.log(searchResult.value)
-          return response.data
+    const myReview = async () => {
+      console.log('myreview!')
+      await axios
+        .get('board/myboard/review')
+        .then((response) => {
+          userReviewList.value = response.data['boardList']
+          for (let index = 0; index < userReviewList.value.length; index++) {
+            const element = userReviewList.value[index]
+          }
         })
-      }
+        .catch((response) => {})
     }
 
     return {
-      searchInput,
-      searchTravelSpot,
-      searchResult
+      myReview,
+      userReviewList
     }
   },
   {

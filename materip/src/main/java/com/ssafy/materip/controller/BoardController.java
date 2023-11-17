@@ -1,9 +1,16 @@
 package com.ssafy.materip.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,16 +22,23 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.ssafy.materip.annotation.AuthRequired;
 import com.ssafy.materip.model.dto.Board;
 import com.ssafy.materip.model.dto.Comments;
 import com.ssafy.materip.model.dto.User;
+import com.ssafy.materip.model.service.AuthService;
 import com.ssafy.materip.model.service.BoardService;
+import com.ssafy.materip.model.service.UserService;
+import com.ssafy.materip.util.JWTUtil;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping("/board")
@@ -32,11 +46,20 @@ import io.swagger.annotations.ApiOperation;
 @JsonAutoDetect
 public class BoardController {
 	private final BoardService boardService;
+	@Value("${jwt.refreshtoken.expiretime}")
+	private Integer refreshTokenExpireTime;
 
-	@Autowired
-	public BoardController(BoardService boardService) {
+	private final JWTUtil jwtUtil;
+	private final AuthService authService;
+	
+	
+	public BoardController(BoardService boardService, JWTUtil jwtUtil, AuthService authService) {
+
 		this.boardService = boardService;
+		this.jwtUtil = jwtUtil;
+		this.authService = authService;
 	}
+	
 
 	@ApiOperation(value = "보드 상세 정보", notes="보드 아이디로 보드 상세 정보를 반환힙니다.")
 	@GetMapping("/detail/{board_id}")
@@ -46,7 +69,7 @@ public class BoardController {
 		
 		return new ResponseEntity<>(board, HttpStatus.OK);
 	}
-	
+
 	@ApiOperation(value = "보드 목록", notes = "등록된 모든 보드 정보를 반환합니다.", response = List.class)
 	@GetMapping("/getList")
 	public ResponseEntity<?> getBoardList() throws Exception {
@@ -67,6 +90,173 @@ public class BoardController {
 		List<Board> list = boardService.getRecruitmentList();
 		return new ResponseEntity<List<Board>>(list, HttpStatus.OK);
 	}
+	
+	
+	@ApiOperation(value="사용자별 리뷰 보드 얻기", notes="접속한 사용자의 보드들을 얻어옵니다.")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "보드 정보 반환 성공"),
+			@ApiResponse(code = 403, message = "권한 없음"),
+			@ApiResponse(code = 404, message = "사용자 정보 없음")
+	})
+	@ResponseBody
+	@AuthRequired
+	@GetMapping("/myboard/review")
+	public ResponseEntity<Map<String, Object>> getReviewBoardbyId(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+		Map<String, Object> result = new HashMap<String, Object>();
+	
+		// Authorization에 포함된 accessToken의 userId를 가져온다.
+		String userId = jwtUtil.getUserId(request.getHeader("Authorization"));
+
+		Cookie[] cookieList = request.getCookies();
+
+		String requestRefreshToken = "";
+
+		for(Cookie cookie : cookieList) {
+			if(cookie.getName().equals("refreshToken")) {
+				requestRefreshToken = cookie.getValue();
+			}
+		}
+
+		// 요청으로 들어온 refreshToken이 Database의 refreshToken과 일치하는지 확인.
+		String dbRefreshToken = authService.getRefreshToken(userId).getRefreshToken();
+
+		if(!requestRefreshToken.equals(dbRefreshToken)) {
+			// RefreshToken은 HttpOnly Cookie로 발급
+			Cookie cookie = new Cookie("refreshToken", "");
+			cookie.setMaxAge(0);
+			cookie.setHttpOnly(true);
+			cookie.setPath("/");
+			System.out.println("토큰이 다름");
+			response.addCookie(cookie);
+
+			result.put("message", "로그인이 필요합니다.");
+			return new ResponseEntity<Map<String, Object>>(result, HttpStatus.FORBIDDEN);
+		}
+
+		// 해당 userId의 정보를 획득.
+		
+		List<Board> boardList = boardService.getReviewListById(userId);
+
+		
+
+		result.put("boardList", boardList);
+		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+	}
+
+
+
+	@ApiOperation(value="사용자별 메이트 보드 얻기", notes="접속한 사용자의 보드들을 얻어옵니다.")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "보드 정보 반환 성공"),
+			@ApiResponse(code = 403, message = "권한 없음"),
+			@ApiResponse(code = 404, message = "사용자 정보 없음")
+	})
+	@ResponseBody
+	@AuthRequired
+	@GetMapping("/myboard/mate")
+	public ResponseEntity<Map<String, Object>> getMateBoardbyId(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+		Map<String, Object> result = new HashMap<String, Object>();
+
+		// Authorization에 포함된 accessToken의 userId를 가져온다.
+		String userId = jwtUtil.getUserId(request.getHeader("Authorization"));
+
+		Cookie[] cookieList = request.getCookies();
+
+		String requestRefreshToken = "";
+
+		for(Cookie cookie : cookieList) {
+			if(cookie.getName().equals("refreshToken")) {
+				requestRefreshToken = cookie.getValue();
+			}
+		}
+
+		// 요청으로 들어온 refreshToken이 Database의 refreshToken과 일치하는지 확인.
+		String dbRefreshToken = authService.getRefreshToken(userId).getRefreshToken();
+
+		if(!requestRefreshToken.equals(dbRefreshToken)) {
+			// RefreshToken은 HttpOnly Cookie로 발급
+			Cookie cookie = new Cookie("refreshToken", "");
+			cookie.setMaxAge(0);
+			cookie.setHttpOnly(true);
+			cookie.setPath("/");
+			System.out.println("토큰이 다름");
+			response.addCookie(cookie);
+
+			result.put("message", "로그인이 필요합니다.");
+			return new ResponseEntity<Map<String, Object>>(result, HttpStatus.FORBIDDEN);
+		}
+
+		// 해당 userId의 정보를 획득.
+
+		List<Board> boardList = boardService.getMateListById(userId);
+
+		result.put("boardList", boardList);
+		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+	}
+
+
+
+
+
+
+
+	@ApiOperation(value="관리자 여부", notes="관리자 여부인지를 반환합니다.")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "사용자 정보 반환 성공"),
+			@ApiResponse(code = 403, message = "권한 없음"),
+			@ApiResponse(code = 404, message = "사용자 정보 없음")
+	})
+	@ResponseBody
+	@GetMapping("/modifyAuth")
+	// board list => list중에 하나 클릭하면 => boardid 넘어가고 => boardid넘어가면 boardid board detail + modify?
+	public ResponseEntity<Map<String, Object>> modifyAuth(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+		Map<String, Object> result = new HashMap<String, Object>();
+		// Authorization에 포함된 accessToken의 userId를 가져온다.
+		String userId = request.getHeader("Authorization").equals("")? "":jwtUtil.getUserId(request.getHeader("Authorization"));
+
+		Cookie[] cookieList = request.getCookies();
+
+		String requestRefreshToken = "";
+
+		for(Cookie cookie : cookieList) {
+			if(cookie.getName().equals("refreshToken")) {
+				requestRefreshToken = cookie.getValue();
+			}
+		}
+		System.out.println(requestRefreshToken);
+		// 요청으로 들어온 refreshToken이 Database의 refreshToken과 일치하는지 확인.
+		String dbRefreshToken = authService.getRefreshToken(userId).getRefreshToken();
+
+		if(!requestRefreshToken.equals(dbRefreshToken)) {
+			// RefreshToken은 HttpOnly Cookie로 발급
+			Cookie cookie = new Cookie("refreshToken", "");
+			cookie.setMaxAge(0);
+			cookie.setHttpOnly(true);
+			cookie.setPath("/");
+			System.out.println("토큰이 다름");
+			response.addCookie(cookie);
+
+			result.put("message", "로그인이 필요합니다.");
+			return new ResponseEntity<Map<String, Object>>(result, HttpStatus.FORBIDDEN);
+		}
+
+		int boardId = Integer.parseInt(request.getParameter("board-id"));
+		Board board = boardService.getBoardById(boardId);
+		result.put("boardDetail", board);
+		result.put("auth",board.author.equals(userId));
+
+		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+	}
+
+
+
+
+
+
+
 
 	@ApiOperation(value = "보드 수정", notes = "보드를 수정합니다.")
 	@PutMapping(value = "/modify")
@@ -75,7 +265,7 @@ public class BoardController {
 		int result = boardService.editBoard(board);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
-
+	
 	@ApiOperation(value = "보드 작성", notes = "보드를 작성합니다.")
 	@PostMapping(value = "/write")
 	public ResponseEntity<?> writeBoard(@RequestBody Board board) throws Exception {

@@ -54,7 +54,6 @@ public class AdminUserController {
 	private final AuthService authService;
 
 	public AdminUserController(UserService userService, JWTUtil jwtUtil, AuthService authService) {
-
 		this.userService = userService;
 		this.jwtUtil = jwtUtil;
 		this.authService = authService;
@@ -138,8 +137,6 @@ public class AdminUserController {
 
 		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
 	}
-	
-	
 	
 	
 	
@@ -306,7 +303,7 @@ public class AdminUserController {
 		result.put("admin", user.getAdmin());
 		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
 	}
-	
+
 	@ApiOperation(value = "좋아요", notes = "사용자 좋아요")
 	@PostMapping(value = "/{userid}/like")
 	public ResponseEntity<?> likeUser(@RequestBody Userlikes userlikes) throws Exception {
