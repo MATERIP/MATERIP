@@ -201,20 +201,19 @@ console.log(userInfo.value.id);
             required
             hide-details
             style="display: flex; justify-content: space-around"
+            v-model="userInfo.gender"
           >
             <v-radio
               true-icon="mdi-gender-male"
               label="남자"
               color="blue"
               value="0"
-              v-model="userInfo.gender"
             ></v-radio>
             <v-radio
               true-icon="mdi-gender-female"
               label="여자"
               color="red"
               value="1"
-              v-model="userInfo.gender"
             ></v-radio>
           </v-radio-group>
 
