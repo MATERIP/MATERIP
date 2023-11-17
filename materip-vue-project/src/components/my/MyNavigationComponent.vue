@@ -16,6 +16,4 @@
   </v-app-bar>
 </template>
 
-<script setup>
-import { onMounted, ref } from 'vue'
-</script>
+<script setup></script>

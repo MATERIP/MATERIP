@@ -1,77 +1,77 @@
 <script setup>
-import axios from "axios";
-import { ref, onMounted, watch } from "vue";
-import { useRouter } from "vue-router";
-import { useUserStore } from "../stores/user-store";
-import { storeToRefs } from "pinia";
-const router = useRouter();
+import axios from 'axios'
+import { ref, onMounted, watch } from 'vue'
+import { useRouter } from 'vue-router'
+import { useUserStore } from '../stores/user-store'
+import { storeToRefs } from 'pinia'
+const router = useRouter()
 const board = ref({
-  id: "",
-  title: "",
-  contents: "",
-  author: "",
-  hits: "",
-  boardType: "",
-  createdAt: "",
-  modifiedAt: "",
-});
-const userStore = useUserStore();
-const { userInfo } = storeToRefs(userStore);
+  id: '',
+  title: '',
+  contents: '',
+  author: '',
+  hits: '',
+  boardType: '',
+  createdAt: '',
+  modifiedAt: ''
+})
+const userStore = useUserStore()
+const { userInfo } = storeToRefs(userStore)
 
 const fetchData = async () => {
   await instance
     .get(`/board/detail/${router.currentRoute.value.params.id}`)
     .then((response) => {
-      board.value = response.data;
-      console.log(response);
+      board.value = response.data
+      console.log(response)
     })
     .catch(function (error) {
-      console.log(error);
-    });
-};
+      console.log(error)
+    })
+}
 
 function modify() {
   instance
-    .put("/board/modify", board.value)
+    .put('/board/modify', board.value)
     .then(() => {
-      alert("수정 성공");
-      if (`${board.value.boardType}` === "notice") {
-        router.push(`/board/review`);
+      alert('수정 성공')
+      if (`${board.value.boardType}` === 'notice') {
+        router.push(`/board/review`)
       } else {
-        router.push(`/board/${board.value.boardType}`);
+        router.push(`/board/${board.value.boardType}`)
       }
     })
     .catch(function (error) {
-      console.log(error);
-    });
+      console.log(error)
+    })
 }
 
 const items = ref([
   {
-    name: "공지사항",
-    value: "notice",
+    name: '공지사항',
+    value: 'notice'
   },
   {
-    name: "여행 메이트 모집",
-    value: "recruitment",
+    name: '여행 메이트 모집',
+    value: 'recruitment'
   },
   {
-    name: "여행 리뷰",
-    value: "review",
-  },
-]);
+    name: '여행 리뷰',
+    value: 'review'
+  }
+])
 
 onMounted(() => {
-  userStore.getUserInfo();
+  userStore.getUserInfo()
   // 게시판 정보 가져오기
-  fetchData();
-  board.value.author = userInfo.value.userInfo.id;
-  console.log(board.value);
-});
+  fetchData()
+  board.value.author = userInfo.value.id
+  console.log(board.value)
+})
 
 const instance = axios.create({
-  baseURL: "http://localhost:8080/",
-});
+  baseURL: 'http://localhost:8080/'
+})
 </script>
 
 <template>
@@ -123,30 +123,22 @@ const instance = axios.create({
           >
           </v-textarea>
           <div class="button">
-          <v-btn
-            color="secondary"
-            size="large"
-            width="fit-content"
-            style="
-             
-              text-align: center;
-              margin: 1rem;
-            "
-            @click="router.back()"
-            >취소</v-btn
-          >
-          <v-btn
-            type="submit"
-            color="light-blue"
-            size="large"
-            width="fit-content"
-            style="
-             
-              text-align: center;
-              margin: 1rem;
-            "
-            >수정</v-btn
-          >
+            <v-btn
+              color="secondary"
+              size="large"
+              width="fit-content"
+              style="text-align: center; margin: 1rem"
+              @click="router.back()"
+              >취소</v-btn
+            >
+            <v-btn
+              type="submit"
+              color="light-blue"
+              size="large"
+              width="fit-content"
+              style="text-align: center; margin: 1rem"
+              >수정</v-btn
+            >
           </div>
         </v-form>
       </v-card>
@@ -156,8 +148,7 @@ const instance = axios.create({
 
 <style scoped>
 .button {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
-
 </style>
