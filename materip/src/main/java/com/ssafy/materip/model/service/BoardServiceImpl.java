@@ -5,6 +5,8 @@ import com.ssafy.materip.model.dao.CommentsDao;
 import com.ssafy.materip.model.dao.ParticipantsDao;
 import com.ssafy.materip.model.dto.Board;
 import com.ssafy.materip.model.dto.Comments;
+import com.ssafy.materip.model.dto.Participants;
+
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -18,13 +20,13 @@ public class BoardServiceImpl implements BoardService {
 
 	private final BoardDao boardDao;
 	private final CommentsDao commentDao;
-	private final ParticipantsDao participantDao;
+	private final ParticipantsDao participantsDao;
 
-	public BoardServiceImpl(BoardDao boardDao, CommentsDao commentDao, ParticipantsDao participantDao) {
+	public BoardServiceImpl(BoardDao boardDao, CommentsDao commentDao, ParticipantsDao participantsDao) {
 		super();
 		this.boardDao = boardDao;
 		this.commentDao = commentDao;
-		this.participantDao = participantDao;
+		this.participantsDao = participantsDao;
 	}
 
 	@Override
@@ -122,21 +124,26 @@ public class BoardServiceImpl implements BoardService {
 		return commentDao.readCommentsCnt(board_id);
 	}
 
+	// Participants
 	
+	@Override
+	public int join(Participants participants) throws Exception {
+		return participantsDao.addParticipants(participants);
+	}
 
+	@Override
+	public int getParticipantsCount(int boardId) throws Exception {
+		return participantsDao.getParticipantsCnt(boardId);
+	}
 
-//    @Override
-//    public int getCommentCntByBoardId(String board_id) {
-//        return 0;
-//    }
-//
-//    @Override
-//    public int addParticipants(String board_id, String user_id) {
-//        return 0;
-//    }
-//
-//    @Override
-//    public int getParticipantsCnt(String board_id) {
-//        return 0;
-//    }
+	@Override
+	public List<Participants> getParticipantsList(int boardId) throws Exception {
+		return participantsDao.getParticipants(boardId);
+	}
+
+	@Override
+	public int leave(Participants participants) throws Exception {
+		return participantsDao.removeParticipants(participants);
+	}
+
 }

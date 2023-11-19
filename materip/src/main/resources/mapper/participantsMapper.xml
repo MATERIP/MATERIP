@@ -8,28 +8,28 @@
 	 <resultMap id="participants" type="participants">
 		 <result column="board_id" property = "boardId"/>
 		 <result column="user_id" property = "userId"/>
-	 </resultMap>
+	 </resultMap>	
 	
-	<insert id="addParticipants"  parameterType="participants">
+	<insert id="addParticipants" >
 		INSERT INTO participants
 		(board_id, user_id)
-		VALUES (#{board_id}, #{user_id})
+		VALUES (#{boardId}, #{userId})
 	</insert>
 
 	<delete id="removeParticipants" parameterType="participants">
 		DELETE FROM participants
-		WHERE board_id = #{board_id} and user_id = #{user_id}
+		WHERE board_id = #{boardId} and user_id = #{userId}
 	</delete>
 
-	<select id="getParticipants" parameterType="int" resultType="participants" resultMap="participants">
+	<select id="getParticipants" parameterType="int" resultMap="participants">
 		SELECT user_id
 		FROM participants
-		WHERE board_id = #{board_id};
+		WHERE board_id = #{boardId};
 	</select>
 
 	<select id="getParticipantsCnt" parameterType="int" resultType="int">
 		SELECT COUNT(*)
 		FROM participants
-		WHERE board_id = #{board_id};
+		WHERE board_id = #{boardId};
 	</select>
 </mapper>

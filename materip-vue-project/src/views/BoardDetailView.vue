@@ -72,6 +72,8 @@ const goToUpdate = () => {
   router.push(`/board/update/${board.value.id}`);
 }
 
+
+
 onMounted(() => {
   fetchData();
 });
@@ -94,6 +96,8 @@ onMounted(() => {
             {{ displayTime }} |
             <v-icon icon="mdi-eye-outline"></v-icon>
             {{ board.hits }}
+            <v-icon icon="mdi-account-multiple"></v-icon>
+            0/0
           </v-card-subtitle>
         </v-card-item>
         <v-divider></v-divider>
@@ -101,8 +105,12 @@ onMounted(() => {
           {{ board.contents }}
         </v-card-text>
       </v-card>
+      
       <template v-if="auth">
       <div class="button">
+        <template v-if="board.boardType === 'recruitment'">
+        <v-btn prepend-icon="mdi-account-plus" color="blue" variant="plain">참여</v-btn>
+      </template>
       <v-btn prepend-icon="mdi-update" color="green" variant="plain" @click="goToUpdate">수정</v-btn>
       <v-btn prepend-icon="mdi-delete" style="margin-left: 1rem;" color="red" variant="plain" @click="deleteBoard">삭제</v-btn>
       </div>
@@ -112,6 +120,7 @@ onMounted(() => {
 </template>
 
 <style scoped>
+
 .button {
   display: flex;
   justify-content: flex-end;
