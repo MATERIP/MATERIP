@@ -216,6 +216,35 @@ watch(participants, (newCount) => {
           >
         </template>
       </div>
+      <v-container>
+        <v-row>
+          <v-col cols="12">
+            <h3>댓글</h3>
+            <v-textarea v-model="newComment" label="댓글을 남겨보세요" outlined>
+            </v-textarea>
+            <div class="button">
+              <v-btn
+                color="green"
+                style="display: flex; justify-content=flex-end"
+                variant="outlined"
+                >등록</v-btn
+              >
+            </div>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col col="12" v-for="comment in comments" :key="comment.id">
+            <v-card>
+              <v-card-title>
+                {{ comment.author }}
+                <v-spacer></v-spacer>
+                <v-chip>{{ comment.createdAt }}</v-chip>
+              </v-card-title>
+              <v-card-text>{{ comment.contents }}</v-card-text>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
     </v-sheet>
   </v-layout>
 </template>
@@ -224,6 +253,6 @@ watch(participants, (newCount) => {
 .button {
   display: flex;
   justify-content: flex-end;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
 }
 </style>
