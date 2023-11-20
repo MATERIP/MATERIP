@@ -67,4 +67,6 @@ public interface BoardService {
 	
 	// leave
 	int leave(Participants participants) throws Exception;
+
+	boolean isJoinable(Participants participants) throws Exception;
 }

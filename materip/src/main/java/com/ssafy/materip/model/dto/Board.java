@@ -18,6 +18,8 @@ public class Board {
 	public int travelSpot;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/seoul")
 	public Timestamp travelDate;
+	public int maxCount;
+	public int currentCount;
 
 	public int getId() {
 		return id;
@@ -99,11 +101,28 @@ public class Board {
 		this.travelDate = travelDate;
 	}
 
+	public int getMaxCount() {
+		return maxCount;
+	}
+
+	public void setMaxCount(int maxCount) {
+		this.maxCount = maxCount;
+	}
+	
+	public int getCurrentCount() {
+		return currentCount;
+	}
+
+	public void setCurrentCount(int currentCount) {
+		this.currentCount = currentCount;
+	}
+
 	@Override
 	public String toString() {
 		return "Board [id=" + id + ", title=" + title + ", contents=" + contents + ", createdAt=" + createdAt
 				+ ", modifiedAt=" + modifiedAt + ", author=" + author + ", hits=" + hits + ", boardType=" + boardType
-				+ ", travelSpot=" + travelSpot + ", travelDate=" + travelDate + "]";
+				+ ", travelSpot=" + travelSpot + ", travelDate=" + travelDate + ", maxCount=" + maxCount
+				+ ", currentCount=" + currentCount + "]";
 	}
-	
+
 }

@@ -288,8 +288,11 @@ public class BoardController {
 	@PostMapping(value = "/write")
 	public ResponseEntity<?> writeBoard(@RequestBody Board board) throws Exception {
 		System.out.println(board.toString());
+		
+		
+		
 		int result = boardService.writeBoard(board);
-
+		
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
@@ -345,29 +348,41 @@ public class BoardController {
 	@ApiOperation(value = "모집글 참가", notes = "모집글 게시판에 참가합니다.")
 	@PostMapping("/participants/join")
 	public ResponseEntity<?> join(@RequestBody Participants participants) throws Exception {
+		
 		int result = boardService.join(participants);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
 	@ApiOperation(value ="모집글 참가 취소", notes = "모집글 게시판 참가를 취소합니다.")
-	@DeleteMapping("/participants/leave")
+	@PostMapping("/participants/leave")
 	public ResponseEntity<?> leave(@RequestBody Participants participants) throws Exception {
 		int result = boardService.leave(participants);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
 	@ApiOperation(value = "모집글 참여인원 조회", notes = "모집글에 참여중인 인원 수를 반환합니다.")
-	@GetMapping("/particpants/{board_id}")
+	@GetMapping("/participants/{board_id}")
 	public ResponseEntity<?> readCount(@PathVariable("board_id") int boardId) throws Exception {
 		int result = boardService.getParticipantsCount(boardId);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
 	@ApiOperation(value = "모집글 참여인원 상세 조회", notes = "모집글에 참여중인 인원의 모든 사용자 아이디 목록을 반환합니다.")
-	@GetMapping("/participants/{board_id}")
+	@GetMapping("/participants/{board_id}/detail")
 	public ResponseEntity<Map<String, Object>> readDetail(@PathVariable("board_id") int boardId) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>(); 
 		result.put("userList", boardService.getParticipantsList(boardId));
 		return new ResponseEntity<Map<String,Object>>(result, HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "모집글 참여 가능 여부 조회", notes = "모집글에 참여 가능 여부를 반환합니다.")
+	@GetMapping("/participants/{board_id}/isjoinable")
+	public ResponseEntity<?> readJoinable(@PathVariable("board_id") int boardId, @RequestParam(value="user_id") String userId) throws Exception {
+		Participants participants = new Participants();
+		participants.setUserId(userId);
+		participants.setBoardId(boardId);
+		
+		boolean result = boardService.isJoinable(participants);
+		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 }

@@ -4,32 +4,51 @@
 	"https://mybatis.org/dtd/mybatis-3-mapper.dtd"
 >
 
-<mapper namespace="com.ssafy.materip.model.dao.ParticpantsDao">
-	 <resultMap id="participants" type="participants">
-		 <result column="board_id" property = "boardId"/>
-		 <result column="user_id" property = "userId"/>
-	 </resultMap>	
-	
-	<insert id="addParticipants" >
-		INSERT INTO participants
+<mapper namespace="com.ssafy.materip.model.dao.ParticipantsDao">
+	<resultMap id="participants" type="participants">
+		<result column="id" property="id" />
+		<result column="board_id" property="boardId" />
+		<result column="user_id" property="userId" />
+	</resultMap>
+
+	<insert id="addParticipants" parameterType="participants">
+		INSERT INTO
+		participants
 		(board_id, user_id)
 		VALUES (#{boardId}, #{userId})
 	</insert>
 
 	<delete id="removeParticipants" parameterType="participants">
-		DELETE FROM participants
+		DELETE FROM
+		participants
 		WHERE board_id = #{boardId} and user_id = #{userId}
 	</delete>
+	
+	<delete id="removeAllParticipants" parameterType="int">
+		DELETE FROM
+		participants
+		WHERE board_id = #{boardId}
+	</delete>
 
-	<select id="getParticipants" parameterType="int" resultMap="participants">
-		SELECT user_id
+	<select id="getParticipants" parameterType="int"
+		resultMap="participants">
+		SELECT id, board_id, user_id
 		FROM participants
-		WHERE board_id = #{boardId};
+		WHERE board_id =
+		#{boardId};
 	</select>
 
-	<select id="getParticipantsCnt" parameterType="int" resultType="int">
+	<select id="getParticipantsCnt" parameterType="int"
+		resultType="int">
 		SELECT COUNT(*)
 		FROM participants
-		WHERE board_id = #{boardId};
+		WHERE board_id =
+		#{boardId};
+	</select>
+	
+	<select id="isJoinable" parameterType="participants" resultType="int">
+		SELECT COUNT(*)
+		FROM participants
+		WHERE board_id = #{boardId} and user_id = #{userId};
 	</select>
 </mapper>
