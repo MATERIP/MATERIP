@@ -10,7 +10,7 @@ import UserModifyView from '../views/UserModifyView.vue'
 import UserReviewComponent from '../components/my/UserReviewComponent.vue'
 import UserRecruitComponent from '../components/my/UserRecruitComponent.vue'
 import AttractionView from '../views/AttractionView.vue'
-// import ProfileView from '../views/ProfileView.vue'
+import AttractionDetailView from '../views/AttractionDetailView.vue'
 
 import BoardWriteView from '../views/BoardWriteView.vue'
 import BoardDetailView from '../views/BoardDetailView.vue'
@@ -83,10 +83,14 @@ const router = createRouter({
 
     {
       name: 'attractionInfo',
-      path: '/attraction/:attractionId', // Correct dynamic parameter syntax
+      path: '/attraction/:attractionName', // Correct dynamic parameter syntax
       component: AttractionView
     },
-
+    {
+      name: 'attractionDetail',
+      path: '/attraction/detail/:contentId', // Correct dynamic parameter syntax
+      component: AttractionDetailView
+    },
     {
       name: 'modify',
       path: '/user/modify',

@@ -31,9 +31,15 @@ public class AttractionInfoServiceImpl implements AttractionInfoService {
 	}
 
 	@Override
-	public List<String> getTravelNameSearchList(String title) {
+	public List<AttractionInfo> getTravelNameSearchList(String title) {
 		// TODO Auto-generated method stub
 		return attractionInfoDao.getAttractionSearchNameList(title);
+	}
+
+	@Override
+	public AttractionInfo getAttractionInfo(int contentId) {
+		// TODO Auto-generated method stub
+		return attractionInfoDao.getAttractionInfo(contentId);
 	}
 	
 	

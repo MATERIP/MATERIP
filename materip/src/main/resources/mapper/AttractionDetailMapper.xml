@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-mybatis.org/DTD Mapper 3.0//EN"
+	"https://mybatis.org/dtd/mybatis-3-mapper.dtd"
+>
+
+<mapper namespace="com.ssafy.materip.model.dao.AttractionDetailDao">
+	<resultMap type="attractionDetail" id="attractionDetail">
+		<result column="content_id" property="contentId" />
+		<result column="homepage" property="contentTypeId" />
+		<result column="overview" property="telname" />
+				<result column="telname" property="telname" />
+	</resultMap>
+
+
+	<select id="getAttractionDetail" parameterType="Integer" resultMap="attractionDetail">
+		SELECT * FROM `attraction_detail`
+		WHERE content_id = #{contentId}
+	</select>
+	
+</mapper>

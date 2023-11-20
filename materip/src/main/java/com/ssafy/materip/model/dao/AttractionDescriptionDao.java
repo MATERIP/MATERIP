@@ -9,5 +9,5 @@ import com.ssafy.materip.model.dto.AttractionDescription;
 @Mapper
 public interface AttractionDescriptionDao {
 	
-	List<AttractionDescription> getAttractionDescriptionList();
+	AttractionDescription getAttractionDescription(int contentId);
 }

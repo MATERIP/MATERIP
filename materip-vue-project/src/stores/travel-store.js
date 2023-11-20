@@ -19,7 +19,7 @@ export const useTravelStore = defineStore(
         console.log()
         return searchResult.value
       } else {
-        await axios.get('/attraction/info', searchInput.value).then((response) => {
+        await axios.get('/attraction/title', searchInput.value).then((response) => {
           console.log(response.data)
           searchResult.value = response.data
           console.log(searchResult.value)

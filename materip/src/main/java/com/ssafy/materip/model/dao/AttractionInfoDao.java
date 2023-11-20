@@ -10,5 +10,6 @@ import com.ssafy.materip.model.dto.AttractionInfo;
 public interface AttractionInfoDao {
 	List<AttractionInfo> getAttractionInfoList();
 	List<String> getAttractionNameList();
-	List<String> getAttractionSearchNameList(String title);
+	List<AttractionInfo> getAttractionSearchNameList(String title);
+	AttractionInfo getAttractionInfo(int contentId);
 }
