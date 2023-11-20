@@ -16,10 +16,11 @@ export const useMateStore = defineStore(
     // **************** actions ****************
     const myMate = async (userId) => {
       await axios
-        .get('board/getMateList/' + userId)
+        .get('board/getRecruitmentList/'+ userId)
         .then((response) => {
-          changeuserMateList(response.data)
-          
+          changeuserMateList(response.data["boardList"])
+          console.log(response.data["boardList"])
+          console.log('board/getRecruitmentList/'+ userId)
         })
         .catch((response) => {
           // alert(response.data["message"])
@@ -38,19 +39,26 @@ export const useMateStore = defineStore(
   }
 )
 
-export const useBoardReview = defineStore(
-  'boardStore',
+export const useReviewStore = defineStore(
+  'reviewStore',
   () => {
     // ***************** state *****************
     const axios = inject('axios')
     var userReviewList = ref([])
+
+
+    const changeuserReviewList = (list) => { 
+      userReviewList.value = list
+    }
     // **************** actions ****************
     const myReview = async (user) => {
       await axios
-        .get('board/getReviewList/' + userId)
+        .get('board/getReviewList/' + user)
         .then((response) => {
-          const { boardList } = response.data
-          userReviewList.value = boardList
+          changeuserReviewList(response.data["boardList"])
+          console.log(response.data["boardList"])
+          console.log("board/getReviewList/" + user)
+          
         })
         .catch((response) => {})
     }

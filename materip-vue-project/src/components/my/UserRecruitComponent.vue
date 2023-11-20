@@ -2,12 +2,16 @@
 import { ref, onMounted, computed } from 'vue'
 import { useMateStore } from '../../stores/board-store.js'
 import { storeToRefs } from 'pinia'
-const mateStore = useMateStore()
-const { userBoardList } = storeToRefs(mateStore)
-onMounted(() => {
-  mateStore.myMate()
-})
+import { useRouter } from 'vue-router'
+import { useUserStore } from '../../stores/user-store'
 
+const router = useRouter()
+
+const mateStore = useMateStore()
+const userStore = useUserStore()
+
+const { userMateList } = storeToRefs(mateStore)
+const { navTitle } = storeToRefs(userStore)
 const title = ref('나의 리뷰')
 
 const itemsPerPage = ref(10)
@@ -32,16 +36,16 @@ const headers = [
 ]
 
 const formatDate = function (item) {
-  console.log(item.createdAt.substring(0, 4))
-  console.log(item.createdAt.substring(5, 7))
-  console.log(item.createdAt.substring(8, 10))
+  console.log(item)
+  if (item == null || item == '') {
+    return ' '
+  }
+
   let today = new Date()
   let year = today.getUTCFullYear()
   let month = today.getUTCMonth() + 1
   let date = today.getUTCDate()
-  console.log(year)
-  console.log(month)
-  console.log(date)
+
   if (
     year == item.createdAt.substring(0, 4) &&
     month == item.createdAt.substring(5, 7) &&
@@ -54,33 +58,20 @@ const formatDate = function (item) {
   return item.createdAt
 }
 
-const pageCount = computed(() => Math.ceil(userBoardList.value.length / itemsPerPage.value))
+const pageCount = computed(() => Math.ceil(userMateList.value.length / itemsPerPage.value))
 </script>
 
 <template>
-  <h1>{{ title }}</h1>
+  <h1>{{ navTitle['mate'] }}</h1>
   <v-data-table
     v-model:page="page"
     :headers="headers"
-    :items="userBoardList"
+    :items="userMateList"
     :items-per-page="itemsPerPage"
     class="elevation-0"
     style="width: 80%; margin: 0 auto"
     hover
   >
-    <!-- <template v-slot:top>
-    <v-text-field
-      :model-value="itemsPerPage"
-      class="pa-2"
-      hide-details
-      label="Items per page"
-      min="5"
-      max="20"
-      type="number"
-      @update:model-value="itemsPerPage = parseInt($event, 10)"
-      ></v-text-field>
-  </template> -->
-
     <template v-slot:bottom>
       <div class="text-center pt-2">
         <v-pagination v-model="page" :length="pageCount"></v-pagination>

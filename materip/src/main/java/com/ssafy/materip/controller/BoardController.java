@@ -54,12 +54,12 @@ public class BoardController {
 	
 	
 	public BoardController(BoardService boardService, JWTUtil jwtUtil, AuthService authService) {
-
 		this.boardService = boardService;
 		this.jwtUtil = jwtUtil;
 		this.authService = authService;
 	}
-	
+
+
 
 	@ApiOperation(value = "보드 상세 정보", notes="보드 아이디로 보드 상세 정보를 반환힙니다.")
 	@GetMapping("/detail/{board_id}")
@@ -70,20 +70,23 @@ public class BoardController {
 		return new ResponseEntity<>(board, HttpStatus.OK);
 	}
 
+
 	@ApiOperation(value = "보드 목록", notes = "등록된 모든 보드 정보를 반환합니다.", response = List.class)
 	@GetMapping("/getList")
 	public ResponseEntity<?> getBoardList() throws Exception {
 		List<Board> list = boardService.getBoardList();
 		return new ResponseEntity<List<Board>>(list, HttpStatus.OK);
 	}
-	
+
+
 	@ApiOperation(value = "리뷰 목록", notes = "등록된 모든 리뷰 정보를 반환합니다.", response = List.class)
 	@GetMapping("/getReviewList")
 	public ResponseEntity<?> getReviewList() throws Exception {
 		List<Board> list = boardService.getReviewList();
 		return new ResponseEntity<List<Board>>(list, HttpStatus.OK);
 	}
-	
+
+
 	@ApiOperation(value = "모집글 목록", notes = "등록된 모든 모집글 정보를 반환합니다.", response = List.class)
 	@GetMapping("/getRecruitmentList")
 	public ResponseEntity<?> getRecruitmentList() throws Exception {
@@ -99,7 +102,7 @@ public class BoardController {
 			@ApiResponse(code = 404, message = "사용자 정보 없음")
 	})
 	@ResponseBody
-	@GetMapping("/getRecruitmentList/user_id")
+	@GetMapping("/getReviewList/{user_id}")
 	public ResponseEntity<Map<String, Object>> getReviewBoardbyId(HttpServletRequest request, HttpServletResponse response, @PathVariable("user_id") String userId) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 
@@ -120,7 +123,7 @@ public class BoardController {
 			@ApiResponse(code = 404, message = "사용자 정보 없음")
 	})
 	@ResponseBody
-	@GetMapping("/getRecruitmentList/user_id")
+	@GetMapping("/getRecruitmentList/{user_id}")
 	public ResponseEntity<Map<String, Object>> getMateBoardbyId(HttpServletRequest request, HttpServletResponse response, @PathVariable("user_id") String userId) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 
