@@ -4,11 +4,21 @@ import { useUserStore } from '../stores/user-store'
 import { storeToRefs } from 'pinia'
 import MyNavicationComponent from '../components/my/MyNavigationComponent.vue'
 const userStore = useUserStore()
-const { userInfo } = storeToRefs(userStore)
-onMounted(() => {
-  userStore.getUserInfo()
+const { getUserInfo } = useUserStore()
+const { userInfo, userId } = storeToRefs(userStore)
+const nickname = ref()
+const name = ref()
 
-  animateProgressBar()
+onMounted(async () => {
+  console.log('userId ' + userId.value)
+  await getUserInfo(userId.value)
+  console.log('userInfo', userInfo.value)
+  if (userInfo.value) {
+    nickname.value = userInfo.value.nickname
+    name.value = userInfo.value.name
+  } else {
+    console.log('userInfo is not defined')
+  }
 })
 
 const progressValue = ref(0) // 초기 게이지 바 값 (0-100 범위)
@@ -36,6 +46,7 @@ const animateProgressBar = () => {
 
   animate()
 }
+animateProgressBar()
 </script>
 <template>
   <div style="height: 8rem"></div>
@@ -71,10 +82,10 @@ const animateProgressBar = () => {
                   <v-list-item color="#0000" class="profile-text-name ma-4 pt-16">
                     <v-list-item-content>
                       <v-list-item-title class="text-h2 max-v-list-height">
-                        {{ userInfo.nickname }}</v-list-item-title
+                        {{ nickname }}</v-list-item-title
                       >
                       <v-list-item-subtitle class="max-v-list-height">{{
-                        userInfo.name
+                        name
                       }}</v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>

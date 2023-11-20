@@ -8,22 +8,27 @@ export const useMateStore = defineStore(
   () => {
     // ***************** state *****************
     const axios = inject('axios')
-    var userBoardList = ref([])
+    const userMateList = ref()
+
+    const changeuserMateList = (usermateList) => { 
+      userMateList.value = usermateList
+    }
     // **************** actions ****************
-    const myMate = async () => {
+    const myMate = async (userId) => {
       await axios
-        .get('board/myboard/mate')
+        .get('board/getMateList/' + userId)
         .then((response) => {
-          console.log(response)
-          console.log(response.data['boardList'])
-          userBoardList.value = response.data['boardList']
+          changeuserMateList(response.data)
+          
         })
-        .catch((response) => {})
+        .catch((response) => {
+          // alert(response.data["message"])
+        })
     }
 
     return {
       myMate,
-      userBoardList
+      userMateList
     }
   },
   {
@@ -40,15 +45,12 @@ export const useBoardReview = defineStore(
     const axios = inject('axios')
     var userReviewList = ref([])
     // **************** actions ****************
-    const myReview = async () => {
-      console.log('myreview!')
+    const myReview = async (user) => {
       await axios
-        .get('board/myboard/review')
+        .get('board/getReviewList/' + userId)
         .then((response) => {
-          userReviewList.value = response.data['boardList']
-          for (let index = 0; index < userReviewList.value.length; index++) {
-            const element = userReviewList.value[index]
-          }
+          const { boardList } = response.data
+          userReviewList.value = boardList
         })
         .catch((response) => {})
     }
