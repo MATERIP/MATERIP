@@ -5,6 +5,9 @@ import com.ssafy.materip.model.dao.CommentsDao;
 import com.ssafy.materip.model.dao.ParticipantsDao;
 import com.ssafy.materip.model.dto.Board;
 import com.ssafy.materip.model.dto.Comments;
+import com.ssafy.materip.model.dto.Participants;
+
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -18,13 +21,13 @@ public class BoardServiceImpl implements BoardService {
 
 	private final BoardDao boardDao;
 	private final CommentsDao commentDao;
-	private final ParticipantsDao participantDao;
+	private final ParticipantsDao participantsDao;
 
-	public BoardServiceImpl(BoardDao boardDao, CommentsDao commentDao, ParticipantsDao participantDao) {
+	public BoardServiceImpl(BoardDao boardDao, CommentsDao commentDao, ParticipantsDao participantsDao) {
 		super();
 		this.boardDao = boardDao;
 		this.commentDao = commentDao;
-		this.participantDao = participantDao;
+		this.participantsDao = participantsDao;
 	}
 
 	@Override
@@ -33,7 +36,15 @@ public class BoardServiceImpl implements BoardService {
 		board.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
 		System.out.println(board.toString());
 		boardDao.createBoard(board);
-
+		
+		// 방금 쓴 글의 아이디 가져오기
+		List<Board> myMateList =  boardDao.readMateBoardsByUserId(board.author);
+		// 모집글 작성자를 참여자로 추가하기
+		Participants participants = new Participants();
+		participants.setBoardId(myMateList.get(0).id);
+		participants.setUserId(board.author);
+		participantsDao.addParticipants(participants);
+		
 		return 0;
 	}
 
@@ -67,9 +78,9 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public int deleteBoard(int board_id) throws Exception {
-		// TODO Auto-generated method stub
-		boardDao.deleteBoard(board_id);
+	public int deleteBoard(int boardId) throws Exception {
+		participantsDao.removeAllParticipants(boardId);
+		boardDao.deleteBoard(boardId);
 		return 0;
 	}
 	
@@ -122,21 +133,50 @@ public class BoardServiceImpl implements BoardService {
 		return commentDao.readCommentsCnt(board_id);
 	}
 
+	// Participants
 	
+	@Override
+	public int join(Participants participants) throws Exception {
+		Board board = boardDao.readBoardById(participants.boardId);
+		
+		if(board.currentCount < board.maxCount && !board.author.equals(participants.userId)) {
+			boardDao.increaseBoardCurrentCount(participants.boardId);
+			return participantsDao.addParticipants(participants);
+		}
+		return -1;
+//		return participantsDao.addParticipants(participants);
+	}
 
+	@Override
+	public int getParticipantsCount(int boardId) throws Exception {
+		return participantsDao.getParticipantsCnt(boardId);
+	}
 
-//    @Override
-//    public int getCommentCntByBoardId(String board_id) {
-//        return 0;
-//    }
-//
-//    @Override
-//    public int addParticipants(String board_id, String user_id) {
-//        return 0;
-//    }
-//
-//    @Override
-//    public int getParticipantsCnt(String board_id) {
-//        return 0;
-//    }
+	@Override
+	public List<Participants> getParticipantsList(int boardId) throws Exception {
+		return participantsDao.getParticipants(boardId);
+	}
+
+	@Override
+	public int leave(Participants participants) throws Exception {
+		Board board = boardDao.readBoardById(participants.boardId);
+		
+		System.out.println(board.toString());
+		
+		if(board.currentCount >= 1 && !board.author.equals(participants.userId)) {
+			boardDao.decreaseBoardCurrentCount(participants.boardId);
+			return participantsDao.removeParticipants(participants);
+		}
+		System.out.println(board.toString());
+		
+		return -1;
+//		return participantsDao.removeParticipants(participants);
+	}
+
+	@Override
+	public boolean isJoinable(Participants participants) throws Exception {
+		int result = participantsDao.isJoinable(participants);
+		return result == 0;
+	}
+
 }

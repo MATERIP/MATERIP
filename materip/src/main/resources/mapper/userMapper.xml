@@ -46,7 +46,7 @@
 	<select id="readUser" resultMap="user">
 		SELECT
 		id,
-		email, name, nickname, tel, birth, gender, join_date,
+		email, name, nickname, tel, birth, gender, admin, join_date, 
 		modified_at
 		FROM
 		users

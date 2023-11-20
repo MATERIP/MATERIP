@@ -29,6 +29,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.ssafy.materip.annotation.AuthRequired;
 import com.ssafy.materip.model.dto.Board;
 import com.ssafy.materip.model.dto.Comments;
+import com.ssafy.materip.model.dto.Participants;
 import com.ssafy.materip.model.dto.User;
 import com.ssafy.materip.model.service.AuthService;
 import com.ssafy.materip.model.service.BoardService;
@@ -51,23 +52,40 @@ public class BoardController {
 
 	private final JWTUtil jwtUtil;
 	private final AuthService authService;
-	
-	
-	public BoardController(BoardService boardService, JWTUtil jwtUtil, AuthService authService) {
+	private final UserService userService;
+
+	public BoardController(BoardService boardService, JWTUtil jwtUtil, AuthService authService, UserService userService) {
 		this.boardService = boardService;
 		this.jwtUtil = jwtUtil;
 		this.authService = authService;
+		this.userService = userService;
 	}
 
 
 
 	@ApiOperation(value = "보드 상세 정보", notes="보드 아이디로 보드 상세 정보를 반환힙니다.")
 	@GetMapping("/detail/{board_id}")
-	public ResponseEntity<?> getBoardById(@PathVariable("board_id") int board_id) throws Exception {
+	@AuthRequired
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> getBoardById(@PathVariable("board_id") int board_id, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		Map<String, Object> result = new HashMap<String, Object>();
+		
+		// Authorization에 포함된 accessToken의 userId를 가져온다.
+		String userId = (request.getHeader("Authorization") == null) || request.getHeader("Authorization").equals("") ? 
+				"" : jwtUtil.getUserId(request.getHeader("Authorization"));
+		
+		
+		
 		boardService.updateBoardHits(board_id); // 게시판 조회 시 조회수 1 증가
 		Board board = boardService.getBoardById(board_id);
 		
-		return new ResponseEntity<>(board, HttpStatus.OK);
+		result.put("board", board);
+		result.put("auth", userId.equals(board.author) || userService.getUser(userId).admin == 1);
+		
+		System.out.println(result.toString());
+		
+		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
 	}
 
 
@@ -152,8 +170,11 @@ public class BoardController {
 	@PostMapping(value = "/write")
 	public ResponseEntity<?> writeBoard(@RequestBody Board board) throws Exception {
 		System.out.println(board.toString());
+		
+		
+		
 		int result = boardService.writeBoard(board);
-
+		
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
@@ -218,4 +239,44 @@ public class BoardController {
 	}
 
 
+	@ApiOperation(value = "모집글 참가", notes = "모집글 게시판에 참가합니다.")
+	@PostMapping("/participants/join")
+	public ResponseEntity<?> join(@RequestBody Participants participants) throws Exception {
+		
+		int result = boardService.join(participants);
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
+	@ApiOperation(value ="모집글 참가 취소", notes = "모집글 게시판 참가를 취소합니다.")
+	@PostMapping("/participants/leave")
+	public ResponseEntity<?> leave(@RequestBody Participants participants) throws Exception {
+		int result = boardService.leave(participants);
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "모집글 참여인원 조회", notes = "모집글에 참여중인 인원 수를 반환합니다.")
+	@GetMapping("/participants/{board_id}")
+	public ResponseEntity<?> readCount(@PathVariable("board_id") int boardId) throws Exception {
+		int result = boardService.getParticipantsCount(boardId);
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "모집글 참여인원 상세 조회", notes = "모집글에 참여중인 인원의 모든 사용자 아이디 목록을 반환합니다.")
+	@GetMapping("/participants/{board_id}/detail")
+	public ResponseEntity<Map<String, Object>> readDetail(@PathVariable("board_id") int boardId) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>(); 
+		result.put("userList", boardService.getParticipantsList(boardId));
+		return new ResponseEntity<Map<String,Object>>(result, HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "모집글 참여 가능 여부 조회", notes = "모집글에 참여 가능 여부를 반환합니다.")
+	@GetMapping("/participants/{board_id}/isjoinable")
+	public ResponseEntity<?> readJoinable(@PathVariable("board_id") int boardId, @RequestParam(value="user_id") String userId) throws Exception {
+		Participants participants = new Participants();
+		participants.setUserId(userId);
+		participants.setBoardId(boardId);
+		
+		boolean result = boardService.isJoinable(participants);
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
 }

@@ -2,6 +2,7 @@ package com.ssafy.materip.model.service;
 
 import com.ssafy.materip.model.dto.Board;
 import com.ssafy.materip.model.dto.Comments;
+import com.ssafy.materip.model.dto.Participants;
 
 import java.util.List;
 
@@ -52,17 +53,20 @@ public interface BoardService {
 	
 	// get comment count
 	int getCommentCnt(int board_id);
-//
-//    // get comment count from board id when board list show
-//    int getCommentCntByBoardId(String board_id);
-//
-//    // add participants by board_id and user_id ,
-//    // when the board created , we have to add author as participants
-//    int addParticipants(String board_id, String user_id);
-//
-//    // show the participants cnt by board id
-//    int getParticipantsCnt(String board_id);
-
 	
+	// Participants
+	
+	// join
+	int join(Participants participants) throws Exception;
 
+	// get particpants count
+	int getParticipantsCount(int boardId) throws Exception;
+	
+	// get particpants list
+	List<Participants> getParticipantsList(int boardId) throws Exception;
+	
+	// leave
+	int leave(Participants participants) throws Exception;
+
+	boolean isJoinable(Participants participants) throws Exception;
 }

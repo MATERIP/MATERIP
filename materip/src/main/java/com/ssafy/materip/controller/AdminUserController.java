@@ -108,6 +108,7 @@ public class AdminUserController {
 		result.put("accessToken", accessToken);
 		result.put("userId", userDto.getId());
 		result.put("isAdmin", userService.getUser(userDto.id).admin);
+
 		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.CREATED);
 	}
 
@@ -195,8 +196,6 @@ public class AdminUserController {
 		}
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
-
-
 
 
 	@ApiOperation(value = "좋아요", notes = "사용자 좋아요")
