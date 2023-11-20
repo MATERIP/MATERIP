@@ -16,6 +16,7 @@ import BoardWriteView from '../views/BoardWriteView.vue'
 import BoardDetailView from '../views/BoardDetailView.vue'
 import BoardUpdateView from '../views/BoardUpdateView.vue'
 
+import MapComponentView from '../components/MapComponent.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -95,6 +96,11 @@ const router = createRouter({
       name: 'modify',
       path: '/user/modify',
       component: UserModifyView
+    },
+    {
+      name: 'map',
+      path: '/map',
+      component: MapComponentView
     }
   ]
 })
