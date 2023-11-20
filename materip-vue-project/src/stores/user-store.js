@@ -1,5 +1,6 @@
 import { ref, inject } from 'vue'
 import { defineStore } from 'pinia'
+import { useRouter } from 'vue-router'
 
 // Pinia Composing Store
 // https://pinia.vuejs.org/cookbook/composing-stores.html
@@ -8,34 +9,54 @@ export const useUserStore = defineStore(
   () => {
     // ***************** state *****************
     const axios = inject('axios')
+    const userInfo = ref() // mypage 유저 정보 (접속한 사용자 정보 아님)
+    const userId = ref() // 접속한 사용자 아이디
+    const isAdmin = ref(0) // 접속한 관리자 정보 (0: 일반 사용자, 1: 관리자)
+    const auth = ref(false) // 접속한 사용자가 자신의 정보를 수정하는 경우 true, 아니면 false
+    const router = useRouter()
+    const likeState = ref(false)
+
+    const navTitle = ref({ review: '나의 리뷰', mate: '나의 여행 메이트' })
 
     const menuList = ref([
       { name: '로그인', show: true, routeName: 'login' },
-      { name: '마이페이지', show: false, routeName: 'mypage' },
+      { name: '마이페이지', show: false, routeName: 'user' },
       { name: '로그아웃', show: false, routeName: 'logout' }
     ])
 
 
-
-    const isLogin = ref(false)
-
-    const isAdmin = ref(false)
-
-    const userInfo = ref()
     const changeMenuState = () => {
       menuList.value.forEach((menu) => {
         menu.show = !menu.show
       })
     }
     
+    const changeUserState = (userid, isadmin) => {
+      userId.value = userid
+      isAdmin.value = isadmin
+    }
+
+    const changeUserInfoState = (userinfo) => {
+      userInfo.value = userinfo
+    }
+
+    const changeAuthState = (Auth) => {
+      auth.value = Auth
+    }
+
+    const changeLikeState = (likestate) => {
+      likeState.value = likestate
+    }
+
     // **************** actions ****************
     const login = async (userInfo) => {
       // 서버로 요청
       console.log(userInfo)
-      await axios.post('/admin/user/login', userInfo).then((response) => {
+      await axios.post('/user/login', userInfo).then((response) => {
         console.log(response)
-        const { accessToken } = response.data
-        isAdmin.value = response.data['isAdmin']
+
+        const accessToken = response.data['accessToken']
+
 
         // 이미 페이지가 로드된 시점에 로그인을 수행 했으므로
         // axios 객체의 아래 값은 초기화가 되어있지 않음으로 값을 저장.
@@ -46,40 +67,91 @@ export const useUserStore = defineStore(
         // 로그인을 성공하여 토큰이 정상적으로 저장된 경우
         // 메뉴 표시를 수정.
         alert('로그인!')
-        isLogin.value = true
+
+        changeUserInfoState({
+          id: '',
+          password: '',
+          email: '',
+          name: '',
+          nickname: '',
+          tel: '',
+          birth: '',
+          gender: 0,
+          admin: 0,
+          joinDate: '',
+          modifiedAt: ''
+        })
+
         changeMenuState()
+        changeUserState(response.data['userId'], response.data['isAdmin'])
       })
     }
 
     const logout = async () => {
       changeMenuState()
 
-      await axios.delete('admin/user/logout').then(() => {
+      await axios.delete('/user/logout').then(() => {
         axios.defaults.headers.common['Authorization'] = ''
-        isLogin.value = false
-        isAdmin.value = false
+        isAdmin.value = 0
+        userId.value = ''
+        userInfo.value = null
+        auth.value = false
+
         alert('로그아웃!')
       })
     }
 
-    const getUserInfo = async () => {
-      const refreshToken = sessionStorage.getItem('refreshToken')
-      axios.defaults.headers.common['Authorization'] = refreshToken
-
+    const getUserInfo = async (Id) => {
       await axios
-        .get('/admin/user/mypage')
+        .get('/user/' + Id)
         .then((response) => {
-          
-          userInfo.value = response.data["userInfo"]
+          changeUserInfoState(response.data)
+          response.data['id'] == userId.value ? changeAuthState(true) : changeAuthState(false)
+          if (auth.value) {
+            navTitle.value = {
+              review: '나의 리뷰',
+              mate: '나의 여행 메이트'
+            }
+          } else {
+            navTitle.value = {
+              review: Id + ' 리뷰',
+              mate: Id + ' 여행 메이트'
+            }
+          }
         })
-        .catch(() => {
-          
+        .catch((response) => {})
+    }
+
+    const getLikeState = async (Id) => {
+      await axios
+        .post('/user/like-state', { id: userId.value, sequence: 0, likedBy: Id })
+        .then((response) => {
+          console.log({ id: userId.value, sequence: 0, likedBy: Id })
+          changeLikeState(response.data['likeState'])
         })
+    }
+    const toggleLikeState = async () => {
+      console.log(likeState.value)
+      likeState.value = !likeState.value
+    }
+    const addLikeState = async (Id) => {
+      await axios
+        .post('/user/like', { id: userId.value, sequence: 0, likedBy: Id })
+        .then((response) => {})
+    }
+
+    const deleteLikeState = async (Id) => {
+      await axios
+        .post('/user/unlike', { id: userId.value, sequence: 0, likedBy: Id })
+        .then((response) => {})
     }
 
     // 회원 정보를 수정하면 axios header에 저장된 accessToken을 삭제한다.
     const modify = async (userInfo) => {
-      await axios.put('/admin/user/modify', userInfo).then(() => {
+      console.log(userInfo.value)
+      await axios.put('/user/modify', userInfo).then(() => {
+        alert('수정 완료! 다시 로그인 해주세요.')
+        router.push('/')
         axios.defaults.headers.common['Authorization'] = ''
         changeMenuState()
       })
@@ -87,7 +159,7 @@ export const useUserStore = defineStore(
 
     // 회원 탈퇴 시 axios header에 저장된 accessToken을 삭제한다.
     const withdrawal = async (userInfo) => {
-      await axios.delete('admin/user/withdrawal', userInfo).then(() => {
+      await axios.delete('user/withdrawal', userInfo).then(() => {
         axios.defaults.headers.common['Authorization'] = ''
         changeMenuState()
       })
@@ -95,15 +167,27 @@ export const useUserStore = defineStore(
 
 
     return {
+      menuList,
+
       login,
       logout,
       modify,
       withdrawal,
+
+      userId,
       userInfo,
-      getUserInfo,
-      menuList,
       isAdmin,
-      isLogin,
+      auth,
+      navTitle,
+
+      addLikeState,
+      toggleLikeState,
+      deleteLikeState,
+      getUserInfo,
+
+      getLikeState,
+
+      likeState
 
     }
   },

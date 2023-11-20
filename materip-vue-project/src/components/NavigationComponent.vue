@@ -7,12 +7,10 @@
     </v-toolbar-title>
     <v-spacer></v-spacer>
     <RouterLink to="/board/review" replace>
-      <v-btn text @click="goToReview"><v-icon icon="mdi-note-edit"></v-icon>여행지 리뷰</v-btn>
+      <v-btn text><v-icon icon="mdi-note-edit"></v-icon>여행지 리뷰</v-btn>
     </RouterLink>
     <RouterLink to="/board/recruitment" replace>
-      <v-btn text @click="goToMate"
-        ><v-icon icon="mdi-account-multiple-plus"></v-icon>여행 메이트</v-btn
-      >
+      <v-btn text><v-icon icon="mdi-account-multiple-plus"></v-icon>여행 메이트</v-btn>
     </RouterLink>
     <v-autocomplete
       :items="travelStore.searchResult"
@@ -52,9 +50,12 @@
         </template>
         <template v-if="menu.routeName === 'mypage'">
           <v-list-item>
-            <RouterLink :to="{ name: menu.routeName }" class="menu">
-              <v-btn> <v-icon icon="mdi-account"></v-icon>{{ menu.name }} </v-btn>
-            </RouterLink>
+            <router-link :to="{ name: menu.routeName, params: { userId: userId } }" class="menu">
+              <v-btn>
+                <v-icon icon="mdi-account"></v-icon>
+                {{ menu.name }}
+              </v-btn>
+            </router-link>
           </v-list-item>
         </template>
       </template>
@@ -72,6 +73,7 @@ const travelStore = useTravelStore()
 const userStore = useUserStore()
 const { logout } = useUserStore()
 const { menuList } = storeToRefs(userStore)
+const { userId } = storeToRefs(userStore)
 onMounted(() => {
   travelStore.searchTravelSpot()
 })

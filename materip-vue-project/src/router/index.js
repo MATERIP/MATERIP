@@ -4,10 +4,11 @@ import MainView from '../views/MainView.vue'
 import LoginView from '../views/LoginView.vue'
 import SignupView from '../views/SignupView.vue'
 import BoardListView from '../views/BoardListView.vue'
-import MypageView from '../views/MypageView.vue'
+import UserView from '../views/UserView.vue'
+import UserModifyView from '../views/UserModifyView.vue'
 
-import MyRecruitView from '../components/my/MyRecruitComponent.vue'
-import MyReviewView from '../components/my/MyReviewComponent.vue'
+import UserReviewComponent from '../components/my/UserReviewComponent.vue'
+import UserRecruitComponent from '../components/my/UserRecruitComponent.vue'
 import AttractionView from '../views/AttractionView.vue'
 // import ProfileView from '../views/ProfileView.vue'
 
@@ -61,16 +62,16 @@ const router = createRouter({
 
     {
       name: 'mypage',
-      path: '/mypage',
-      component: MypageView,
+      path: '/user/:userId',
+      component: UserView,
       children: [
         {
           path: 'myreview', // Remove the leading '/'
-          component: MyReviewView
+          component: UserReviewComponent
         },
         {
-          path: 'mymate', // Remove the leading '/'
-          component: MyRecruitView
+          path: 'myrecruit', // Remove the leading '/'
+          component: UserRecruitComponent
         }
       ]
     },
@@ -84,6 +85,12 @@ const router = createRouter({
       name: 'attractionInfo',
       path: '/attraction/:attractionId', // Correct dynamic parameter syntax
       component: AttractionView
+    },
+
+    {
+      name: 'modify',
+      path: '/user/modify',
+      component: UserModifyView
     }
   ]
 })
