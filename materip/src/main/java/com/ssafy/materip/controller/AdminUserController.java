@@ -58,42 +58,42 @@ public class AdminUserController {
 		this.jwtUtil = jwtUtil;
 		this.authService = authService;
 	}
-	
-	
+
+
 	@ApiOperation(value="로그인", notes="로그인 성공시 JWT를 반환합니다.")
 	@ApiResponses({
-		// https://stackoverflow.com/questions/11714485/restful-login-failure-return-401-or-custom-response
-		@ApiResponse(code = 201, message = "로그인 성공"),
-		@ApiResponse(code = 401, message= " 로그인 실패")
+			// https://stackoverflow.com/questions/11714485/restful-login-failure-return-401-or-custom-response
+			@ApiResponse(code = 200, message = "로그인 성공"),
+			@ApiResponse(code = 401, message = "로그인 실패")
 	})
 	@ResponseBody
 	@PostMapping("/login")
-	public ResponseEntity<Map<String, Object>> login(@RequestBody User user, HttpServletResponse response) throws Exception {
+	public ResponseEntity<Map<String, Object>> login(@RequestBody User userDto, HttpServletResponse response) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
-		
-		User validUser = userService.login(user);
-		
+
+		User validUser = userService.login(userDto);
+
 		// 일치하는 사용자가 없는 경우.
 		if(validUser == null) {
 			result.put("message", "아이디 또는 패스워드를 확인해주세요.");
 			return new ResponseEntity<Map<String, Object>>(result, HttpStatus.UNAUTHORIZED);
 		}
-		
+
 		// AccessToken, RefreshToken 발급
 		// https://velog.io/@yaytomato/%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%90%EC%84%9C-%EC%95%88%EC%A0%84%ED%95%98%EA%B2%8C-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EC%B2%98%EB%A6%AC%ED%95%98%EA%B8%B0
 		String accessToken = jwtUtil.createAccessToken(validUser.getId());
 		String refreshToken = jwtUtil.createRefreshToken(validUser.getId());
-		
+
 		// RefreshToken은 HttpOnly Cookie로 발급
 		Cookie cookie = new Cookie("refreshToken", refreshToken);
 		cookie.setMaxAge(refreshTokenExpireTime);
 		cookie.setHttpOnly(true);
 		cookie.setPath("/");
 		response.addCookie(cookie);
-		
+
 		// 이미 발급 받은 refreshToken이 있는지 확인.
 		AuthDto authDto = authService.getRefreshToken(validUser.getId());
-		
+
 		if(authDto != null) {
 			authDto.setRefreshToken(refreshToken);
 			authService.updateRefreshToken(authDto);
@@ -102,11 +102,12 @@ public class AdminUserController {
 			// 발급받은 refreshToken을 DB에 저장.
 			authService.setRefreshToken(new AuthDto(validUser.getId(), refreshToken));
 		}
-		
+
+
 		// AccessToken은 JSON으로 전달
 		result.put("accessToken", accessToken);
-		result.put("userId", user.id);
-		result.put("isAdmin", userService.getUser(user.id).admin);
+		result.put("userId", userDto.getId());
+		result.put("isAdmin", userService.getUser(userDto.id).admin);
 		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.CREATED);
 	}
 
@@ -119,12 +120,11 @@ public class AdminUserController {
 			@ApiResponse(code = 200, message = "로그아웃 성공"),
 			@ApiResponse(code = 401, message = "로그아웃 실패")
 	})
+	@AuthRequired
 	@ResponseBody
 	@DeleteMapping("/logout")
 	public ResponseEntity<Map<String, Object>> logout(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, ParseException {
 		Map<String, Object> result = new HashMap<String, Object>();
-		System.out.println(request.getHeader("Authorization") + " authorization");
-		System.out.println("=============================");
 
 		String userId = jwtUtil.getUserId(request.getHeader("Authorization"));
 
@@ -140,15 +140,13 @@ public class AdminUserController {
 		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
 	}
 
-	
-	
-	
 	@ApiOperation(value = "사용자 목록", notes = "등록된 모든 사용자 정보를 반환합니다.", response = List.class)
 	@GetMapping()
 	public ResponseEntity<?> getUserList() throws Exception {
 		List<User> list = userService.getUserList();
 		return new ResponseEntity<List<User>>(list, HttpStatus.OK);
 	}
+
 
 	@ApiOperation(value = "회원 정보", notes = "아이디와 일치하는 사용자 정보를 반환합니다.")
 	@ApiImplicitParams({
@@ -181,6 +179,8 @@ public class AdminUserController {
 	@ApiOperation(value = "회원 정보 수정", notes = "사용자 정보를 수정합니다.")
 	@PutMapping(value = "/modify")
 	public ResponseEntity<?> updateUser(@RequestBody User user) throws Exception {
+		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+		System.out.println(user.toString());
 		int result = userService.modifyUserInfo(user);
 
 		return new ResponseEntity<>(result, HttpStatus.OK);
@@ -200,15 +200,14 @@ public class AdminUserController {
 
 
 	@ApiOperation(value = "좋아요", notes = "사용자 좋아요")
-	@PostMapping(value = "/{userid}/like")
+	@PostMapping(value = "/like")
 	public ResponseEntity<?> likeUser(@RequestBody Userlikes userlikes) throws Exception {
 		int result = userService.likeUser(userlikes.getLikedBy(), userlikes.getId());
-
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "좋아요 취소", notes = "사용자 좋아요 취소")
-	@DeleteMapping(value = "/{userid}/unlike")
+	@PostMapping(value = "/unlike")
 	public ResponseEntity<?> unlikeUser(@RequestBody Userlikes userlike) throws Exception {
 		int result = userService.unlikeUser(userlike.getLikedBy(), userlike.getId());
 		return new ResponseEntity<>(result, HttpStatus.OK);
@@ -224,6 +223,14 @@ public class AdminUserController {
 	@GetMapping(value = "/{userid}/like/detail")
 	public ResponseEntity<?> getUserlikes(@PathVariable("userid") String userId) throws Exception {
 		return new ResponseEntity<>(userService.readUserlikes(userId), HttpStatus.OK);
+	}
+
+	@ApiOperation(value = "좋아요 여부 반환", notes = "좋아요 여부를 반환합니다.")
+	@PostMapping(value = "/like-state")
+	public ResponseEntity<?> getLikeState(@RequestBody Userlikes userlikes) throws Exception {
+		HashMap<String, Object> result = new HashMap<String, Object>();
+		result.put("likeState", userService.readUserlikes(userlikes.getId()).contains(userlikes.getLikedBy()));
+		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
 }

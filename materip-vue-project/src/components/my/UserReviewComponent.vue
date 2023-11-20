@@ -1,15 +1,16 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
-import { useBoardReview } from '../../stores/board-store.js'
+import { useReviewStore } from '../../stores/board-store.js'
 import { storeToRefs } from 'pinia'
-const reviewStore = useBoardReview()
+import { useRouter } from 'vue-router'
+import { useUserStore } from '../../stores/user-store'
+const router = useRouter()
+
+const userStore = useUserStore()
+const reviewStore = useReviewStore()
+
 const { userReviewList } = storeToRefs(reviewStore)
-
-onMounted(() => {
-  reviewStore.myReview()
-})
-
-const title = ref('나의 리뷰')
+const { navTitle } = storeToRefs(userStore)
 
 const itemsPerPage = ref(10)
 const page = ref(1)
@@ -59,7 +60,7 @@ const pageCount = computed(() => Math.ceil(userReviewList.value.length / itemsPe
 </script>
 
 <template>
-  <h1>{{ title }}</h1>
+  <h1>{{ navTitle['review'] }}</h1>
   <v-data-table
     v-model:page="page"
     :headers="headers"
