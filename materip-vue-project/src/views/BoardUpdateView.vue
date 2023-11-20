@@ -1,73 +1,70 @@
 <script setup>
-import { ref, onMounted, watch, inject } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted, watch, inject } from "vue";
+import { useRouter } from "vue-router";
 
-const axios = inject('axios')
+const axios = inject("axios");
 
-const router = useRouter()
+const router = useRouter();
 const board = ref({
-  id: '',
-  title: '',
-  contents: '',
-  author: '',
-  hits: '',
-  boardType: '',
-  createdAt: '',
-  modifiedAt: ''
-})
+  id: "",
+  title: "",
+  contents: "",
+  author: "",
+  hits: "",
+  boardType: "",
+  createdAt: "",
+  modifiedAt: "",
+  maxCount: "",
+  currentCount: "",
+});
 
 const fetchData = async () => {
   await axios
     .get(`/board/detail/${router.currentRoute.value.params.id}`)
     .then((response) => {
-      board.value = response.data['board']
-      console.log(response)
+      board.value = response.data["board"];
+      console.log(response);
     })
     .catch(function (error) {
-      console.log(error)
-    })
-}
+      console.log(error);
+    });
+};
 
 function modify() {
   axios
-    .put('/board/modify', board.value)
+    .put("/board/modify", board.value)
     .then(() => {
-      alert('수정 성공')
-      if (`${board.value.boardType}` === 'notice') {
-        router.push(`/board/review`)
-      } else {
-        router.push(`/board/${board.value.boardType}`)
-      }
+      alert("수정 성공");
+      // 수정 후 게시판 상세 페이지로 이동
+      router.push(`/board/${board.value.id}`);
     })
     .catch(function (error) {
-      console.log(error)
-    })
+      console.log(error);
+    });
 }
 
 const items = ref([
   {
-    name: '공지사항',
-    value: 'notice'
+    name: "공지사항",
+    value: "notice",
   },
   {
-    name: '여행 메이트 모집',
-    value: 'recruitment'
+    name: "여행 메이트 모집",
+    value: "recruitment",
   },
   {
-    name: '여행 리뷰',
-    value: 'review'
-  }
-])
+    name: "여행 리뷰",
+    value: "review",
+  },
+]);
 
 onMounted(() => {
   // userStore.getUserInfo()
   // 게시판 정보 가져오기
-  fetchData()
+  fetchData();
   // board.value.author = userInfo.value.id
-  console.log(board.value)
-})
-
-
+  console.log(board.value);
+});
 </script>
 
 <template>
@@ -82,18 +79,40 @@ onMounted(() => {
           </v-layout>
         </v-card-title>
         <v-form class="mt-5" @submit.prevent="modify">
-          <v-select
-            label="게시판 선택"
-            variant="underlined"
-            single-line
-            :items="items"
-            item-title="name"
-            item-value="value"
-            style="width: 15rem; justify-content: end"
-            v-model="board.boardType"
-            readonly
-          >
-          </v-select>
+          <div class="board-title">
+            <v-select
+              label="게시판 선택"
+              variant="underlined"
+              single-line
+              :items="items"
+              item-title="name"
+              item-value="value"
+              v-model="board.boardType"
+              disabled
+              style="display: flex; margin-bottom: 1.5rem; width: fit-content"
+            >
+            </v-select>
+            <template v-if="board.boardType === 'recruitment'">
+              <div class="count">
+                <p>최대 인원 수</p>
+                <v-icon icon="mdi-account-group" style="margin: 0 1rem"></v-icon>
+
+                <v-icon
+                  icon="mdi-minus"
+                  @click="board.maxCount--"
+                  style="margin-right: 1rem"
+                ></v-icon>
+                <div class="max-count">
+                  <p>{{ board.maxCount }}</p>
+                </div>
+                <v-icon
+                  icon="mdi-plus"
+                  @click="board.maxCount++"
+                  style="margin-left: 1rem"
+                ></v-icon>
+              </div>
+            </template>
+          </div>
           <v-text-field
             clearable
             label="제목"
@@ -127,6 +146,7 @@ onMounted(() => {
               @click="router.back()"
               >취소</v-btn
             >
+
             <v-btn
               type="submit"
               color="light-blue"
@@ -146,5 +166,26 @@ onMounted(() => {
 .button {
   display: flex;
   justify-content: center;
+}
+
+.count {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+  align-items: center;
+}
+
+.max-count {
+  display: flex;
+  align-items: center;
+}
+
+.board-title {
+  display: flex;
+}
+
+p {
+  font-family: "Noto Sans KR", sans-serif;
+  font-weight: bold;
 }
 </style>

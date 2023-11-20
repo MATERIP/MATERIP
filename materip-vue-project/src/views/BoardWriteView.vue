@@ -1,78 +1,78 @@
 <script setup>
-import { ref, onMounted, watch, inject, computed } from 'vue'
-import { useRouter } from 'vue-router'
-import { useUserStore } from '../stores/user-store'
-import { storeToRefs } from 'pinia'
+import { ref, onMounted, watch, inject, computed } from "vue";
+import { useRouter } from "vue-router";
+import { useUserStore } from "../stores/user-store";
+import { storeToRefs } from "pinia";
 
-const axios = inject('axios')
-const router = useRouter()
+const axios = inject("axios");
+const router = useRouter();
 const board = ref({
-  title: '',
-  contents: '',
-  author: '',
-  boardType: null
-})
+  title: "",
+  contents: "",
+  author: "",
+  boardType: null,
+  maxCount: 2,
+  currentCount: 0,
+});
 
-const userStore = useUserStore()
-const { userInfo } = storeToRefs(userStore)
-const { isAdmin } = storeToRefs(userStore)
+const userStore = useUserStore();
+const { userInfo } = storeToRefs(userStore);
+const { isAdmin } = storeToRefs(userStore);
 
 const items = ref([
   {
-    name: '공지사항',
-    value: 'notice',
-    show: false
+    name: "공지사항",
+    value: "notice",
+    show: false,
   },
   {
-    name: '여행 메이트 모집',
-    value: 'recruitment',
-    show: true
+    name: "여행 메이트 모집",
+    value: "recruitment",
+    show: true,
   },
   {
-    name: '여행 리뷰',
-    value: 'review',
-    show: true
-  }
-])
-
-
+    name: "여행 리뷰",
+    value: "review",
+    show: true,
+  },
+]);
 
 onMounted(() => {
-  // console.log(userInfo.value)
-  console.log(isAdmin.value)
-  if(isAdmin.value === true){
+  console.log(userInfo.value);
+  console.log(isAdmin.value);
+  if (isAdmin.value === true) {
     items.value[0].show = true;
   }
-  
-  board.value.author = userInfo.value.id
-  
+
+  board.value.author = userInfo.value.id;
+
   // console.log(board.value);
-})
+});
 
 watch(
   () => board.value.boardType,
   (newValue) => {
-    console.log(newValue)
+    console.log(newValue);
   }
-)
+);
 
 const write = async () => {
-  console.log(board.value)
+  console.log(board.value);
   await axios
-    .post('/board/write', board.value)
+    .post("/board/write", board.value)
     .then(() => {
-      alert('글쓰기 성공')
-      if (`${board.value.boardType}` === 'notice') {
-        router.push(`/board/review`)
+      alert("글쓰기 성공");
+      if (`${board.value.boardType}` === "notice") {
+        router.push(`/board/review`);
       } else {
-        router.push(`/board/${board.value.boardType}`)
+        router.push(`/board/${board.value.boardType}`);
       }
     })
     .catch(function (error) {
-      alert('로그인 후 이용해주세요.')
-      console.log(error)
-    })
-}
+      alert("로그인 후 이용해주세요.");
+      console.log(error);
+    });
+};
 </script>
 
 <template>
@@ -89,18 +89,40 @@ const write = async () => {
           </v-layout>
         </v-card-title>
         <v-form class="mt-5" @submit.prevent="write">
-          <v-select
-            label="게시판 선택"
-            variant="underlined"
-            single-line
-            clearable
-            :items="items.filter(item => item.show)"
-            item-title="name"
-            item-value="value"
-            style="width: 15rem; justify-content: end"
-            v-model="board.boardType"
-          >
-          </v-select>
+          <div class="board-title">
+            <v-select
+              label="게시판 선택"
+              variant="underlined"
+              single-line
+              clearable
+              :items="items.filter((item) => item.show)"
+              item-title="name"
+              item-value="value"
+              v-model="board.boardType"
+              style="display: flex; margin-bottom: 1.5rem; width: 10rem"
+            >
+            </v-select>
+            <template v-if="board.boardType === 'recruitment'">
+              <div class="count">
+                <p>최대 인원 수</p>
+                <v-icon icon="mdi-account-group" style="margin: 0 1rem"></v-icon>
+
+                <v-icon
+                  icon="mdi-minus"
+                  @click="board.maxCount > 2 ? board.maxCount-- : board.maxCount"
+                  style="margin-right: 1rem"
+                ></v-icon>
+                <div class="max-count">
+                  <p>{{ board.maxCount }}</p>
+                </div>
+                <v-icon
+                  icon="mdi-plus"
+                  @click="board.maxCount < 10 ? board.maxCount++ : board.maxCount"
+                  style="margin-left: 1rem"
+                ></v-icon>
+              </div>
+            </template>
+          </div>
           <v-text-field
             clearable
             label="제목"
@@ -125,6 +147,9 @@ const write = async () => {
             max-rows="10"
           >
           </v-textarea>
+          <v-btn color="grey" size="large" width="fit-content" @click="router.back">
+            취소</v-btn
+          >
           <v-btn
             type="submit"
             color="light-blue"
@@ -145,4 +170,25 @@ const write = async () => {
   </v-layout>
 </template>
 
-<style scoped></style>
+<style scoped>
+.count {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+  align-items: center;
+}
+
+.max-count {
+  display: flex;
+  align-items: center;
+}
+
+.board-title {
+  display: flex;
+}
+
+p {
+  font-family: "Noto Sans KR", sans-serif;
+  font-weight: bold;
+}
+</style>
