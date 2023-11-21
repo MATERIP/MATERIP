@@ -5,19 +5,18 @@ import { useUserStore } from "../stores/user-store";
 import { storeToRefs } from "pinia";
 
 const axios = inject("axios");
+const userStore = useUserStore();
+const { userInfo, userId } = storeToRefs(userStore);
+const { isAdmin } = storeToRefs(userStore);
 const router = useRouter();
 const board = ref({
   title: "",
   contents: "",
-  author: "",
+  author: userId.value,
   boardType: null,
   maxCount: 2,
   currentCount: 0,
 });
-
-const userStore = useUserStore();
-const { userInfo } = storeToRefs(userStore);
-const { isAdmin } = storeToRefs(userStore);
 
 const items = ref([
   {
@@ -38,9 +37,10 @@ const items = ref([
 ]);
 
 onMounted(() => {
-  console.log(userInfo.value);
+  userStore.getUserInfo(userId.value);
+  console.log(userInfo.value.id);
   console.log(isAdmin.value);
-  if (isAdmin.value === true) {
+  if (isAdmin.value === 1) {
     items.value[0].show = true;
   }
 
@@ -147,23 +147,30 @@ const write = async () => {
             max-rows="10"
           >
           </v-textarea>
-          <v-btn color="grey" size="large" width="fit-content" @click="router.back">
-            취소</v-btn
-          >
-          <v-btn
-            type="submit"
-            color="light-blue"
-            size="large"
-            width="fit-content"
-            style="
-              display: block;
-              text-align: center;
-              margin: 0 auto;
-              margin-top: 1rem;
-              margin-bottom: 1rem;
-            "
-            >등록</v-btn
-          >
+          <div class="button">
+            <v-btn
+              color="grey"
+              size="large"
+              width="fit-content"
+              style="display: flex; text-align: center; margin: 1rem"
+              @click="router.back"
+            >
+              취소</v-btn
+            >
+            <v-btn
+              type="submit"
+              color="light-blue"
+              size="large"
+              width="fit-content"
+              style="
+                display: flex;
+                text-align: center;
+                margin-top: 1rem;
+                margin-bottom: 1rem;
+              "
+              >등록</v-btn
+            >
+          </div>
         </v-form>
       </v-card>
     </v-sheet>
@@ -185,6 +192,11 @@ const write = async () => {
 
 .board-title {
   display: flex;
+}
+
+.button {
+  display: flex;
+  justify-content: center;
 }
 
 p {

@@ -124,5 +124,5 @@ public class Board {
 				+ ", travelSpot=" + travelSpot + ", travelDate=" + travelDate + ", maxCount=" + maxCount
 				+ ", currentCount=" + currentCount + "]";
 	}
-
+	
 }

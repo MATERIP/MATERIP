@@ -303,39 +303,46 @@ public class BoardController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "댓글 리스트", notes = "보드 아이디에 따라 댓글 리스트를 불러옵니다", response = Comments.class)
+	@ApiOperation(value = "댓글 리스트", notes = "보드 아이디에 따라 댓글 리스트를 불러옵니다")
 	@GetMapping("/comment/getList/{board_id}")
 	public ResponseEntity<?> getCommentList(@PathVariable("board_id") int board_id) throws Exception {
 		List<Comments> result = boardService.getCommentList(board_id);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "댓글 개수", notes = "보드 아이디에 따른 댓글 개수를 불러옵니다.", response = Integer.class)
+	@ApiOperation(value = "댓글 개수", notes = "보드 아이디에 따른 댓글 개수를 불러옵니다.")
 	@GetMapping("/comment/getCommentCnt/{board_id}")
 	public ResponseEntity<?> getCommentCnt(@PathVariable("board_id") int board_id) throws Exception {
 		int result = boardService.getCommentCnt(board_id);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "댓글 작성", notes = "댓글 작성합니다. ", response = Integer.class)
+	@ApiOperation(value = "댓글 작성", notes = "댓글 작성합니다.")
 	@PostMapping("/comment/write")
-	public ResponseEntity<?> writeComment(@RequestBody Comments comments, int board_id) throws Exception {
-		int result = boardService.writeComment(comments, board_id);
+	public ResponseEntity<?> writeComment(@RequestBody Comments comments) throws Exception {
+		int result = boardService.writeComment(comments);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "댓글 수정", notes = "댓글 수정합니다.", response = Integer.class)
-	@PostMapping("/comment/modify")
+	@ApiOperation(value = "댓글 수정", notes = "댓글 수정합니다.")
+	@PutMapping("/comment/modify")
 	public ResponseEntity<?> modifyComment(@RequestBody Comments comments) throws Exception {
 		int result = boardService.modifyComment(comments);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "댓글 삭제", notes = "댓글을 삭제합니다.", response = Integer.class)
-	@DeleteMapping("/comment/delete/{sequence}")
-	public ResponseEntity<?> deleteComment(@PathVariable("sequence") int sequence) throws Exception {
+	@ApiOperation(value = "댓글 삭제", notes = "댓글을 삭제합니다.")
+	@DeleteMapping("/comment/delete")
+	public ResponseEntity<?> deleteComment(@RequestParam(value="sequence") int sequence) throws Exception {
 		int result = boardService.removeComment(sequence);
 		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "댓글 조회", notes = "댓글을 조회합니다.")
+	@GetMapping("/comment/detail")
+	public ResponseEntity<?> viewComment(@RequestParam(value = "sequence") int sequence) throws Exception {
+		Comments comment = boardService.getComment(sequence);
+		return new ResponseEntity<>(comment, HttpStatus.OK);
 	}
 	
 	@ApiOperation(value = "조회수 증가", notes = "게시판 조회수 증가")
@@ -377,7 +384,7 @@ public class BoardController {
 	
 	@ApiOperation(value = "모집글 참여 가능 여부 조회", notes = "모집글에 참여 가능 여부를 반환합니다.")
 	@GetMapping("/participants/{board_id}/isjoinable")
-	public ResponseEntity<?> readJoinable(@PathVariable("board_id") int boardId, @RequestParam(value="user_id") String userId) throws Exception {
+	public ResponseEntity<?> readJoinable(@PathVariable("board_id") int boardId, @RequestParam(value="userid") String userId) throws Exception {
 		Participants participants = new Participants();
 		participants.setUserId(userId);
 		participants.setBoardId(boardId);
