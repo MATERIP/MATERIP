@@ -1,7 +1,5 @@
 <script setup>
-
 import { ref, computed, onMounted, watch, inject } from "vue";
-
 import { useRouter } from "vue-router";
 import { useUserStore } from "../stores/user-store";
 import { storeToRefs } from "pinia";
@@ -29,7 +27,6 @@ const board = ref({
 const auth = ref(false);
 const participants = ref(0);
 const isJoinable = ref(false);
-
 
 const fetchData = async () => {
   await axios
@@ -89,14 +86,11 @@ const join = async () => {
     .then(() => {
       alert("참여 성공");
       isJoinable.value = false;
-
       readParticpantsCount();
-
     })
     .catch(function (error) {
       console.log(error);
     });
-
 };
 
 const leave = async () => {
@@ -108,14 +102,11 @@ const leave = async () => {
     .then(() => {
       alert("참여 취소 성공");
       isJoinable.value = true;
-
       readParticpantsCount();
-
     })
     .catch(function (error) {
       console.log(error);
     });
-
 };
 
 const readParticpantsCount = async () => {
@@ -208,49 +199,18 @@ const updateComment = async (item) => {
     .then(() => {
       alert("댓글 수정 성공");
       getComments();
-
-  if (!isJoinable.value) {
-    isJoinable.value != isJoinable.value;
-  }
-  readParticpantsCount();
-};
-
-const readParticpantsCount = async () => {
-  await axios
-    .get(`/board/participants/${router.currentRoute.value.params.id}`)
-    .then((response) => {
-      participants.value = response.data;
     })
     .catch(function (error) {
       console.log(error);
     });
 };
-
-const isJoined = async () => {
-  await axios
-    .get(`board/participants/${router.currentRoute.value.params.id}`, {
-      userId: userInfo.value.id,
-    })
-    .then((response) => {
-      isJoinable.value = response.data;
-      console.log(response.data);
-
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-};
-
 
 //
-
-
 
 onMounted(() => {
   userStore.getUserInfo(userInfo.value.id);
 
   fetchData();
-
   getComments();
   readParticpantsCount();
   isJoined();
@@ -258,10 +218,6 @@ onMounted(() => {
 
 watch(participants, (newCount) => {
   board.value.currentCount = newCount;
-
-  readParticpantsCount();
-  isJoined();
-
 });
 </script>
 
@@ -282,10 +238,8 @@ watch(participants, (newCount) => {
             {{ displayTime }} |
             <v-icon icon="mdi-eye-outline"></v-icon>
             {{ board.hits }} |
-
             <v-icon icon="mdi-comment-text-multiple-outline"></v-icon>
             {{ comments.length }} |
-
             <template v-if="board.boardType === 'recruitment'">
               <v-icon icon="mdi-account-multiple"></v-icon>
               {{ board.currentCount }} / {{ board.maxCount }}
@@ -301,7 +255,6 @@ watch(participants, (newCount) => {
       <div class="button">
         <template v-if="board.boardType === 'recruitment'">
           <template v-if="board.author !== userInfo.id">
-
             <v-btn
               prepend-icon="mdi-account-plus"
               color="blue"
@@ -319,26 +272,6 @@ watch(participants, (newCount) => {
               :disabled="isJoinable"
               >취소</v-btn
             >
-
-            <template v-if="isJoinable">
-              <v-btn
-                prepend-icon="mdi-account-plus"
-                color="blue"
-                variant="plain"
-                @click="join"
-                >참여</v-btn
-              >
-            </template>
-            <template v-else>
-              <v-btn
-                prepend-icon="mdi-account-minus"
-                color="blue"
-                variant="plain"
-                @click="leave"
-                >취소</v-btn
-              >
-            </template>
-
           </template>
         </template>
         <template v-if="auth">
@@ -359,7 +292,6 @@ watch(participants, (newCount) => {
           >
         </template>
       </div>
-
       <v-container>
         <v-row>
           <v-col cols="12">
@@ -461,7 +393,6 @@ watch(participants, (newCount) => {
           </template>
         </v-data-iterator>
       </v-container>
-
     </v-sheet>
   </v-layout>
 </template>
