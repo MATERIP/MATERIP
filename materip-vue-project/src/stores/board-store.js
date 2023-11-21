@@ -8,22 +8,28 @@ export const useMateStore = defineStore(
   () => {
     // ***************** state *****************
     const axios = inject('axios')
-    var userBoardList = ref([])
+    const userMateList = ref()
+
+    const changeuserMateList = (usermateList) => { 
+      userMateList.value = usermateList
+    }
     // **************** actions ****************
-    const myMate = async () => {
+    const myMate = async (userId) => {
       await axios
-        .get('board/myboard/mate')
+        .get('board/getRecruitmentList/'+ userId)
         .then((response) => {
-          console.log(response)
-          console.log(response.data['boardList'])
-          userBoardList.value = response.data['boardList']
+          changeuserMateList(response.data["boardList"])
+          console.log(response.data["boardList"])
+          console.log('board/getRecruitmentList/'+ userId)
         })
-        .catch((response) => {})
+        .catch((response) => {
+          // alert(response.data["message"])
+        })
     }
 
     return {
       myMate,
-      userBoardList
+      userMateList
     }
   },
   {
@@ -33,22 +39,26 @@ export const useMateStore = defineStore(
   }
 )
 
-export const useBoardReview = defineStore(
-  'boardStore',
+export const useReviewStore = defineStore(
+  'reviewStore',
   () => {
     // ***************** state *****************
     const axios = inject('axios')
     var userReviewList = ref([])
+
+
+    const changeuserReviewList = (list) => { 
+      userReviewList.value = list
+    }
     // **************** actions ****************
-    const myReview = async () => {
-      console.log('myreview!')
+    const myReview = async (user) => {
       await axios
-        .get('board/myboard/review')
+        .get('board/getReviewList/' + user)
         .then((response) => {
-          userReviewList.value = response.data['boardList']
-          for (let index = 0; index < userReviewList.value.length; index++) {
-            const element = userReviewList.value[index]
-          }
+          changeuserReviewList(response.data["boardList"])
+          console.log(response.data["boardList"])
+          console.log("board/getReviewList/" + user)
+          
         })
         .catch((response) => {})
     }

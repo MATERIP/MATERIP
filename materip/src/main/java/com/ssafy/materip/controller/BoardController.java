@@ -53,15 +53,15 @@ public class BoardController {
 	private final JWTUtil jwtUtil;
 	private final AuthService authService;
 	private final UserService userService;
-	
-	public BoardController(BoardService boardService, JWTUtil jwtUtil, AuthService authService, UserService userService) {
 
+	public BoardController(BoardService boardService, JWTUtil jwtUtil, AuthService authService, UserService userService) {
 		this.boardService = boardService;
 		this.jwtUtil = jwtUtil;
 		this.authService = authService;
 		this.userService = userService;
 	}
-	
+
+
 
 	@ApiOperation(value = "보드 상세 정보", notes="보드 아이디로 보드 상세 정보를 반환힙니다.")
 	@GetMapping("/detail/{board_id}")
@@ -88,20 +88,23 @@ public class BoardController {
 		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
 	}
 
+
 	@ApiOperation(value = "보드 목록", notes = "등록된 모든 보드 정보를 반환합니다.", response = List.class)
 	@GetMapping("/getList")
 	public ResponseEntity<?> getBoardList() throws Exception {
 		List<Board> list = boardService.getBoardList();
 		return new ResponseEntity<List<Board>>(list, HttpStatus.OK);
 	}
-	
+
+
 	@ApiOperation(value = "리뷰 목록", notes = "등록된 모든 리뷰 정보를 반환합니다.", response = List.class)
 	@GetMapping("/getReviewList")
 	public ResponseEntity<?> getReviewList() throws Exception {
 		List<Board> list = boardService.getReviewList();
 		return new ResponseEntity<List<Board>>(list, HttpStatus.OK);
 	}
-	
+
+
 	@ApiOperation(value = "모집글 목록", notes = "등록된 모든 모집글 정보를 반환합니다.", response = List.class)
 	@GetMapping("/getRecruitmentList")
 	public ResponseEntity<?> getRecruitmentList() throws Exception {
@@ -117,158 +120,37 @@ public class BoardController {
 			@ApiResponse(code = 404, message = "사용자 정보 없음")
 	})
 	@ResponseBody
-	@AuthRequired
-	@GetMapping("/myboard/review")
-	public ResponseEntity<Map<String, Object>> getReviewBoardbyId(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
+	@GetMapping("/getReviewList/{user_id}")
+	public ResponseEntity<Map<String, Object>> getReviewBoardbyId(HttpServletRequest request, HttpServletResponse response, @PathVariable("user_id") String userId) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
-	
-		// Authorization에 포함된 accessToken의 userId를 가져온다.
-		String userId = jwtUtil.getUserId(request.getHeader("Authorization"));
-
-		Cookie[] cookieList = request.getCookies();
-
-		String requestRefreshToken = "";
-
-		for(Cookie cookie : cookieList) {
-			if(cookie.getName().equals("refreshToken")) {
-				requestRefreshToken = cookie.getValue();
-			}
-		}
-
-		// 요청으로 들어온 refreshToken이 Database의 refreshToken과 일치하는지 확인.
-		String dbRefreshToken = authService.getRefreshToken(userId).getRefreshToken();
-
-		if(!requestRefreshToken.equals(dbRefreshToken)) {
-			// RefreshToken은 HttpOnly Cookie로 발급
-			Cookie cookie = new Cookie("refreshToken", "");
-			cookie.setMaxAge(0);
-			cookie.setHttpOnly(true);
-			cookie.setPath("/");
-			System.out.println("토큰이 다름");
-			response.addCookie(cookie);
-
-			result.put("message", "로그인이 필요합니다.");
-			return new ResponseEntity<Map<String, Object>>(result, HttpStatus.FORBIDDEN);
-		}
 
 		// 해당 userId의 정보를 획득.
 		
 		List<Board> boardList = boardService.getReviewListById(userId);
-
-		
-
 		result.put("boardList", boardList);
 		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
 	}
 
 
 
-	@ApiOperation(value="사용자별 메이트 보드 얻기", notes="접속한 사용자의 보드들을 얻어옵니다.")
+
+	@ApiOperation(value="사용자별 모집 정보 얻기", notes="접속한 사용자의 메이트 모집글들을 얻어옵니다.")
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "보드 정보 반환 성공"),
 			@ApiResponse(code = 403, message = "권한 없음"),
 			@ApiResponse(code = 404, message = "사용자 정보 없음")
 	})
 	@ResponseBody
-	@AuthRequired
-	@GetMapping("/myboard/mate")
-	public ResponseEntity<Map<String, Object>> getMateBoardbyId(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
+	@GetMapping("/getRecruitmentList/{user_id}")
+	public ResponseEntity<Map<String, Object>> getMateBoardbyId(HttpServletRequest request, HttpServletResponse response, @PathVariable("user_id") String userId) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
-
-		// Authorization에 포함된 accessToken의 userId를 가져온다.
-		String userId = jwtUtil.getUserId(request.getHeader("Authorization"));
-
-		Cookie[] cookieList = request.getCookies();
-
-		String requestRefreshToken = "";
-
-		for(Cookie cookie : cookieList) {
-			if(cookie.getName().equals("refreshToken")) {
-				requestRefreshToken = cookie.getValue();
-			}
-		}
-
-		// 요청으로 들어온 refreshToken이 Database의 refreshToken과 일치하는지 확인.
-		String dbRefreshToken = authService.getRefreshToken(userId).getRefreshToken();
-
-		if(!requestRefreshToken.equals(dbRefreshToken)) {
-			// RefreshToken은 HttpOnly Cookie로 발급
-			Cookie cookie = new Cookie("refreshToken", "");
-			cookie.setMaxAge(0);
-			cookie.setHttpOnly(true);
-			cookie.setPath("/");
-			System.out.println("토큰이 다름");
-			response.addCookie(cookie);
-
-			result.put("message", "로그인이 필요합니다.");
-			return new ResponseEntity<Map<String, Object>>(result, HttpStatus.FORBIDDEN);
-		}
 
 		// 해당 userId의 정보를 획득.
 
 		List<Board> boardList = boardService.getMateListById(userId);
-
 		result.put("boardList", boardList);
 		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
 	}
-
-
-
-
-
-
-
-	@ApiOperation(value="관리자 여부", notes="관리자 여부인지를 반환합니다.")
-	@ApiResponses({
-			@ApiResponse(code = 200, message = "사용자 정보 반환 성공"),
-			@ApiResponse(code = 403, message = "권한 없음"),
-			@ApiResponse(code = 404, message = "사용자 정보 없음")
-	})
-	@ResponseBody
-	@GetMapping("/modifyAuth")
-	// board list => list중에 하나 클릭하면 => boardid 넘어가고 => boardid넘어가면 boardid board detail + modify?
-	public ResponseEntity<Map<String, Object>> modifyAuth(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-		Map<String, Object> result = new HashMap<String, Object>();
-		// Authorization에 포함된 accessToken의 userId를 가져온다.
-		String userId = request.getHeader("Authorization").equals("")? "":jwtUtil.getUserId(request.getHeader("Authorization"));
-
-		Cookie[] cookieList = request.getCookies();
-
-		String requestRefreshToken = "";
-
-		for(Cookie cookie : cookieList) {
-			if(cookie.getName().equals("refreshToken")) {
-				requestRefreshToken = cookie.getValue();
-			}
-		}
-		System.out.println(requestRefreshToken);
-		// 요청으로 들어온 refreshToken이 Database의 refreshToken과 일치하는지 확인.
-		String dbRefreshToken = authService.getRefreshToken(userId).getRefreshToken();
-
-		if(!requestRefreshToken.equals(dbRefreshToken)) {
-			// RefreshToken은 HttpOnly Cookie로 발급
-			Cookie cookie = new Cookie("refreshToken", "");
-			cookie.setMaxAge(0);
-			cookie.setHttpOnly(true);
-			cookie.setPath("/");
-			System.out.println("토큰이 다름");
-			response.addCookie(cookie);
-
-			result.put("message", "로그인이 필요합니다.");
-			return new ResponseEntity<Map<String, Object>>(result, HttpStatus.FORBIDDEN);
-		}
-
-		int boardId = Integer.parseInt(request.getParameter("board-id"));
-		Board board = boardService.getBoardById(boardId);
-		result.put("boardDetail", board);
-		result.put("auth",board.author.equals(userId));
-
-		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
-	}
-
 
 
 
@@ -303,12 +185,14 @@ public class BoardController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
+
 	@ApiOperation(value = "댓글 리스트", notes = "보드 아이디에 따라 댓글 리스트를 불러옵니다")
 	@GetMapping("/comment/getList/{board_id}")
 	public ResponseEntity<?> getCommentList(@PathVariable("board_id") int board_id) throws Exception {
 		List<Comments> result = boardService.getCommentList(board_id);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
+
 
 	@ApiOperation(value = "댓글 개수", notes = "보드 아이디에 따른 댓글 개수를 불러옵니다.")
 	@GetMapping("/comment/getCommentCnt/{board_id}")
@@ -352,6 +236,7 @@ public class BoardController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
+
 	@ApiOperation(value = "모집글 참가", notes = "모집글 게시판에 참가합니다.")
 	@PostMapping("/participants/join")
 	public ResponseEntity<?> join(@RequestBody Participants participants) throws Exception {
@@ -393,3 +278,4 @@ public class BoardController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 }
+

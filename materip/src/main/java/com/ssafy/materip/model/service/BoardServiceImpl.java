@@ -79,10 +79,12 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public int deleteBoard(int boardId) throws Exception {
+
 		// 참여 중인 모든 참여자 삭제
 		participantsDao.removeAllParticipants(boardId);
 		// 게시판의 모든 댓글 삭제
 		commentDao.deleteAllComments(boardId);
+
 		boardDao.deleteBoard(boardId);
 		return 0;
 	}

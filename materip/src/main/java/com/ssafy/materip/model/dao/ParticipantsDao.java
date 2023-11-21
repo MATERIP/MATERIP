@@ -22,3 +22,4 @@ public interface ParticipantsDao {
 	int isJoinable(Participants participants) throws SQLException;
 	
 }
+

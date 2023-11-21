@@ -5,18 +5,22 @@ import { useUserStore } from "../stores/user-store";
 import { storeToRefs } from "pinia";
 
 const axios = inject("axios");
+
 const userStore = useUserStore();
 const { userInfo, userId } = storeToRefs(userStore);
 const { isAdmin } = storeToRefs(userStore);
+
 const router = useRouter();
 const board = ref({
   title: "",
   contents: "",
+
   author: userId.value,
   boardType: null,
   maxCount: 2,
   currentCount: 0,
 });
+
 
 const items = ref([
   {
@@ -37,10 +41,12 @@ const items = ref([
 ]);
 
 onMounted(() => {
+
   userStore.getUserInfo(userId.value);
   console.log(userInfo.value.id);
   console.log(isAdmin.value);
   if (isAdmin.value === 1) {
+
     items.value[0].show = true;
   }
 

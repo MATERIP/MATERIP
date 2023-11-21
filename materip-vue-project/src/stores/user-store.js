@@ -24,11 +24,13 @@ export const useUserStore = defineStore(
       { name: '로그아웃', show: false, routeName: 'logout' }
     ])
 
+
     const changeMenuState = () => {
       menuList.value.forEach((menu) => {
         menu.show = !menu.show
       })
     }
+
     const changeUserState = (userid, isadmin) => {
       userId.value = userid
       isAdmin.value = isadmin
@@ -45,14 +47,17 @@ export const useUserStore = defineStore(
     const changeLikeState = (likestate) => {
       likeState.value = likestate
     }
+
     // **************** actions ****************
     const login = async (userInfo) => {
       // 서버로 요청
       console.log(userInfo)
-      console.log(userId)
+
       await axios.post('/user/login', userInfo).then((response) => {
         console.log(response)
+
         const accessToken = response.data['accessToken']
+
 
         // 이미 페이지가 로드된 시점에 로그인을 수행 했으므로
         // axios 객체의 아래 값은 초기화가 되어있지 않음으로 값을 저장.
@@ -63,8 +68,9 @@ export const useUserStore = defineStore(
         // 로그인을 성공하여 토큰이 정상적으로 저장된 경우
         // 메뉴 표시를 수정.
         alert('로그인!')
+
         changeUserInfoState({
-          id: response.data['userId'],
+          id: '',
           password: '',
           email: '',
           name: '',
@@ -76,6 +82,7 @@ export const useUserStore = defineStore(
           joinDate: '',
           modifiedAt: ''
         })
+
         changeMenuState()
         changeUserState(response.data['userId'], response.data['isAdmin'])
       })
@@ -83,12 +90,14 @@ export const useUserStore = defineStore(
 
     const logout = async () => {
       changeMenuState()
+
       await axios.delete('/user/logout').then(() => {
         axios.defaults.headers.common['Authorization'] = ''
         isAdmin.value = 0
         userId.value = ''
         userInfo.value = null
         auth.value = false
+
         alert('로그아웃!')
       })
     }
@@ -175,7 +184,10 @@ export const useUserStore = defineStore(
       toggleLikeState,
       deleteLikeState,
       getUserInfo,
+
       getLikeState,
+
+
 
       likeState
     }
