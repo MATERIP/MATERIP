@@ -63,7 +63,7 @@ const passwordRules = [
             ></v-text-field>
 
             <v-divider></v-divider>
-            <v-btn type="submit" color="light-blue" size="large" block class = "mt-5" @click="login">로그인</v-btn>
+            <v-btn type="submit" color="light-blue" size="large" block class = "mt-5">로그인</v-btn>
         </v-form>
         </v-card>
         <v-layout row wrap style="display: flex; justify-content: space-around; margin:1rem">
