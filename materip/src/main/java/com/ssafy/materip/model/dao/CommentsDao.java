@@ -18,4 +18,8 @@ public interface CommentsDao {
 	int deleteComments(int sequence) throws SQLException;
 
 	int readCommentsCnt(int board_id);
+	
+	Comments readComments(int sequence) throws SQLException;
+	
+	int deleteAllComments(int boardId) throws SQLException;
 }

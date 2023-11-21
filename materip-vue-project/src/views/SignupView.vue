@@ -70,7 +70,7 @@ const instance = axios.create({
 function signup() {
   console.log(userInfo.value);
   instance
-    .post("/admin/user/signup", userInfo.value)
+    .post("/user/signup", userInfo.value)
     .then(() => {
       // userInfo.value = response.data;
       // console.log(response);
@@ -90,7 +90,7 @@ function idCheck() {
   hasInput.value = true;
   // console.log(userInfo.value.id)
   instance
-    .post("/admin/user", { id: userInfo.value.id })
+    .post("/user", { id: userInfo.value.id })
     .then(function (response) {
       //console.log(response.data);
       if (response.data == 1) {
@@ -150,9 +150,7 @@ console.log(userInfo.value.id);
             type="password"
             prepend-inner-icon="mdi-lock-outline"
             variant="solo"
-
             v-model="userInfo.password"
-
             required
           ></v-text-field>
           <v-text-field
@@ -169,9 +167,7 @@ console.log(userInfo.value.id);
             label="이름"
             prepend-inner-icon="mdi-account"
             variant="solo"
-
             v-model="userInfo.name"
-
             required
           ></v-text-field>
           <v-text-field
@@ -184,7 +180,6 @@ console.log(userInfo.value.id);
             required
             lazy-validation="between:3, 15"
             validation-visibility="live"
-
           ></v-text-field>
           <v-text-field
             density="comfortable"

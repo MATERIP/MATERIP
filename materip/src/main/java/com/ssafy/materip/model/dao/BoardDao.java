@@ -35,4 +35,6 @@ public interface BoardDao {
 	void increaseBoardCurrentCount(int boardId) throws SQLException;
 	
 	void decreaseBoardCurrentCount(int boardId) throws SQLException;
+
 }
+

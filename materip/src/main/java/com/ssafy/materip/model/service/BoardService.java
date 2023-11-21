@@ -40,7 +40,7 @@ public interface BoardService {
 	// Comment
 
 	// add comment
-	int writeComment(Comments comments, int article_id) throws Exception;
+	int writeComment(Comments comments) throws Exception;
 
 	// remove comment
 	int removeComment(int sequence) throws Exception;
@@ -53,6 +53,9 @@ public interface BoardService {
 	
 	// get comment count
 	int getCommentCnt(int board_id);
+	
+	// get comment
+	Comments getComment(int sequence) throws Exception;
 	
 	// Participants
 	
@@ -69,4 +72,5 @@ public interface BoardService {
 	int leave(Participants participants) throws Exception;
 
 	boolean isJoinable(Participants participants) throws Exception;
+
 }

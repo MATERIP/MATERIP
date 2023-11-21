@@ -30,7 +30,7 @@ export const useUserStore = defineStore(
         menu.show = !menu.show
       })
     }
-    
+
     const changeUserState = (userid, isadmin) => {
       userId.value = userid
       isAdmin.value = isadmin
@@ -52,6 +52,7 @@ export const useUserStore = defineStore(
     const login = async (userInfo) => {
       // 서버로 요청
       console.log(userInfo)
+
       await axios.post('/user/login', userInfo).then((response) => {
         console.log(response)
 
@@ -165,7 +166,6 @@ export const useUserStore = defineStore(
       })
     }
 
-
     return {
       menuList,
 
@@ -187,8 +187,9 @@ export const useUserStore = defineStore(
 
       getLikeState,
 
-      likeState
 
+
+      likeState
     }
   },
   {

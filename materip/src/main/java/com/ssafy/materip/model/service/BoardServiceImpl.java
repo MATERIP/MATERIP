@@ -79,7 +79,12 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public int deleteBoard(int boardId) throws Exception {
+
+		// 참여 중인 모든 참여자 삭제
 		participantsDao.removeAllParticipants(boardId);
+		// 게시판의 모든 댓글 삭제
+		commentDao.deleteAllComments(boardId);
+
 		boardDao.deleteBoard(boardId);
 		return 0;
 	}
@@ -100,8 +105,7 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public int writeComment(Comments comments, int article_id) throws Exception {
-		comments.setArticleId(article_id);
+	public int writeComment(Comments comments) throws Exception {
 		comments.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
 		comments.setModifiedAt(Timestamp.valueOf(LocalDateTime.now()));
 		return commentDao.createComments(comments);
@@ -115,7 +119,6 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public int modifyComment(Comments comments) throws Exception {
-		comments.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
 		comments.setModifiedAt(Timestamp.valueOf(LocalDateTime.now()));
 		commentDao.updateComments(comments);
 		return 0;
@@ -131,6 +134,11 @@ public class BoardServiceImpl implements BoardService {
 	public int getCommentCnt(int board_id) {
 		// TODO Auto-generated method stub
 		return commentDao.readCommentsCnt(board_id);
+	}
+	
+	@Override
+	public Comments getComment(int sequence) throws Exception {
+		return commentDao.readComments(sequence);
 	}
 
 	// Participants
@@ -178,5 +186,6 @@ public class BoardServiceImpl implements BoardService {
 		int result = participantsDao.isJoinable(participants);
 		return result == 0;
 	}
+
 
 }

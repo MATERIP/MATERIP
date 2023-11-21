@@ -70,7 +70,7 @@ public class AdminUserController {
 	@PostMapping("/login")
 	public ResponseEntity<Map<String, Object>> login(@RequestBody User userDto, HttpServletResponse response) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
-
+		
 		User validUser = userService.login(userDto);
 
 		// 일치하는 사용자가 없는 경우.
@@ -183,7 +183,7 @@ public class AdminUserController {
 		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		System.out.println(user.toString());
 		int result = userService.modifyUserInfo(user);
-
+		
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
@@ -196,7 +196,6 @@ public class AdminUserController {
 		}
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
-
 
 	@ApiOperation(value = "좋아요", notes = "사용자 좋아요")
 	@PostMapping(value = "/like")

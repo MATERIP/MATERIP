@@ -35,11 +35,13 @@
 	</delete>
 
 	<select id="readAllComments" parameterType="int"
-		resultType="Comments" resultMap="comments">
+		resultMap="comments">
 		SELECT *
 		FROM comments
 		WHERE article_id =
 		#{articleId}
+		ORDER BY created_at
+		DESC
 	</select>
 
 	<select id="readCommentsCnt" parameterType="int"
@@ -49,5 +51,19 @@
 		WHERE article_id =
 		#{articleId}
 	</select>
+	
+	<select id="readComments" parameterType="int" resultMap="comments">
+		SELECT *
+		FROM comments
+		WHERE sequence = #{sequence}
+	</select>
+	
+	<delete id="deleteAllComments" parameterType="int">
+		DELETE
+		FROM comments
+		WHERE article_id =
+		#{articleId}
+	</delete>
+	
 </mapper>
 
