@@ -16,6 +16,16 @@ const login = async () => {
     router.push("/")
 }
 
+const idRules = [
+  value => !!value || '아이디를 입력하세요!',
+  value => value.length >= 5 || '아이디는 최소 5자 이상이어야 합니다.',
+  value => /^[A-Za-z0-9]+$/.test(value) || '아이디는 영어 대소문자와 숫자만 포함할 수 있습니다.' 
+];
+
+const passwordRules = [
+  value => !!value || '비밀번호를 입력하세요!',
+  value => value.length >= 5 || '비밀번호는 최소 5자 이상이어야 합니다.',
+];
 
 </script>
 
@@ -28,7 +38,7 @@ const login = async () => {
                 <h3>로그인</h3>
             </v-layout>
         </v-card-title>
-        
+        <v-form @submit.prevent="login">
             <v-text-field
                 name="id"
                 label="아이디"
@@ -38,6 +48,7 @@ const login = async () => {
                 variant="solo"
                 required
                 v-model = "userInfo.id"
+                :rules="idRules"
             ></v-text-field>
             <v-text-field
                 name="password"
@@ -48,10 +59,12 @@ const login = async () => {
                 variant="solo"
                 required
                 v-model = "userInfo.password"
+                :rules="passwordRules"
             ></v-text-field>
+
             <v-divider></v-divider>
             <v-btn type="submit" color="light-blue" size="large" block class = "mt-5" @click="login">로그인</v-btn>
-        
+        </v-form>
         </v-card>
         <v-layout row wrap style="display: flex; justify-content: space-around; margin:1rem">
                 <a href="">비밀번호 찾기</a> |
