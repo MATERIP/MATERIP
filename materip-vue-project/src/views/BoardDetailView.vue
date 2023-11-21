@@ -86,7 +86,7 @@ const join = async () => {
     .then(() => {
       alert("참여 성공");
       isJoinable.value = false;
-      readParticpantsCount();
+      readParticipantsCount();
     })
     .catch(function (error) {
       console.log(error);
@@ -102,14 +102,14 @@ const leave = async () => {
     .then(() => {
       alert("참여 취소 성공");
       isJoinable.value = true;
-      readParticpantsCount();
+      readParticipantsCount();
     })
     .catch(function (error) {
       console.log(error);
     });
 };
 
-const readParticpantsCount = async () => {
+const readParticipantsCount = async () => {
   await axios
     .get(`/board/participants/${router.currentRoute.value.params.id}`)
     .then((response) => {
@@ -160,6 +160,7 @@ const writeComment = async () => {
     .then(() => {
       alert("댓글 등록 성공");
       getComments();
+      comment.value.contents = "";
     })
     .catch(function (error) {
       console.log(error);
@@ -197,6 +198,7 @@ const updateComment = async (item) => {
   await axios
     .put(`/board/comment/modify`, item)
     .then(() => {
+      console.log(item);
       alert("댓글 수정 성공");
       getComments();
     })
@@ -206,13 +208,14 @@ const updateComment = async (item) => {
 };
 
 //
+const search = ref("");
 
 onMounted(() => {
   userStore.getUserInfo(userInfo.value.id);
 
   fetchData();
   getComments();
-  readParticpantsCount();
+  readParticipantsCount();
   isJoined();
 });
 
@@ -222,7 +225,6 @@ watch(participants, (newCount) => {
 </script>
 
 <template>
-  <div><RouterView /></div>
   <v-layout row wrap style="display: flex; justify-content: center; margin-top: 10rem">
     <v-sheet>
       <v-card class="mx-auto pa-12 pb-8" min-width="80rem" rounded="lg" hover>
@@ -231,7 +233,7 @@ watch(participants, (newCount) => {
             [{{ displayBoardType }}]
             {{ board.title }}
           </v-card-title>
-          <v-card-subtitle>
+          <v-card-subtitle hide-details>
             <v-icon icon="mdi-account"></v-icon>
             {{ board.author }} |
             <v-icon icon="mdi-clock-outline"></v-icon>
@@ -319,55 +321,80 @@ watch(participants, (newCount) => {
             </v-form>
           </v-col>
         </v-row>
+      </v-container>
 
-        <!-- 댓글 목록 -->
-        <v-data-iterator :items="comments">
-          <v-row v-for="comment in comments" :key="comment.sequence">
-            <v-col>
-              <v-card variant="elevated" hover>
-                <v-form @submit.prevent>
-                  <v-card-title>
-                    <v-icon icon="mdi-account-badge" size="small"></v-icon>
-                    {{ comment.author }}
-                  </v-card-title>
-                  <v-card-subtitle>
-                    {{ comment.createdAt }}
-                  </v-card-subtitle>
-                  <v-card-text>
-                    <v-textarea
-                      v-model="comment.contents"
-                      auto-grow
-                      rows="1"
-                      max-rows="3"
-                      :disabled="comment.author !== userInfo.id"
-                      variant="plain"
-                    ></v-textarea>
-                  </v-card-text>
-                  <template v-if="comment.author === userInfo.id">
-                    <v-card-actions>
-                      <v-btn
-                        prepend-icon="mdi-update"
-                        size="small"
-                        color="secondary"
-                        variant="outlined"
-                        style="margin-right: 1rem"
-                        @click="updateComment(comment)"
-                        >수정</v-btn
-                      >
-                      <v-btn
-                        prepend-icon="mdi-delete"
-                        size="small"
-                        color="warning"
-                        variant="outlined"
-                        @click="deleteComment(comment.sequence)"
-                        >삭제</v-btn
-                      >
-                    </v-card-actions>
-                  </template>
-                </v-form>
-              </v-card>
-            </v-col>
-          </v-row>
+      <!-- 댓글 목록 -->
+      <v-card class="pb-3 comments" border flat>
+        <v-data-iterator :items="comments" :items-per-page="2" :search="search">
+          <!-- header -->
+          <template v-slot:header>
+            <v-toolbar class="px-2">
+              <v-text-field
+                v-model="search"
+                clearable
+                density="comfortable"
+                hide-details
+                placeholder="Search"
+                prepend-inner-icon="mdi-magnify"
+                style="max-width: 300px"
+                variant="solo"
+              ></v-text-field>
+            </v-toolbar>
+          </template>
+          <!-- default -->
+          <template v-slot:default="{ items }">
+            <v-container class="pa-2" fluid>
+              <v-row v-for="item in items" :key="item.sequence" rows="auto">
+                <v-col dense>
+                  <v-card class="pb-3" border flat>
+                    <v-form @submit.prevent>
+                      <v-card-title>
+                        <v-icon icon="mdi-account-badge" size="small"></v-icon>
+                        {{ item.raw.author }}
+                      </v-card-title>
+                      <v-card-subtitle>
+                        {{ item.raw.createdAt }}
+                      </v-card-subtitle>
+                      <v-divider style="margin: 0.5rem"></v-divider>
+                      <v-card-text style="padding-top: 0">
+                        <v-textarea
+                          v-model="item.raw.contents"
+                          auto-grow
+                          rows="1"
+                          max-rows="3"
+                          :disabled="item.raw.author !== userInfo.id"
+                          variant="plain"
+                          hide-details
+                        ></v-textarea>
+                      </v-card-text>
+                      <template v-if="item.raw.author === userInfo.id">
+                        <v-card-actions>
+                          <v-btn
+                            prepend-icon="mdi-update"
+                            size="small"
+                            color="secondary"
+                            variant="outlined"
+                            style="margin-right: 1rem"
+                            @click="updateComment(item.raw)"
+                            >수정</v-btn
+                          >
+                          <v-btn
+                            prepend-icon="mdi-delete"
+                            size="small"
+                            color="warning"
+                            variant="outlined"
+                            @click="deleteComment(comment.sequence)"
+                            >삭제</v-btn
+                          >
+                        </v-card-actions>
+                      </template>
+                    </v-form>
+                  </v-card>
+                </v-col>
+              </v-row>
+            </v-container>
+          </template>
+          <!-- 페이징 -->
           <template v-slot:footer="{ page, pageCount, prevPage, nextPage }">
             <div class="d-flex align-center justify-center pa-4">
               <v-btn
@@ -379,7 +406,7 @@ watch(participants, (newCount) => {
                 @click="prevPage"
               ></v-btn>
 
-              <div class="mx-2 text-caption">Page {{ page }} of {{ pageCount }}</div>
+              <div class="mx-2 text-caption">{{ page }} / {{ pageCount }}</div>
 
               <v-btn
                 :disabled="page >= pageCount"
@@ -392,7 +419,7 @@ watch(participants, (newCount) => {
             </div>
           </template>
         </v-data-iterator>
-      </v-container>
+      </v-card>
     </v-sheet>
   </v-layout>
 </template>
@@ -402,5 +429,10 @@ watch(participants, (newCount) => {
   display: flex;
   justify-content: flex-end;
   margin-top: 0.5rem;
+}
+
+.comments {
+  max-height: 250px;
+  overflow-y: auto;
 }
 </style>
