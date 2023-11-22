@@ -6,7 +6,7 @@ import SignupView from '../views/SignupView.vue'
 import BoardListView from '../views/BoardListView.vue'
 import UserView from '../views/UserView.vue'
 import UserModifyView from '../views/UserModifyView.vue'
-
+import SearchComponent from '../components/SearchComponent.vue'
 import UserReviewComponent from '../components/my/UserReviewComponent.vue'
 import UserRecruitComponent from '../components/my/UserRecruitComponent.vue'
 import AttractionView from '../views/AttractionView.vue'
@@ -37,7 +37,7 @@ const router = createRouter({
     },
     {
       name: 'write',
-      path: '/board/write',
+      path: '/board/write:contentId',
       component: BoardWriteView
     },
     {

@@ -15,7 +15,6 @@ export const useTravelStore = defineStore(
     const searchTravelSpot = async () => {
       // 서버로 요청
       if (searchResult.value != [] && searchResult.value.length != 0) {
-        console.log('안빔!')
         console.log()
         return searchResult.value
       } else {
