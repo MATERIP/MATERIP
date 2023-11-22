@@ -16,4 +16,5 @@ public interface AttractionInfoDao {
 	
 	List<AttractionInfo> getAttractionInfoBySido(int sidoCode);
 	List<String> getAttractionInfoBySidoGugun(int sidoCode, int gugunCode);
+	Integer getAttractionContentId(AttractionInfo attractionInfo);
 }

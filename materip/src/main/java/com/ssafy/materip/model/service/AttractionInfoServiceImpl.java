@@ -45,5 +45,10 @@ public class AttractionInfoServiceImpl implements AttractionInfoService {
 	public List<String> getTravelListBySidoGugun(int sidoCode, int gugunCode) {
 		return attractionInfoDao.getAttractionInfoBySidoGugun(sidoCode, gugunCode);
 	}
+
+	@Override
+	public Integer getTravelSpot(AttractionInfo attractionInfo) {
+		return attractionInfoDao.getAttractionContentId(attractionInfo);
+	}
 	
 }

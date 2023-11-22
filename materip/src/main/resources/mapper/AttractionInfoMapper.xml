@@ -56,5 +56,13 @@
 		attraction_info
 		WHERE sido_code = #{sidoCode} AND gugun_code = #{gugunCode};
 	</select>
-
+	
+	<select id="getAttractionContentId" parameterType="attractionInfo" resultType="Integer">
+		SELECT content_id
+		FROM
+		attraction_info
+		WHERE sido_code = #{sidoCode} AND gugun_code = #{gugunCode} AND title = #{title}
+		LIMIT 1;
+	</select>
+		
 </mapper>

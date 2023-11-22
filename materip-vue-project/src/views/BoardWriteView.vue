@@ -15,9 +15,17 @@ const { isAdmin } = storeToRefs(userStore);
 const sidoCode = ref([
   {
     name: "",
-    value: "",
+    code: "",
   },
 ]);
+
+const gugunCode = ref([]);
+
+const selectedSido = ref();
+const selectedGugun = ref();
+const selectedAttraction = ref();
+const gugunData = ref({});
+const contentId = ref();
 
 const router = useRouter();
 const board = ref({
@@ -27,7 +35,7 @@ const board = ref({
   boardType: null,
   maxCount: 2,
   currentCount: 0,
-  attractionId: "",
+  travelSpot: 0,
 });
 
 const attractionList = ref([]);
@@ -67,13 +75,50 @@ onMounted(() => {
 
 watch(
   () => board.value.boardType,
+  (newValue) => {}
+);
+
+watch(
+  () => selectedSido.value,
   (newValue) => {
-    console.log(newValue);
+    // console.log(newValue);
+    // 선택된 시도가 바뀌면 구군 목록을 초기화
+    selectedGugun.value = "";
+
+    // 선택된 시도에 따라 구군 목록을 가져옴
+    getGugunCode(sidoCode.value[selectedSido.value]);
+    // 선택된 시도에 따라 관광지 목록을 가져옴
+    searchAttractionByRegion1(sidoCode.value[selectedSido.value]);
+  }
+);
+
+watch(
+  () => selectedGugun.value,
+  (newValue) => {
+    // console.log(newValue);
+
+    console.log(gugunData.value[selectedGugun.value]);
+
+    // 선택된 구군이 바뀌면 관광지 목록을 초기화
+    selectedAttraction.value = "";
+
+    // 선택된 구군에 따라 관광지 목록을 가져옴
+    if (selectedGugun.value === "") return;
+    searchAttractionByRegion2(
+      sidoCode.value[selectedSido.value],
+      gugunData.value[selectedGugun.value]
+    );
   }
 );
 
 const write = async () => {
-  console.log(board.value);
+  // board.value.travelSpot = selectedAttraction.value;
+
+  // console.log(selectedSido.value + "," + selectedGugun.value);
+  await searchAttractionContentId();
+  // 1초 지연
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  // console.log(board.value);
   await axios
     .post("/board/write", board.value)
     .then(() => {
@@ -94,9 +139,19 @@ const write = async () => {
 
 // 시도 코드 목록 가져오기
 const getSidoCode = async () => {
-  await axios.get(`/attraction/info/sido`).then((res) => {
-    sidoCode.value = res.data;
-    console.log(sidoCode.value);
+  await axios.get(`/attraction/info/sido`).then((response) => {
+    sidoCode.value = response.data;
+    // console.log(sidoCode.value);
+  });
+};
+
+// 구군 코드 목록 가져오기
+const getGugunCode = async (sidocode) => {
+  // console.log(sidocode)
+  await axios.get(`/attraction/info/gugun?sidocode=${sidocode}`).then((response) => {
+    gugunData.value = response.data;
+    gugunCode.value = Object.keys(response.data).sort();
+    // console.log(gugunCode.value);
   });
 };
 
@@ -104,17 +159,43 @@ const getSidoCode = async () => {
 const searchAttractionByRegion1 = async (item) => {
   await axios.get(`/attraction/info/region1?sidocode=${item}`).then((res) => {
     attractionList.value = res.data;
-    console.log(attractionList.value);
+    // console.log(attractionList.value);
   });
 };
 
 // 시도, 구군 코드로 관광지 검색
-const searchAttractionByRegion2 = async (item) => {
+const searchAttractionByRegion2 = async (sidocode, guguncode) => {
   await axios
-    .get(`/attraction/info/region2?guguncode=${item.gugunCode}&sidocode=${item.sidoCode}`)
+    .get(`/attraction/info/region2?guguncode=${guguncode}&sidocode=${sidocode}`)
     .then((res) => {
       attractionList.value = res.data;
-      console.log(attractionList.value);
+      // console.log(attractionList.value);
+    });
+};
+
+const searchAttractionContentId = async () => {
+  await axios
+    .post(`/attraction/info/contentid`, {
+      addr1: "",
+      addr2: "",
+      contentId: null,
+      contentTypeId: 0,
+      firstImage: "",
+      firstImage2: "",
+      gugunCode: gugunData.value[selectedGugun.value],
+      latitude: 0,
+      longitude: 0,
+      mlevel: "string",
+      readcount: 0,
+      sidoCode: sidoCode.value[selectedSido.value],
+      tel: "",
+      title: selectedAttraction.value,
+      zipcode: "",
+    })
+    .then((response) => {
+      console.log(response.data);
+      board.value.travelSpot = response.data;
+      // console.log(attractionList.value);
     });
 };
 </script>
@@ -146,6 +227,7 @@ const searchAttractionByRegion2 = async (item) => {
               style="display: flex; margin-bottom: 1.5rem; min-width: 10rem max-width: fit-content"
             >
             </v-select>
+            <!-- 모집글인 경우... -->
             <template v-if="board.boardType === 'recruitment'">
               <div class="count">
                 <p>최대 인원 수</p>
@@ -166,35 +248,56 @@ const searchAttractionByRegion2 = async (item) => {
                 ></v-icon>
               </div>
             </template>
+
+            <!-- 
             <v-chip-group>
               <v-chip
                 selected-class="text-orange-accent-4"
-                v-for="(val, name) in sidoCode"
-                :key="val"
+                v-for="(code, name) in sidoCode"
+                :key="code"
                 :value="name"
-                @change="searchAttractionByRegion1(val)"
+                @click="getGugunCode(code), searchAttractionByRegion1(code)"
                 >{{ name }}</v-chip
               >
             </v-chip-group>
+
             <v-chip-group>
               <v-chip
-                v-model="areaCode.gugunCode"
-                v-for="item in areaCode"
-                :key="item.gugunCode"
-                :value="item.gugunCode"
-                @change="searchAttractionByRegion(item)"
-              ></v-chip>
-            </v-chip-group>
-            <v-select class="select-attraction"> </v-select>
-            <!-- <v-select class="select-sido" label="시도 선택">
-              <template v-slot:item="{ props }">
-                <v-list-item v-bind="props"></v-list-item>
-              </template>
+                selected-class="text-orange-accent-4"
+                v-for="(code, name) in gugunCode"
+                :key="code"
+                :value="name"
+                @click="searchAttractionByRegion2(selectedSido, code)"
+                >{{ name }}</v-chip>
+            </v-chip-group> -->
+
+            <v-select
+              class="select-sido"
+              label="시/도 선택"
+              v-model="selectedSido"
+              :items="Object.keys(sidoCode).sort()"
+              item-text="name"
+              item-value="code"
+            ></v-select>
+
+            <v-select
+              class="select-gugun"
+              label="구/군 선택"
+              v-model="selectedGugun"
+              :items="gugunCode"
+              item-text="name"
+              item-value="code"
+            ></v-select>
+
+            <v-select
+              class="select-attraction"
+              v-model="selectedAttraction"
+              label="관광지 선택"
+              :items="attractionList"
+              item-text="title"
+              item-value="contentId"
+            >
             </v-select>
-
-            <v-select class="select-gugun" label="구군 선택"></v-select>
-
-            <v-select class="select-attraction" label="관광지 선택"></v-select> -->
           </div>
           <v-text-field
             clearable

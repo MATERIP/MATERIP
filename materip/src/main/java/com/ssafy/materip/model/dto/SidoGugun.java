@@ -28,9 +28,9 @@ public class SidoGugun implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
-		FileOutputStream fStreams = new FileOutputStream("C:\\\\Users\\\\SSAFY\\\\Downloads\\\\sido.ser");
+		FileOutputStream fStreams = new FileOutputStream("C:\\\\Users\\\\82105\\\\Downloads\\\\sido.ser");
 		ObjectOutputStream oss = new ObjectOutputStream(fStreams);
-		FileOutputStream fStreamg = new FileOutputStream("C:\\\\Users\\\\SSAFY\\\\Downloads\\\\gugun.ser");
+		FileOutputStream fStreamg = new FileOutputStream("C:\\\\Users\\\\82105\\\\Downloads\\\\gugun.ser");
 		ObjectOutputStream osg = new ObjectOutputStream(fStreamg);
 		
 		
@@ -39,13 +39,13 @@ public class SidoGugun implements Serializable {
 		JSONParser jsonParser = new JSONParser();
 
 		Map<String, Integer> sidoMap = new HashMap<String, Integer>();
-		Map<String, HashMap<String, Integer>> guGunMap = new HashMap<String, HashMap<String, Integer>>();
+		Map<Integer, HashMap<String, Integer>> guGunMap = new HashMap<Integer, HashMap<String, Integer>>();
 		int[] sidoCode = new int[] { 1, 6, 2, 4, 5, 3, 7, 8, 31, 32, 33, 34, 35, 36, 37, 38, 39 };
 		Map<String, Object> map = new HashMap<String, Object>();
 		int idx = 0;
 		try {
 			Object object = jsonParser
-					.parse(new FileReader("C:\\Users\\SSAFY\\Downloads\\korea-administrative-district.json"));
+					.parse(new FileReader("C:\\Users\\82105\\Downloads\\korea-administrative-district.json"));
 
 			JSONObject jsonObject = (JSONObject) object;
 			for (JSONObject obj : (List<JSONObject>) jsonObject.get("data")) {
@@ -59,18 +59,18 @@ public class SidoGugun implements Serializable {
 						}
 					});
 
-					sidoMap.put((String) sido, sidoCode[idx++]);
+					sidoMap.put((String) sido, sidoCode[idx]);
 
 					HashMap<String, Integer> tmp = new HashMap<String, Integer>();
-//					if(sido.equals("세종특별자치시")) {
-//						tmp.put((String)sido, 1);
-//					}
+					if(sido.equals("세종특별자치시")) {
+						tmp.put((String)sido, 1);
+					}
 					int idx2 = 1; // 구군 코드 시작 인덱스
 					for (String gugun : (List<String>) obj.get(sido)) {
 						tmp.put(gugun, idx2++);
 
 					}
-					guGunMap.put((String) sido, (HashMap<String, Integer>) tmp.clone());
+					guGunMap.put(sidoCode[idx++], (HashMap<String, Integer>) tmp.clone());
 				}
 				
 			}
