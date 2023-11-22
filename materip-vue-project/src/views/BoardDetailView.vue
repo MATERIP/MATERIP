@@ -334,7 +334,7 @@ watch(participants, (newCount) => {
                 clearable
                 density="comfortable"
                 hide-details
-                placeholder="Search"
+                placeholder="댓글 검색..."
                 prepend-inner-icon="mdi-magnify"
                 style="max-width: 300px"
                 variant="solo"
@@ -344,7 +344,7 @@ watch(participants, (newCount) => {
           <!-- default -->
           <template v-slot:default="{ items }">
             <v-container class="pa-2" fluid>
-              <v-row v-for="item in items" :key="item.sequence" rows="auto">
+              <v-row v-for="item in items" :key=item.sequence rows="auto">
                 <v-col dense>
                   <v-card class="pb-3" border flat>
                     <v-form @submit.prevent>
@@ -383,7 +383,7 @@ watch(participants, (newCount) => {
                             size="small"
                             color="warning"
                             variant="outlined"
-                            @click="deleteComment(comment.sequence)"
+                            @click="deleteComment(item.raw.sequence)"
                             >삭제</v-btn
                           >
                         </v-card-actions>
