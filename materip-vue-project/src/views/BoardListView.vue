@@ -51,7 +51,7 @@ const headers = computed(() => {
       align: "center",
       sortable: false,
       value: (item) =>
-        item.maxCount === 0 ? "" : `${item.currentCount}/${item.maxCount}`,
+        item.boardType !== "recruitment" ? "" : `${item.currentCount}/${item.maxCount}`,
     });
   }
 
@@ -177,6 +177,7 @@ const goWrite = () => {
 h1 {
   margin-top: 0;
   align-self: center;
+  font-family: 'Ghanachocolate';
 }
 
 .notice {

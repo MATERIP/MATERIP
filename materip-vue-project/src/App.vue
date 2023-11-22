@@ -13,4 +13,17 @@ import FooterComponent from './components/FooterComponent.vue'
   </v-app>
 </template>
 
-<style scoped></style>
+<style>
+
+.v-application {
+  font-family: 'Ghanachocolate';
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'Ghanachocolate';
+  src : url('./assets/Ghanachocolate.ttf') format('truetype');
+  font-weight: 300;
+}
+
+</style>

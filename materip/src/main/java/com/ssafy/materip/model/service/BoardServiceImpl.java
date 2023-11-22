@@ -37,14 +37,15 @@ public class BoardServiceImpl implements BoardService {
 		System.out.println(board.toString());
 		boardDao.createBoard(board);
 		
-		// 방금 쓴 글의 아이디 가져오기
-		List<Board> myMateList =  boardDao.readMateBoardsByUserId(board.author);
-		// 모집글 작성자를 참여자로 추가하기
-		Participants participants = new Participants();
-		participants.setBoardId(myMateList.get(0).id);
-		participants.setUserId(board.author);
-		participantsDao.addParticipants(participants);
-		
+		if(board.boardType.equals("recruitment")) { // 모집글인 경우...
+			// 방금 쓴 글의 아이디 가져오기
+			List<Board> myMateList =  boardDao.readMateBoardsByUserId(board.author);
+			// 모집글 작성자를 참여자로 추가하기
+			Participants participants = new Participants();
+			participants.setBoardId(myMateList.get(0).id);
+			participants.setUserId(board.author);
+			participantsDao.addParticipants(participants);
+		}
 		return 0;
 	}
 
