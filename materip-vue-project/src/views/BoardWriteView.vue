@@ -2,25 +2,35 @@
 import { ref, onMounted, watch, inject, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "../stores/user-store";
+import { useTravelStore } from "../stores/travel-store";
 import { storeToRefs } from "pinia";
 
 const axios = inject("axios");
 
 const userStore = useUserStore();
+const travelStore = useTravelStore();
 const { userInfo, userId } = storeToRefs(userStore);
 const { isAdmin } = storeToRefs(userStore);
+
+const sidoCode = ref([
+  {
+    name: "",
+    value: "",
+  },
+]);
 
 const router = useRouter();
 const board = ref({
   title: "",
   contents: "",
-
   author: userId.value,
   boardType: null,
   maxCount: 2,
   currentCount: 0,
+  attractionId: "",
 });
 
+const attractionList = ref([]);
 
 const items = ref([
   {
@@ -41,12 +51,12 @@ const items = ref([
 ]);
 
 onMounted(() => {
-
   userStore.getUserInfo(userId.value);
+  getSidoCode();
+
   console.log(userInfo.value.id);
   console.log(isAdmin.value);
   if (isAdmin.value === 1) {
-
     items.value[0].show = true;
   }
 
@@ -79,6 +89,34 @@ const write = async () => {
       console.log(error);
     });
 };
+
+// attraction
+
+// 시도 코드 목록 가져오기
+const getSidoCode = async () => {
+  await axios.get(`/attraction/info/sido`).then((res) => {
+    sidoCode.value = res.data;
+    console.log(sidoCode.value);
+  });
+};
+
+// 시도 코드로 관광지 검색
+const searchAttractionByRegion1 = async (item) => {
+  await axios.get(`/attraction/info/region1?sidocode=${item}`).then((res) => {
+    attractionList.value = res.data;
+    console.log(attractionList.value);
+  });
+};
+
+// 시도, 구군 코드로 관광지 검색
+const searchAttractionByRegion2 = async (item) => {
+  await axios
+    .get(`/attraction/info/region2?guguncode=${item.gugunCode}&sidocode=${item.sidoCode}`)
+    .then((res) => {
+      attractionList.value = res.data;
+      console.log(attractionList.value);
+    });
+};
 </script>
 
 <template>
@@ -105,7 +143,7 @@ const write = async () => {
               item-title="name"
               item-value="value"
               v-model="board.boardType"
-              style="display: flex; margin-bottom: 1.5rem; width: 10rem"
+              style="display: flex; margin-bottom: 1.5rem; min-width: 10rem max-width: fit-content"
             >
             </v-select>
             <template v-if="board.boardType === 'recruitment'">
@@ -128,6 +166,35 @@ const write = async () => {
                 ></v-icon>
               </div>
             </template>
+            <v-chip-group>
+              <v-chip
+                selected-class="text-orange-accent-4"
+                v-for="(val, name) in sidoCode"
+                :key="val"
+                :value="name"
+                @change="searchAttractionByRegion1(val)"
+                >{{ name }}</v-chip
+              >
+            </v-chip-group>
+            <v-chip-group>
+              <v-chip
+                v-model="areaCode.gugunCode"
+                v-for="item in areaCode"
+                :key="item.gugunCode"
+                :value="item.gugunCode"
+                @change="searchAttractionByRegion(item)"
+              ></v-chip>
+            </v-chip-group>
+            <v-select class="select-attraction"> </v-select>
+            <!-- <v-select class="select-sido" label="시도 선택">
+              <template v-slot:item="{ props }">
+                <v-list-item v-bind="props"></v-list-item>
+              </template>
+            </v-select>
+
+            <v-select class="select-gugun" label="구군 선택"></v-select>
+
+            <v-select class="select-attraction" label="관광지 선택"></v-select> -->
           </div>
           <v-text-field
             clearable
@@ -205,8 +272,20 @@ const write = async () => {
   justify-content: center;
 }
 
-p {
-  font-family: "Noto Sans KR", sans-serif;
-  font-weight: bold;
+.select-sido {
+  margin: 0 1rem;
+  min-width: 8rem;
+  max-width: fit-content;
+}
+
+.select-gugun {
+  margin: 0 1rem;
+  min-width: 8rem;
+  max-width: fit-content;
+}
+
+.select-attraction {
+  min-width: 15rem;
+  max-width: fit-content;
 }
 </style>
