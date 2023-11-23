@@ -12,3 +12,4 @@ add column `max_count` int default 0;
 alter table `board`
 add column `current_count` int default 0;
 
+select * from attraction_info;

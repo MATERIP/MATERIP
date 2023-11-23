@@ -9,7 +9,7 @@ export const useUserStore = defineStore(
   () => {
     // ***************** state *****************
     const axios = inject('axios')
-    const userInfo = ref() // mypage 유저 정보 (접속한 사용자 정보 아님)
+    const userInfo = ref({ nickname: 'unknowon', name: 'unknowon' }) // mypage 유저 정보 (접속한 사용자 정보 아님)
     const userId = ref() // 접속한 사용자 아이디
     const isAdmin = ref(0) // 접속한 관리자 정보 (0: 일반 사용자, 1: 관리자)
     const auth = ref(false) // 접속한 사용자가 자신의 정보를 수정하는 경우 true, 아니면 false
@@ -150,10 +150,16 @@ export const useUserStore = defineStore(
     }
 
     // 회원 탈퇴 시 axios header에 저장된 accessToken을 삭제한다.
-    const withdrawal = async (userInfo) => {
-      await axios.delete('user/withdrawal', userInfo).then(() => {
+    const withdrawal = async () => {
+      await axios.delete('user/withdrawal', { data: userId.value }).then(() => {
+        console.log(userId.value)
         axios.defaults.headers.common['Authorization'] = ''
         changeMenuState()
+        router.push('/')
+        isAdmin.value = 0
+        userId.value = ''
+        userInfo.value = { nickname: 'unknowon', name: 'unknowon' }
+        auth.value = false
       })
     }
 

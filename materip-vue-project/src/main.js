@@ -29,7 +29,7 @@ const vuetify = createVuetify({
 const app = createApp(App)
 
 // pinia-plugin-persistedstate
-import { instance} from '@/api/axios'
+import { instance } from '@/api/axios'
 
 app.provide('axios', instance)
 app.use(createPinia().use(piniaPluginPersistedState))
@@ -37,5 +37,4 @@ app.use(router)
 app.use(vuetify)
 app.use(aliases)
 app.use(mdi)
-
 app.mount('#app')

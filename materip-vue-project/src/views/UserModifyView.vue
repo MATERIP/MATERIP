@@ -1,13 +1,9 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import axios from 'axios'
-import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useUserStore } from '../stores/user-store'
 const userStore = useUserStore()
 const { userInfo } = storeToRefs(userStore)
-
-const router = useRouter()
 
 const message = ref('')
 const color = ref('')
@@ -17,36 +13,6 @@ const hasInput = ref(false)
 onMounted(() => {
   hasInput.value = false
 })
-
-const instance = axios.create({
-  baseURL: 'http://localhost:8080/'
-})
-
-function idCheck() {
-  hasInput.value = true
-  // console.log(userInfo.value.id)
-  instance
-    .post('/user', { id: userInfo.id })
-    .then(function (response) {
-      //console.log(response.data);
-      if (response.data == 1) {
-        message.value = '중복된 아이디 존재'
-        color.value = 'red'
-        icon.value = 'mdi-alert-circle'
-      } else if (userInfo.id === '') {
-        message.value = '아이디를 입력하세요!'
-        color.value = 'red'
-        icon.value = 'mdi-alert-circle'
-      } else {
-        message.value = '사용 가능한 아이디'
-        color.value = 'green'
-        icon.value = 'mdi-check-circle'
-      }
-    })
-    .catch(function (error) {
-      console.log(error)
-    })
-}
 </script>
 
 <template>
@@ -67,17 +33,9 @@ function idCheck() {
             variant="solo"
             v-model="userInfo.id"
             required
+            disabled
             @keyup="idCheck"
-          >
-            <template v-if="hasInput" v-slot:append-inner>
-              <v-btn rounded size="15" flat>
-                <v-icon v-bind:style="{ color: color }">{{ icon }}</v-icon>
-                <v-tooltip activator="parent" location="top">
-                  <v-text>{{ message }}</v-text>
-                </v-tooltip>
-              </v-btn>
-            </template>
-          </v-text-field>
+          ></v-text-field>
 
           <v-text-field
             density="comfortable"

@@ -4,18 +4,26 @@ import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.Map;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import org.springframework.web.bind.annotation.PathVariable;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.ssafy.materip.model.dto.AttractionDetail;
+import com.ssafy.materip.model.service.AttractionDescriptionService;
 import com.ssafy.materip.model.dto.AttractionInfo;
 import com.ssafy.materip.model.service.AttractionInfoService;
 import io.swagger.annotations.Api;
@@ -27,28 +35,32 @@ import io.swagger.annotations.ApiOperation;
 @JsonAutoDetect
 public class AttractionController {
 	private final AttractionInfoService attractionInfoService;
-
+	private final AttractionDescriptionService attractionDescriptionService;
 	
 	@Autowired
-	public AttractionController(AttractionInfoService attractionInfoService) {
+	public AttractionController(AttractionInfoService attractionInfoService, AttractionDescriptionService attractionDescriptionService) {
+		
 		super();
 		this.attractionInfoService = attractionInfoService;
+		this.attractionDescriptionService = attractionDescriptionService;
 	}
+
 
 	@ApiOperation(value = "여행지 전체 이름 목록", notes="여행지 전체 이름 목록을 반환합니다.")
 	@GetMapping("/info")
 	public ResponseEntity<?> getTravelTitleList() throws Exception {
-		
 		return new ResponseEntity<>(attractionInfoService.getTravelNameList(), HttpStatus.OK);
 	}
 	
+
 	@ApiOperation(value = "여행지 이름으로 검색", notes="여행지 이름으로 여행지 상세 정보를 반환합니다.")
 	@GetMapping("/searchinfo/{title}")
-	public ResponseEntity<?> searchByTitle(String title) throws Exception {
+	public ResponseEntity<?> searchByTitle(@PathVariable("title") String title) throws Exception {
 		
 		return new ResponseEntity<>(attractionInfoService.getTravelNameSearchList(title), HttpStatus.OK);
 	}
 	
+
 	@ApiOperation(value = "여행지 전체 상세 목록", notes="여행지 전체 상세 정보를 반환합니다.")
 	@GetMapping("/info/detail")
 	public ResponseEntity<?> getTravelList() throws Exception {
@@ -109,5 +121,15 @@ public class AttractionController {
 	public ResponseEntity<?> getAttractionInfoByContentId(@RequestParam(value="contentId") Integer contentId) throws Exception {
 		return new ResponseEntity<>(attractionInfoService.getTravelInfoByContentId(contentId), HttpStatus.OK);
 	}
-	
+
+
+	@ApiOperation(value = "컨텐츠 아이디로 여행지 정보 가져오기", notes="컨텐츠 아이디와 일치하는 여행지 정보를 반환합니다.")
+	@GetMapping("/information/{content_id}")
+	public ResponseEntity<?> getAttractionInformationByContentId(@PathVariable(value="content_id") Integer contentId) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("info", attractionInfoService.getTravelInfoByContentId(contentId));
+		result.put("description", attractionDescriptionService.getAttractionDescription(contentId));
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+
 }
