@@ -6,7 +6,7 @@ import SignupView from '../views/SignupView.vue'
 import BoardListView from '../views/BoardListView.vue'
 import UserView from '../views/UserView.vue'
 import UserModifyView from '../views/UserModifyView.vue'
-
+import SearchComponent from '../components/SearchComponent.vue'
 import UserReviewComponent from '../components/my/UserReviewComponent.vue'
 import UserRecruitComponent from '../components/my/UserRecruitComponent.vue'
 import AttractionView from '../views/AttractionView.vue'
@@ -16,6 +16,7 @@ import BoardWriteView from '../views/BoardWriteView.vue'
 import BoardDetailView from '../views/BoardDetailView.vue'
 import BoardUpdateView from '../views/BoardUpdateView.vue'
 
+import MapComponentView from '../components/MapComponent.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -36,7 +37,7 @@ const router = createRouter({
     },
     {
       name: 'write',
-      path: '/board/write',
+      path: '/board/write:contentId',
       component: BoardWriteView
     },
     {
@@ -95,6 +96,11 @@ const router = createRouter({
       name: 'modify',
       path: '/user/modify',
       component: UserModifyView
+    },
+    {
+      name: 'map',
+      path: '/map',
+      component: MapComponentView
     }
   ]
 })
