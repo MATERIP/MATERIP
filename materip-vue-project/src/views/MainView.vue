@@ -2,38 +2,24 @@
 import { ref, watchEffect, onMounted, onBeforeUnmount } from 'vue'
 import VideoBackground from 'vue-responsive-video-background-player'
 const showComponent = ref(false)
-
+import CarouselComponent from '../components/CarouselComponent.vue'
 onMounted(() => {
   setTimeout(() => {
     showComponent.value = true
-  }, 5500)
-  window.addEventListener('scroll', handleScroll)
+    scrollToPosition(280)
+  }, 5700)
 })
-
-const handleScroll = () => {
-  // Adjust the values based on your layout and scroll behavior
-  const scrollThreshold = 500
-  const maxOpacity = 1
-
-  // Calculate the opacity based on the scroll position
-  const opacity = 1 - window.scrollY / scrollThreshold
-  scrollOpacity.value = Math.max(opacity, 0)
-
-  // Update the opacity of the text
-  const textElements = document.querySelectorAll('.fade-in')
-  textElements.forEach((element) => {
-    element.style.opacity = scrollOpacity.value
+const scrollToPosition = (position) => {
+  window.scrollTo({
+    top: position,
+    behavior: 'smooth'
   })
 }
-
-// Cleanup the event listener when the component is destroyed
-onBeforeUnmount(() => {
-  window.removeEventListener('scroll', handleScroll)
-})
+const position = ref(0)
 </script>
 
 <template>
-  <div>
+  <div class="backgrd">
     <!-- 어두운 배경 -->
 
     <!-- 실제 컨텐츠 -->
@@ -42,9 +28,8 @@ onBeforeUnmount(() => {
       <video-background src="src/assets/sky.mp4" style="max-height: 1200px; height: 1200px">
       </video-background>
     </div>
-    <div class="overlay">
-      {{ showComponent }}
-      <div style="text-align: center; margin-top: 350px">
+    <div class="overlay main-text">
+      <div style="text-align: center">
         <div class="text-wrap">
           <svg width="525" height="160" viewBox="0 0 525 160">
             <text x="0" y="50%">L</text>
@@ -62,20 +47,16 @@ onBeforeUnmount(() => {
         </div>
       </div>
     </div>
-    <v-app>
-      <v-fade-transition>
-        <div v-if="showComponent" class="fade-in slide-in">
-          <div style="height: 100px; width: 100px; background: #000; z-index: 3"></div>
+
+    <Transition>
+      <div v-if="showComponent" class="carousel">
+        <div style="height: 80%; width: 50%; z-index: 3">
+          <CarouselComponent />
         </div>
-      </v-fade-transition>
-    </v-app>
-    <div class="marquee">
-      <div class="textSpan">
-        <span>You spin me right round, baby. Like a record, baby.</span>
-        <span>You spin me right round, baby. Like a record, baby.</span>
       </div>
-    </div>
+    </Transition>
   </div>
+  <div style="height: 500px"></div>
 </template>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Staatliches&display=swap');
@@ -88,15 +69,14 @@ onBeforeUnmount(() => {
 }
 body {
   margin: 0;
-  overflow: hidden;
 }
 
 .overlay {
-  position: fixed;
-  top: 0;
+  position: relative;
+  top: 350px;
   left: 0;
   width: 100vw;
-  height: 1500px;
+  height: 100px;
   z-index: 300;
   transition: opacity 5s ease-in-out;
   padding: 0;
@@ -111,7 +91,16 @@ body {
   z-index: 1;
   color: #fff;
 }
-
+.carousel {
+  position: absolute;
+  top: 500px;
+  left: 0;
+  width: 100%;
+  height: 300px;
+  z-index: 30;
+  display: flex;
+  justify-content: center;
+}
 .videoContent {
   position: absolute;
   top: 0;
@@ -119,40 +108,6 @@ body {
   width: 100%;
   height: 100%;
   z-index: 0;
-}
-
-.marquee {
-  height: 25px;
-  margin-top: 1050px;
-  width: 100%;
-  background-color: rgb(255, 221, 0);
-  overflow: hidden;
-  position: relative;
-}
-
-.marquee div {
-  display: block;
-  width: 200%;
-  height: 30px;
-
-  position: absolute;
-  overflow: hidden;
-
-  animation: marquee 10s linear infinite;
-}
-
-.marquee span {
-  float: left;
-  width: 50%;
-}
-
-@keyframes marquee {
-  0% {
-    left: 0;
-  }
-  100% {
-    left: -100%;
-  }
 }
 
 body {
@@ -234,21 +189,11 @@ svg text:nth-child(12) {
   }
 }
 
-.fade-in-enter-active,
-.fade-in-leave-active {
-  transition: opacity 10s; /* 나타나는데 1.5초 동안의 시간을 가짐 */
-}
-.fade-in-enter,
-.fade-in-leave-to {
-  opacity: 0;
+.v-enter-active {
+  transition: opacity 0.5s ease;
 }
 
-.slide-in-enter-active,
-.slide-in-leave-active {
-  transition: transform 10s; /* 나타나는데 1.5초 동안의 시간을 가짐 */
-}
-.slide-in-enter,
-.slide-in-leave-to {
-  transform: translateY(100%); /* 시작 위치를 아래로 이동시킴 */
+.v-enter-from {
+  opacity: 0;
 }
 </style>

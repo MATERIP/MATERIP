@@ -15,6 +15,7 @@ import AttractionDetailView from '../views/AttractionDetailView.vue'
 import BoardWriteView from '../views/BoardWriteView.vue'
 import BoardDetailView from '../views/BoardDetailView.vue'
 import BoardUpdateView from '../views/BoardUpdateView.vue'
+import CarouselComponent from '../components/CarouselComponent.vue'
 
 import MapComponentView from '../components/MapComponent.vue'
 const router = createRouter({
@@ -101,6 +102,12 @@ const router = createRouter({
       name: 'map',
       path: '/map',
       component: MapComponentView
+    },
+
+    {
+      name: 'carousel',
+      path: '/carousel',
+      component: CarouselComponent
     }
   ]
 })
