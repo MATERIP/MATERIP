@@ -94,7 +94,7 @@ const goToDetail = function (contentId) {
       <template v-slot:default="{ isActive }">
         <v-card style="display: flex; justify-content: center">
           <h1 style="margin: 40px">{{ title }}</h1>
-          <div class="map"><SearchMapComponent></SearchMapComponent></div>
+          <div class="map"><SearchMapComponent /></div>
           <div class="modalcard">
             <v-btn
               id="closebtn"

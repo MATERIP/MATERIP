@@ -85,7 +85,11 @@ const displayMarker = (markerPositions) => {
     markers.value.forEach((marker) => marker.setMap(null))
   }
   console.log(markerPositions)
-  const positions = markerPositions.map((position) => new kakao.maps.LatLng(...position))
+  const positions = []
+  for (let idx = 0; idx < markerPositions.length; idx++) {
+    positions.push(new kakao.maps.LatLng(markerPositions[idx][0], markerPositions[idx][1]))
+  }
+
   console.log(positions)
   var markerImage = new kakao.maps.MarkerImage(
     'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png',
