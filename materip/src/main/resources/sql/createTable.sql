@@ -246,6 +246,9 @@ alter table `board`
 add column `max_count` int default 0;
 
 alter table `board`
+modify column `travel_date` datetime; 
+
+alter table `board`
 add column `current_count` int default 0;
 
 alter table `participants`

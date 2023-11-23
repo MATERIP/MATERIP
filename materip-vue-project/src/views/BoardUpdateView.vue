@@ -17,9 +17,11 @@ const board = ref({
   maxCount: "",
   currentCount: "",
   travelSpot: "",
+  travelDate: null,
 });
 
-const participants = ref([]);
+const dialog = ref(false);
+
 const attraction = ref({
   id: "",
   sidocode: "",
@@ -151,7 +153,14 @@ watch(board, (newboard) => {
               color="red-darken-2"
             ></v-icon>
             {{ attraction.title }}
+            <v-icon
+              icon="mdi-calendar"
+              style="margin: 0 1rem"
+              color="red-darken-2"
+            ></v-icon>
+            {{ board.travelDate }}
           </div>
+
           <v-text-field
             clearable
             label="제목"
@@ -160,6 +169,7 @@ watch(board, (newboard) => {
             variant="outlined"
             required
             width="80%"
+            :rules="[(v) => !!v || '제목을 입력하세요.']"
           >
           </v-text-field>
           <!-- 내용 textarea 사용자 입력에 맞춰 크기 키우기, 기본 row 개수: 5, 최대 row 개수: 10-->
@@ -174,6 +184,7 @@ watch(board, (newboard) => {
             persistent-counter="true"
             rows="5"
             max-rows="10"
+            :rules="[(v) => !!v || '내용을 입력하세요.']"
           >
           </v-textarea>
           <div class="button">

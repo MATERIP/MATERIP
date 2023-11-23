@@ -40,11 +40,13 @@ public class BoardServiceImpl implements BoardService {
 		if(board.boardType.equals("recruitment")) { // 모집글인 경우...
 			// 방금 쓴 글의 아이디 가져오기
 			List<Board> myMateList =  boardDao.readMateBoardsByUserId(board.author);
-			// 모집글 작성자를 참여자로 추가하기
+			// 모집글 작성자를 참여자로 추가하고 승인
 			Participants participants = new Participants();
 			participants.setBoardId(myMateList.get(0).id);
 			participants.setUserId(board.author);
+			participants.setStatus(1);
 			participantsDao.addParticipants(participants);
+			participantsDao.accept(participants);
 		}
 		return 0;
 	}
@@ -149,7 +151,7 @@ public class BoardServiceImpl implements BoardService {
 		Board board = boardDao.readBoardById(participants.boardId);
 		
 		if(board.currentCount < board.maxCount && !board.author.equals(participants.userId)) {
-			boardDao.increaseBoardCurrentCount(participants.boardId);
+//			boardDao.increaseBoardCurrentCount(participants.boardId);
 			return participantsDao.addParticipants(participants);
 		}
 		return -1;
@@ -173,7 +175,7 @@ public class BoardServiceImpl implements BoardService {
 		System.out.println(board.toString());
 		
 		if(board.currentCount >= 1 && !board.author.equals(participants.userId)) {
-			boardDao.decreaseBoardCurrentCount(participants.boardId);
+//			boardDao.decreaseBoardCurrentCount(participants.boardId);
 			return participantsDao.removeParticipants(participants);
 		}
 		System.out.println(board.toString());
@@ -184,8 +186,26 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public boolean isJoinable(Participants participants) throws Exception {
+		// 1인 경우...게시판 아이디, 사용자 아이디와 일치하는 참여자가 이미 존재 
 		int result = participantsDao.isJoinable(participants);
 		return result == 0;
+	}
+
+	@Override
+	public List<Participants> getAllParticipantsList(int boardId) throws Exception {
+		return participantsDao.getAllParticipants(boardId);
+	}
+
+	@Override
+	public int accept(Participants participants) throws Exception {
+		boardDao.increaseBoardCurrentCount(participants.getBoardId());
+		return participantsDao.accept(participants);
+	}
+
+	@Override
+	public int decline(Participants participants) throws Exception {
+		
+		return participantsDao.decline(participants);
 	}
 
 

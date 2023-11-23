@@ -23,8 +23,8 @@ public interface ParticipantsDao {
 	
 	int isJoinable(Participants participants) throws SQLException;
 	
-	void accept(Participants participants) throws SQLException;
+	int accept(Participants participants) throws SQLException;
 	
-	void decline(Participants participants) throws SQLException;
+	int decline(Participants participants) throws SQLException;
 }
 

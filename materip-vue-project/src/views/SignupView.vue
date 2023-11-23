@@ -140,7 +140,7 @@ const nameRules = [
 
 const nicknameRules = [
   (value) => !!value || "닉네임을 입력하세요!",
-  (value) => value.length >= 5 || "닉네임은 5글자 이상이어야 합니다.",
+  (value) => value.length >= 2 || "닉네임은 2글자 이상이어야 합니다.",
   (value) => /^[a-zA-Z0-9가-힣]+$/.test(value) || "특수문자는 사용할 수 없습니다.",
 ];
 

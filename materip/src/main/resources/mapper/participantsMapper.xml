@@ -50,8 +50,6 @@
 		FROM participants
 		WHERE board_id = #{board_id};
 	</select>
-	
-	<!--  -->
 
  	<!-- 참여중인 참여자 수  -->
 	<select id="getParticipantsCnt" parameterType="int"

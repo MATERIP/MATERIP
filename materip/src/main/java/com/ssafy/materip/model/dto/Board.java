@@ -1,5 +1,6 @@
 package com.ssafy.materip.model.dto;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -17,7 +18,7 @@ public class Board {
 	public String boardType;
 	public int travelSpot;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/seoul")
-	public Timestamp travelDate;
+	public Date travelDate;
 	public int maxCount;
 	public int currentCount;
 
@@ -93,11 +94,11 @@ public class Board {
 		this.travelSpot = travelSpot;
 	}
 
-	public Timestamp getTravelDate() {
+	public Date getTravelDate() {
 		return travelDate;
 	}
 
-	public void setTravelDate(Timestamp travelDate) {
+	public void setTravelDate(Date travelDate) {
 		this.travelDate = travelDate;
 	}
 

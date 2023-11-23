@@ -18,7 +18,8 @@
     "vue-responsive-video-background-player": "^2.3.1",
     "vue-router": "^4.2.5",
     "vue3-carousel": "^0.3.1",
-    "vuetify": "^3.4.0"
+    "vuetify": "^3.4.0",
+    "vuetify-datetime-picker": "^2.1.1"
   },
   "devDependencies": {
     "@mdi/font": "^7.3.67",
