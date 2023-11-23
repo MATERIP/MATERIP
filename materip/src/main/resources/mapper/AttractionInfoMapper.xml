@@ -32,8 +32,8 @@
 		attraction_info;
 	</select>
 
-	<select id="getAttractionSearchNameList" parameterType="String" resultType="String">
-		SELECT title FROM `attraction_info`
+	<select id="getAttractionSearchNameList" parameterType="String" resultMap="attractionInfo">
+		SELECT * FROM `attraction_info`
 		WHERE title LIKE  CONCAT('%', #{title}, '%');
 	</select>
 	
@@ -72,4 +72,5 @@
 		WHERE content_id = #{contentId}
 	</select>
 		
+
 </mapper>

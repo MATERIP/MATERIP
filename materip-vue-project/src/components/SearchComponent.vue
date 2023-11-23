@@ -1,80 +1,83 @@
-<template>
-  <v-card theme="dark" class="pa-8 d-flex justify-center flex-wrap">
-    <v-responsive max-width="550">
-      <v-img
-        class="mx-auto mt-12 mb-16"
-        max-height="140"
-        max-width="240"
-        src="https://cdn.vuetifyjs.com/docs/images/logos/vuetify-logo-dark-text.svg"
-      ></v-img>
+<script setup>
+import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useTravelStore } from '@/stores/travel-store'
 
-      <v-autocomplete
-        :items="items"
-        append-inner-icon="mdi-microphone"
-        auto-select-first
-        class="flex-full-width"
-        density="comfortable"
-        item-props
-        menu-icon=""
-        placeholder="Search Google or type a URL"
-        prepend-inner-icon="mdi-magnify"
-        rounded
-        theme="light"
-        variant="solo"
-      ></v-autocomplete>
+const travelStore = useTravelStore()
 
-      
-    </v-responsive>
-  </v-card>
-</template>
-<script>
-export default {
-  data: () => ({
-    dialog: false,
-    items: [
-      {
-        prependIcon: "mdi-clock-outline",
-        title: "recipe with chicken",
-      },
-      {
-        prependIcon: "mdi-clock-outline",
-        title: "best hiking trails near me",
-      },
-      {
-        prependIcon: "mdi-clock-outline",
-        title: "how to learn a new language",
-      },
-      {
-        prependIcon: "mdi-clock-outline",
-        title: "DIY home organization ideas",
-      },
-      {
-        prependIcon: "mdi-clock-outline",
-        title: "latest fashion trends",
-      },
-    ],
-    shortcuts: [
-      {
-        icon: "mdi-github",
-        title: "Master ",
-        href: "https://github.com/vuetifyjs/vuetify",
-      },
-      {
-        icon: "mdi-github",
-        title: "Dev",
-        href: "https://github.com/vuetifyjs/vuetify/tree/dev",
-      },
-      {
-        icon: "mdi-github",
-        title: "Stable",
-        href: "https://github.com/vuetifyjs/vuetify/tree/v2-stable",
-      },
-      {
-        icon: "mdi-github",
-        title: "My Pull Requests",
-        href: "https://github.com/vuetifyjs/vuetify/pulls/johnleider",
-      },
-    ],
-  }),
-};
+onMounted(() => {
+  travelStore.searchTravelSpot()
+})
+const inputValue = ref('')
+
+const search = function () {
+  if (inputValue.value === '') {
+    return
+  }
+  window.location.href = 'http://localhost:5173/' + 'attraction/' + inputValue.value
+}
+
+const sizes = ref([
+  '단풍',
+  '부산',
+  '제주도',
+  '경주',
+  '단양',
+  '서울',
+  '축제',
+  '강릉',
+  '음악',
+  '여수',
+  '음악축제'
+])
+const rules = ref([(value) => !!value || '검색어를 입력하세요'])
+const removeDarkEffect = function () {
+  // 입력 필드를 클릭했을 때 어두워지는 효과 제거
+  const inputField = document.querySelector('.v-text-field__slot input')
+  if (inputField) {
+    inputField.style.backgroundColor = 'transparent'
+    inputField.style.border = '1px solid #ccc' // 필요에 따라 테두리 스타일도 조정할 수 있습니다.
+  }
+}
 </script>
+
+<template>
+  <div class="searchCmp">
+    <div style="text-align: center; padding: 20px 20px">
+      <h1>어디로?🤷‍♂️</h1>
+    </div>
+    <v-form @submit.prevent="search" style="color: aliceblue">
+      <v-text-field
+        color="#ffc70f"
+        placeholder="검색어를 입력하세요"
+        :rules="rules"
+        hide-details="auto"
+        prepend-inner-icon="mdi-magnify"
+        v-model="inputValue"
+        base-color="white"
+        bg-color="white"
+        variant="underlined"
+        clearable
+        @click="removeDarkEffect"
+      ></v-text-field>
+    </v-form>
+    <div class="space"></div>
+    <v-chip-group v-model="inputValue" selected-class="text-orange-accent-4" mandatory>
+      <v-chip v-for="size in sizes" :key="size" :value="size">
+        {{ size }}
+      </v-chip>
+    </v-chip-group>
+  </div>
+</template>
+
+<style scoped>
+v-text-field {
+  width: 10rem;
+}
+.searchCmp {
+  padding: 1rem;
+}
+.space {
+  height: 2rem;
+}
+</style>
