@@ -1,25 +1,24 @@
 <script setup>
+import { onMounted, ref, nextTick } from "vue";
+import { storeToRefs } from "pinia";
+import { useRouter } from "vue-router";
+import { useUserStore } from "@/stores/user-store";
+const userStore = useUserStore();
+const { userInfo } = storeToRefs(userStore);
+const { auth } = storeToRefs(userStore);
+const { likeState } = storeToRefs(userStore);
+const { likePercent } = storeToRefs(userStore);
+const { likeRank } = storeToRefs(userStore);
 
-import { onMounted, ref, nextTick } from 'vue'
-import { storeToRefs } from 'pinia'
-import { useRouter } from 'vue-router'
-import { useUserStore } from '@/stores/user-store'
-const userStore = useUserStore()
-const { userInfo } = storeToRefs(userStore)
-const { auth } = storeToRefs(userStore)
-const { likeState } = storeToRefs(userStore)
-const { likePercent } = storeToRefs(userStore)
-const { likeRank } = storeToRefs(userStore)
-
-const router = useRouter()
-const iconColor = ref('white')
-const iconBgColor = ref('grey')
+const router = useRouter();
+const iconColor = ref("white");
+const iconBgColor = ref("grey");
 onMounted(() => {
-  userStore.getLikeRank(userInfo.value.id)
-  userStore.getLikeCnt(userInfo.value.id)
-  animateProgressBar(likePercent.value)
+  userStore.getLikeRank(userInfo.value.id);
+  userStore.getLikeCnt(userInfo.value.id);
+  animateProgressBar(likePercent.value);
 
-  console.log('auth ' + auth.value)
+  console.log("auth " + auth.value);
 
   if (likeState.value) {
     iconColor.value = "red";
@@ -62,21 +61,20 @@ const toggleButton = () => {
     iconColor.value = "white";
     console.log(iconBgColor.value + " " + iconColor.value);
   } else {
+    userStore.toggleLikeState();
 
-    userStore.toggleLikeState()
-
-    console.log('좋아요')
-    console.log(likeState.value)
-    userStore.addLikeState(userInfo.value.id)
-    iconBgColor.value = 'white'
-    iconColor.value = 'red'
-    console.log(iconBgColor.value + ' ' + iconColor.value)
+    console.log("좋아요");
+    console.log(likeState.value);
+    userStore.addLikeState(userInfo.value.id);
+    iconBgColor.value = "white";
+    iconColor.value = "red";
+    console.log(iconBgColor.value + " " + iconColor.value);
   }
 
-  userStore.getLikeRank(userInfo.value.id)
-  userStore.getLikeCnt(userInfo.value.id)
-  animateProgressBar(likePercent.value)
-}
+  userStore.getLikeRank(userInfo.value.id);
+  userStore.getLikeCnt(userInfo.value.id);
+  animateProgressBar(likePercent.value);
+};
 
 const goToWithdrawal = () => {
   var input = confirm("정말 탈퇴하시겠습니까? 탈퇴하시면 모든 정보가 삭제됩니다.");
@@ -108,7 +106,7 @@ const goToWithdrawal = () => {
                 cols="12"
               >
                 <v-avatar
-                  class="profile avatar-center-heigth avatar-shadow"
+                  class="profile avatar-center-height avatar-shadow"
                   color="grey"
                   size="164"
                 >
@@ -169,7 +167,9 @@ const goToWithdrawal = () => {
               <v-col class="text-center">
                 <v-container>
                   <v-list-item-content class="sutitles">
-                    <v-list-item-title class="text-h6"> #{{ likeRank }} </v-list-item-title>
+                    <v-list-item-title class="text-h6">
+                      #{{ likeRank }}
+                    </v-list-item-title>
                     <v-list-item-subtitle class="text-caption">랭킹</v-list-item-subtitle>
                   </v-list-item-content>
                 </v-container>

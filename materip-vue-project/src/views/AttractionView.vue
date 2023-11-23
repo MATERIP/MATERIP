@@ -1,18 +1,17 @@
 <script setup>
-import { onMounted, ref, computed } from 'vue'
-import axios from 'axios'
-import { useRoute } from 'vue-router'
-import router from '../router'
-import SearchMapComponent from '../components/SearchMapComponent.vue'
-const route = useRoute()
-const attractionName = route.params.attractionName
-const attractionMapCoord = ref([])
-const attractionMapTitle = ref([])
-const attractionMapContentId = ref([])
-const attractionList = ref([])
-
+import { onMounted, ref, computed } from "vue";
+import axios from "axios";
+import { useRoute } from "vue-router";
+import router from "../router";
+import SearchMapComponent from "../components/SearchMapComponent.vue";
+const route = useRoute();
+const attractionName = route.params.attractionName;
+const attractionMapCoord = ref([]);
+const attractionMapTitle = ref([]);
+const attractionMapContentId = ref([]);
+const attractionList = ref([]);
 onMounted(() => {
-  title.value = "#'" + attractionName + "' 검색 결과"
+  title.value = "#'" + attractionName + "' 검색 결과";
   axios({
     baseURL: "",
     method: "get",
@@ -22,23 +21,23 @@ onMounted(() => {
       "Content-Type": "application/json; charset=utf-8",
     },
   }).then(function (response) {
-    console.log(response.data)
-    attractionList.value = response.data
-    console.log(Object.keys(attractionList.value[0]))
+    console.log(response.data);
+    attractionList.value = response.data;
+    console.log(Object.keys(attractionList.value[0]));
     response.data.forEach((attr) => {
-      attractionMapCoord.value.push([attr.mapX, attr.mapY])
-      attractionMapTitle.value.push(attr.title)
-      attractionMapContentId.value.push(attr.contentId)
-    })
-  })
+      attractionMapCoord.value.push([attr.mapX, attr.mapY]);
+      attractionMapTitle.value.push(attr.title);
+      attractionMapContentId.value.push(attr.contentId);
+    });
+  });
 
   // console.log(attractionMapInfo.value)
-})
+});
 
-const title = ref('')
+const title = ref("");
 
-const itemsPerPage = ref(10)
-const page = ref(1)
+const itemsPerPage = ref(10);
+const page = ref(1);
 const headers = [
   {
     title: "🖼️🖼️🖼️",

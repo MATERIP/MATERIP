@@ -303,6 +303,11 @@ const searchAttractionContentId = async () => {
                 </v-card>
               </v-dialog>
             </v-btn>
+            {{
+              board.travelDate === null
+                ? ""
+                : board.travelDate.toLocaleDateString("ko-KR")
+            }}
           </div>
           <v-text-field
             clearable
@@ -412,6 +417,7 @@ const searchAttractionContentId = async () => {
   display: flex;
   justify-content: flex-start;
   margin-bottom: 1rem;
+  align-items: center;
 }
 
 .v-text-field {

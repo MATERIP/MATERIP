@@ -6,62 +6,65 @@
 
 <script setup>
 /**https://apis.map.kakao.com/web/sample/markerWithCustomOverlay/ */
-import { ref, onMounted, defineProps, watch, computed } from 'vue'
+import { ref, onMounted, defineProps, watch, computed } from "vue";
 
-const props = defineProps(['mapData'])
+const props = defineProps(["mapData"]);
 const mapData = computed(() => {
-  return props.mapData
-})
+  return props.mapData;
+});
 
 const initMap = () => {
-  const container = document.getElementById('map')
+  const container = document.getElementById("map");
   const options = {
-    center: new kakao.maps.LatLng(mapData.value['latitude'], mapData.value['longitude']),
-    level: 5
-  }
+    center: new kakao.maps.LatLng(mapData.value["latitude"], mapData.value["longitude"]),
+    level: 5,
+  };
 
-  const kmap = new kakao.maps.Map(container, options)
-  map.value = kmap
+  const kmap = new kakao.maps.Map(container, options);
+  map.value = kmap;
 
   const markerImage = new kakao.maps.MarkerImage(
-    'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png',
+    "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png",
     new kakao.maps.Size(24, 35)
-  )
+  );
 
   new kakao.maps.Marker({
     map: map.value,
     image: markerImage,
-    position: new kakao.maps.LatLng(mapData.value['latitude'], mapData.value['longitude'])
-  })
-}
+    position: new kakao.maps.LatLng(
+      mapData.value["latitude"],
+      mapData.value["longitude"]
+    ),
+  });
+};
 watch(
   () => mapData.value,
   () => {
-    console.log('mapData changed')
-    console.log(mapData.value)
+    console.log("mapData changed");
+    console.log(mapData.value);
   }
-)
-const map = ref(null)
+);
+const map = ref(null);
 
 const fetchMap = function () {
   if (window.kakao && window.kakao.maps) {
-    map.value = initMap()
+    map.value = initMap();
   } else {
-    const script = document.createElement('script')
+    const script = document.createElement("script");
 
     /* global kakao */
     script.onload = () => {
-      kakao.maps.load(initMap)
-    }
+      kakao.maps.load(initMap);
+    };
     script.src =
-      '//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=eb6931206ff1fcdb8d82fb079ab62952'
-    document.head.appendChild(script)
+      "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=eb6931206ff1fcdb8d82fb079ab62952";
+    document.head.appendChild(script);
   }
-}
+};
 
 onMounted(() => {
-  fetchMap()
-})
+  fetchMap();
+});
 </script>
 
 <style scoped>

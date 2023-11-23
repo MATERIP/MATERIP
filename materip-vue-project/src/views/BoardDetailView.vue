@@ -546,7 +546,9 @@ watch(board, (newBoard) => {
                     <v-form @submit.prevent>
                       <v-card-title>
                         <v-icon icon="mdi-account-badge" size="small"></v-icon>
-                        {{ item.raw.author }}
+                        {{
+                          item.raw.author === null ? "알 수 없는 사용자" : item.raw.author
+                        }}
                       </v-card-title>
                       <v-card-subtitle>
                         {{ item.raw.createdAt }}

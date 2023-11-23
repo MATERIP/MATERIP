@@ -1,18 +1,18 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import { storeToRefs } from 'pinia'
-import { useUserStore } from '../stores/user-store'
-const userStore = useUserStore()
-const { userInfo } = storeToRefs(userStore)
+import { ref, onMounted } from "vue";
+import { storeToRefs } from "pinia";
+import { useUserStore } from "../stores/user-store";
+const userStore = useUserStore();
+const { userInfo } = storeToRefs(userStore);
 
-const message = ref('')
-const color = ref('')
-const icon = ref('')
-const hasInput = ref(false)
+const message = ref("");
+const color = ref("");
+const icon = ref("");
+const hasInput = ref(false);
 
 onMounted(() => {
-  hasInput.value = false
-})
+  hasInput.value = false;
+});
 </script>
 
 <template>
@@ -89,20 +89,19 @@ onMounted(() => {
             required
             hide-details
             style="display: flex; justify-content: space-around"
+            v-model="userInfo.gender"
           >
             <v-radio
               true-icon="mdi-gender-male"
               label="남자"
               color="blue"
               value="0"
-              v-model="userInfo.gender"
             ></v-radio>
             <v-radio
               true-icon="mdi-gender-female"
               label="여자"
               color="red"
               value="1"
-              v-model="userInfo.gender"
             ></v-radio>
           </v-radio-group>
 
@@ -118,7 +117,9 @@ onMounted(() => {
             v-model="userInfo.tel"
           ></v-text-field>
           <v-divider></v-divider>
-          <v-btn type="submit" color="green" size="large" block class="mt-5">회원 정보 수정</v-btn>
+          <v-btn type="submit" color="green" size="large" block class="mt-5"
+            >회원 정보 수정</v-btn
+          >
         </v-form>
       </v-card>
     </v-sheet>
@@ -129,5 +130,9 @@ onMounted(() => {
 div {
   text-align: center;
   align-self: center;
+}
+
+.v-text-field {
+  font-family: "Nanum Gothic";
 }
 </style>
