@@ -2,6 +2,7 @@ package com.ssafy.materip.controller;
 
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -82,7 +83,9 @@ public class AttractionController {
 	@ApiOperation(value ="시도 코드 목록", notes="시도 코드 목록을 반환합니다.")
 	@GetMapping("/info/sido")
 	public ResponseEntity<?> getSidoList() throws Exception {
-		FileInputStream fileStream = new FileInputStream("C:\\Users\\SSAFY\\DESKTOP\\MATERIP\\materip\\src\\main\\resources\\sido.ser");
+
+
+		FileInputStream fileStream = new FileInputStream(Paths.get("").toAbsolutePath().toString() + "/src/main/resources/sido.ser");
 		ObjectInputStream objectInputStream = new ObjectInputStream(fileStream);
 		
 		Object obj = objectInputStream.readObject();
@@ -96,7 +99,7 @@ public class AttractionController {
 	@ApiOperation(value ="구군 코드 목록", notes="구군 코드 목록을 반환합니다.")
 	@GetMapping("/info/gugun")
 	public ResponseEntity<?> getGugunList(Integer sidocode) throws Exception {
-		FileInputStream fileStream = new FileInputStream("C:\\Users\\SSAFY\\DESKTOP\\MATERIP\\materip\\src\\main\\resources\\gugun.ser");
+		FileInputStream fileStream = new FileInputStream(Paths.get("").toAbsolutePath().toString() + "/src/main/resources/gugun.ser");
 		ObjectInputStream objectInputStream = new ObjectInputStream(fileStream);
 		
 		Object obj = objectInputStream.readObject();
@@ -121,5 +124,14 @@ public class AttractionController {
 		return new ResponseEntity<>(attractionInfoService.getTravelInfoByContentId(contentId), HttpStatus.OK);
 	}
 
-	
+
+	@ApiOperation(value = "컨텐츠 아이디로 여행지 정보 가져오기", notes="컨텐츠 아이디와 일치하는 여행지 정보를 반환합니다.")
+	@GetMapping("/information/{content_id}")
+	public ResponseEntity<?> getAttractionInformationByContentId(@PathVariable(value="content_id") Integer contentId) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("info", attractionInfoService.getTravelInfoByContentId(contentId));
+		result.put("description", attractionDescriptionService.getAttractionDescription(contentId));
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+
 }

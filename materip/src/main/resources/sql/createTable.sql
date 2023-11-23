@@ -7,7 +7,9 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- Schema materip
 -- -----------------------------------------------------
-
+delete from attraction_description where true;
+delete from attraction_detail where true;
+delete from attraction_info where true;
 -- -----------------------------------------------------
 -- Schema materip
 -- -----------------------------------------------------

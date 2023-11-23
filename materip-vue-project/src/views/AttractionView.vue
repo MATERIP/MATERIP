@@ -30,9 +30,9 @@ const itemsPerPage = ref(10)
 const page = ref(1)
 const headers = [
   {
-    title: '',
+    title: '🖼️🖼️🖼️',
     key: 'img1',
-    align: 'center',
+    align: 'start',
     sortable: false,
     template: 'imageColumn' // 이미지를 표시할 컬럼에 대한 템플릿 지정
   },

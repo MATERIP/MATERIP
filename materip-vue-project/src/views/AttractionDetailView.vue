@@ -14,7 +14,7 @@ onMounted(() => {
   axios({
     baseURL: '',
     method: 'get',
-    url: 'http://localhost:8080/attraction/info/' + encodeURIComponent(contentId), // URL에 한글이 포함될 경우 인코딩
+    url: 'http://localhost:8080/attraction/information/' + encodeURIComponent(contentId), // URL에 한글이 포함될 경우 인코딩
     headers: {
       'Content-Type': 'application/json; charset=utf-8'
     }

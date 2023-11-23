@@ -34,5 +34,4 @@ app.use(router)
 app.use(vuetify)
 app.use(aliases)
 app.use(mdi)
-
 app.mount('#app')

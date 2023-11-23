@@ -44,7 +44,7 @@ instance.interceptors.response.use(
 
     // 페이지가 새로고침되어 저장된 accessToken이 없어진 경우.
     // 토큰 자체가 만료되어 더 이상 진행할 수 없는 경우.
-    if (status == httpStatusCode.UNAUTHORIZED) {
+    if (status == httpStatusCode.UNAUTHORIZED && error.response.data['message'] === undefined) {
       // 요청 상태 저장
       const originalRequest = config
 
@@ -69,6 +69,7 @@ instance.interceptors.response.use(
       }
     } else if (status == httpStatusCode.FORBIDDEN) {
       alert(error.response.data)
+    } else if (error.response.data) {
     }
 
     return Promise.reject(error)

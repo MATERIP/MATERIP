@@ -20,10 +20,6 @@ const position = ref(0)
 
 <template>
   <div class="backgrd">
-    <!-- 어두운 배경 -->
-
-    <!-- 실제 컨텐츠 -->
-
     <div class="videoContent">
       <video-background src="src/assets/sky.mp4" style="max-height: 1200px; height: 1200px">
       </video-background>
@@ -31,7 +27,7 @@ const position = ref(0)
     <div class="overlay main-text">
       <div style="text-align: center">
         <div class="text-wrap">
-          <svg width="525" height="160" viewBox="0 0 525 160">
+          <svg width="700" height="160" viewBox="0 0 700 160">
             <text x="0" y="50%">L</text>
             <text x="45" y="50%">E</text>
             <text x="90" y="50%">T</text>
@@ -39,10 +35,14 @@ const position = ref(0)
             <text x="150" y="50%">S</text>
             <text x="220" y="50%">G</text>
             <text x="265" y="50%">O</text>
-            <text x="335" y="50%">T</text>
-            <text x="380" y="50%">R</text>
-            <text x="425" y="50%">I</text>
-            <text x="450" y="50%">P</text>
+            <text x="335" y="50%">O</text>
+            <text x="380" y="50%">N</text>
+            <text x="450" y="50%">A</text>
+            <text x="520" y="50%">T</text>
+            <text x="565" y="50%">R</text>
+            <text x="610" y="50%">I</text>
+            <text x="635" y="50%">P</text>
+            <text x="680" y="50%">!</text>
           </svg>
         </div>
       </div>
@@ -138,38 +138,48 @@ svg text:nth-child(1) {
   animation-delay: 0s;
 }
 svg text:nth-child(2) {
-  animation-delay: 0.5s;
+  animation-delay: 0.3s;
 }
 svg text:nth-child(3) {
-  animation-delay: 1s;
+  animation-delay: 0.9s;
 }
 svg text:nth-child(4) {
-  animation-delay: 1.5s;
+  animation-delay: 1.2s;
 }
 svg text:nth-child(5) {
-  animation-delay: 2s;
+  animation-delay: 1.5s;
 }
 svg text:nth-child(6) {
-  animation-delay: 2.5s;
+  animation-delay: 1.8s;
 }
 svg text:nth-child(7) {
-  animation-delay: 3s;
+  animation-delay: 2.1s;
 }
 svg text:nth-child(8) {
-  animation-delay: 3.5s;
+  animation-delay: 2.4s;
 }
 svg text:nth-child(9) {
-  animation-delay: 4s;
+  animation-delay: 2.7s;
 }
 svg text:nth-child(10) {
-  animation-delay: 4.5s;
+  animation-delay: 3s;
 }
 svg text:nth-child(11) {
-  animation-delay: 5s;
+  animation-delay: 3.3s;
 }
 svg text:nth-child(12) {
-  animation-delay: 5.5s;
+  animation-delay: 3.6s;
 }
+svg text:nth-child(13) {
+  animation-delay: 3.9s;
+}
+svg text:nth-child(14) {
+  animation-delay: 4.2s;
+}
+svg text:nth-child(15) {
+  animation-delay: 4.5s;
+}
+
 @keyframes stroke {
   0% {
     stroke: #f1c164;

@@ -38,7 +38,7 @@ const router = createRouter({
     },
     {
       name: 'write',
-      path: '/board/write:contentId',
+      path: '/board/write',
       component: BoardWriteView
     },
     {
