@@ -9,7 +9,14 @@ const colors = ref([
 
 <template>
   <div style="height:"></div>
-  <v-carousel cycle height="800" interval="5000" id="hello" :show-arrows="false">
+  <v-carousel
+    cycle
+    height="800"
+    hide-controls="true"
+    interval="5000"
+    id="hello"
+    :show-arrows="false"
+  >
     <v-carousel-item v-for="i in 3" :key="i">
       <v-sheet
         style="padding-left: 10rem; padding-right: 10rem; background-color: rgba(255, 255, 255, 0)"

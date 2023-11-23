@@ -12,6 +12,7 @@ import UserRecruitComponent from '../components/my/UserRecruitComponent.vue'
 import AttractionView from '../views/AttractionView.vue'
 import AttractionDetailView from '../views/AttractionDetailView.vue'
 
+import SearchMapComponent from '../components/SearchMapComponent.vue'
 import BoardWriteView from '../views/BoardWriteView.vue'
 import BoardDetailView from '../views/BoardDetailView.vue'
 import BoardUpdateView from '../views/BoardUpdateView.vue'
@@ -98,16 +99,11 @@ const router = createRouter({
       path: '/user/modify',
       component: UserModifyView
     },
-    {
-      name: 'map',
-      path: '/map',
-      component: MapComponentView
-    },
 
     {
-      name: 'carousel',
-      path: '/carousel',
-      component: CarouselComponent
+      name: 'map',
+      path: '/map/:attractionName',
+      component: SearchMapComponent
     }
   ]
 })

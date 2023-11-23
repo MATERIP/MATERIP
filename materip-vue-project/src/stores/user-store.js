@@ -14,8 +14,13 @@ export const useUserStore = defineStore(
     const isAdmin = ref(0) // 접속한 관리자 정보 (0: 일반 사용자, 1: 관리자)
     const auth = ref(false) // 접속한 사용자가 자신의 정보를 수정하는 경우 true, 아니면 false
     const router = useRouter()
-    const likeState = ref(false)
 
+    const likeState = ref(false)
+    const likeCnt = ref(0)
+    const likeRank = ref(0)
+    const likePercent = ref(0)
+
+    const personCnt = ref(1)
     const navTitle = ref({ review: '나의 리뷰', mate: '나의 여행 메이트' })
 
     const menuList = ref([
@@ -44,6 +49,21 @@ export const useUserStore = defineStore(
 
     const changeLikeState = (likestate) => {
       likeState.value = likestate
+    }
+
+    const changeRankState = (likerank, total) => {
+      likeRank.value = likerank
+      personCnt.value = total
+    }
+
+    const changeLikeCnt = (likecnt) => {
+      likeCnt.value = likecnt
+      console.log('~~~~~~~~~~~changeLIkeCnt~~~~~~~~~~~')
+      console.log(likecnt)
+      console.log(personCnt.value)
+      console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+
+      likePercent.value = Math.floor((likecnt / personCnt.value) * 100)
     }
     // **************** actions ****************
     const login = async (userInfo) => {
@@ -118,7 +138,7 @@ export const useUserStore = defineStore(
       await axios
         .post('/user/like-state', { id: userId.value, sequence: 0, likedBy: Id })
         .then((response) => {
-          console.log({ id: userId.value, sequence: 0, likedBy: Id })
+          console.log({ id: Id, sequence: 0, likedBy: userId.value })
           changeLikeState(response.data['likeState'])
         })
     }
@@ -136,6 +156,18 @@ export const useUserStore = defineStore(
       await axios
         .post('/user/unlike', { id: userId.value, sequence: 0, likedBy: Id })
         .then((response) => {})
+    }
+
+    const getLikeRank = async (Id) => {
+      await axios.get('/user/like/rank/' + Id).then((response) => {
+        changeRankState(response.data['rank'], response.data['total'])
+      })
+    }
+
+    const getLikeCnt = async (Id) => {
+      await axios.get('/user/likecnt/' + Id).then((response) => {
+        changeLikeCnt(response.data)
+      })
     }
 
     // 회원 정보를 수정하면 axios header에 저장된 accessToken을 삭제한다.
@@ -183,7 +215,13 @@ export const useUserStore = defineStore(
       getUserInfo,
       getLikeState,
 
-      likeState
+      likeState,
+      getLikeRank,
+      likeRank,
+      likeCnt,
+      likePercent,
+      personCnt,
+      getLikeCnt
     }
   },
   {

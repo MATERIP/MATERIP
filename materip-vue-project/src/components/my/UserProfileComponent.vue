@@ -7,11 +7,17 @@ const userStore = useUserStore()
 const { userInfo } = storeToRefs(userStore)
 const { auth } = storeToRefs(userStore)
 const { likeState } = storeToRefs(userStore)
+const { likePercent } = storeToRefs(userStore)
+const { likeRank } = storeToRefs(userStore)
+
 const router = useRouter()
 const iconColor = ref('white')
 const iconBgColor = ref('grey')
 onMounted(() => {
-  animateProgressBar(80)
+  userStore.getLikeRank(userInfo.value.id)
+  userStore.getLikeCnt(userInfo.value.id)
+  animateProgressBar(likePercent.value)
+
   console.log('auth ' + auth.value)
   if (likeState.value) {
     iconColor.value = 'red'
@@ -55,7 +61,7 @@ const toggleButton = () => {
     console.log(iconBgColor.value + ' ' + iconColor.value)
   } else {
     userStore.toggleLikeState()
-    animateProgressBar(80)
+
     console.log('좋아요')
     console.log(likeState.value)
     userStore.addLikeState(userInfo.value.id)
@@ -63,6 +69,10 @@ const toggleButton = () => {
     iconColor.value = 'red'
     console.log(iconBgColor.value + ' ' + iconColor.value)
   }
+
+  userStore.getLikeRank(userInfo.value.id)
+  userStore.getLikeCnt(userInfo.value.id)
+  animateProgressBar(likePercent.value)
 }
 
 const goToWithdrawal = () => {
@@ -96,7 +106,7 @@ const goToWithdrawal = () => {
             </v-row>
             <v-list-item color="#0000" class="profile-text-name ma-4 pt-16">
               <v-list-item-content>
-                <v-list-item-title class="text-h2 max-v-list-height">
+                <v-list-item-title class="text-h3 max-v-list-height">
                   {{ userInfo.nickname }}</v-list-item-title
                 >
                 <v-list-item-subtitle class="max-v-list-height">
@@ -139,7 +149,7 @@ const goToWithdrawal = () => {
                   :rounded="true"
                 ></v-progress-linear>
               </v-col>
-              <v-col cols="3" align-center>{{ Math.floor(progressValue) }} </v-col>
+              <v-col cols="3" align-center>{{ Math.floor(progressValue) }}% </v-col>
             </v-row>
             <v-spacer></v-spacer>
 
@@ -147,8 +157,8 @@ const goToWithdrawal = () => {
               <v-col class="text-center">
                 <v-container>
                   <v-list-item-content class="sutitles">
-                    <v-list-item-title class="text-h6"> 1002 </v-list-item-title>
-                    <v-list-item-subtitle class="text-caption">Curtidas</v-list-item-subtitle>
+                    <v-list-item-title class="text-h6"> #{{ likeRank }} </v-list-item-title>
+                    <v-list-item-subtitle class="text-caption">랭킹</v-list-item-subtitle>
                   </v-list-item-content>
                 </v-container>
               </v-col>

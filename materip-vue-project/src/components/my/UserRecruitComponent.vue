@@ -60,6 +60,18 @@ const formatDate = function (item) {
 onMounted(() => {
   console.log(userMateList.value)
 })
+
+async function goToDetail(item) {
+  console.log(item)
+  // 상세 페이지 이동 전에 조회수를 1 증가시킨다.
+  // await updateBoardHits(item);
+
+  router.push({ name: 'boardDetail', params: { id: item.id } })
+}
+
+async function goToUser(item) {
+  router.push('/user/' + item.author)
+}
 const pageCount = computed(() => Math.ceil(userMateList.value.length / itemsPerPage.value))
 </script>
 
@@ -74,6 +86,12 @@ const pageCount = computed(() => Math.ceil(userMateList.value.length / itemsPerP
     style="width: 80%; margin: 0 auto"
     hover
   >
+    <template v-slot:item.title="{ item }">
+      <v-btn text @click="goToDetail(item)" variant="flat" :class="[item.boardType]">{{
+        item.title
+      }}</v-btn>
+    </template>
+
     <template v-slot:bottom>
       <div class="text-center pt-2">
         <v-pagination v-model="page" :length="pageCount"></v-pagination>
