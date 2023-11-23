@@ -64,6 +64,16 @@ const toggleButton = () => {
     console.log(iconBgColor.value + ' ' + iconColor.value)
   }
 }
+
+const goToWithdrawal = () => {
+  var input = confirm('정말 탈퇴하시겠습니까? 탈퇴하시면 모든 정보가 삭제됩니다.')
+  if (input === true) {
+    userStore.withdrawal(userInfo.value.id)
+    alert('탈퇴되었습니다.')
+  } else {
+    alert('탈퇴가 취소되었습니다.')
+  }
+}
 </script>
 
 <template>
@@ -148,7 +158,7 @@ const toggleButton = () => {
             <template v-if="auth">
               <div class="button-container">
                 <v-btn color="success" @click="router.push('modify')">수정</v-btn>
-                <v-btn color="red">탈퇴</v-btn>
+                <v-btn color="red" @click="goToWithdrawal">탈퇴</v-btn>
               </div>
             </template>
             <v-spacer style="height: 1rem"></v-spacer>
