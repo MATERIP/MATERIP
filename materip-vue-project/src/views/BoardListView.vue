@@ -142,7 +142,7 @@ const goWrite = () => {
     <v-btn
       style="align-self: center"
       variant="elevated"
-      color="primary"
+      color="#Fbc507"
       width="fit-content"
       @click="goWrite"
       prepend-icon="mdi-pencil"
@@ -176,8 +176,8 @@ const goWrite = () => {
 <style scoped>
 h1 {
   margin-top: 0;
+  margin-bottom: 3rem;
   align-self: center;
-  font-family: 'Ghanachocolate';
 }
 
 .notice {

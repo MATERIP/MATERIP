@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -69,7 +70,7 @@ public class AttractionController {
 	@ApiOperation(value ="시도 코드 목록", notes="시도 코드 목록을 반환합니다.")
 	@GetMapping("/info/sido")
 	public ResponseEntity<?> getSidoList() throws Exception {
-		FileInputStream fileStream = new FileInputStream("C:\\Users\\82105\\Desktop\\MATERIP\\materip\\src\\main\\resources\\sido.ser");
+		FileInputStream fileStream = new FileInputStream("C:\\Users\\SSAFY\\DESKTOP\\MATERIP\\materip\\src\\main\\resources\\sido.ser");
 		ObjectInputStream objectInputStream = new ObjectInputStream(fileStream);
 		
 		Object obj = objectInputStream.readObject();
@@ -83,7 +84,7 @@ public class AttractionController {
 	@ApiOperation(value ="구군 코드 목록", notes="구군 코드 목록을 반환합니다.")
 	@GetMapping("/info/gugun")
 	public ResponseEntity<?> getGugunList(Integer sidocode) throws Exception {
-		FileInputStream fileStream = new FileInputStream("C:\\Users\\82105\\Desktop\\MATERIP\\materip\\src\\main\\resources\\gugun.ser");
+		FileInputStream fileStream = new FileInputStream("C:\\Users\\SSAFY\\DESKTOP\\MATERIP\\materip\\src\\main\\resources\\gugun.ser");
 		ObjectInputStream objectInputStream = new ObjectInputStream(fileStream);
 		
 		Object obj = objectInputStream.readObject();
@@ -100,6 +101,12 @@ public class AttractionController {
 	public ResponseEntity<?> getContentId(@RequestBody AttractionInfo attractionInfo) throws Exception {
 		System.out.println(attractionInfo.toString());
 		return new ResponseEntity<>(attractionInfoService.getTravelSpot(attractionInfo), HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "컨텐츠 아이디로 여행지 정보 가져오기", notes="컨텐츠 아이디와 일치하는 여행지 정보를 반환합니다.")
+	@PostMapping("/info/contentid/detail")
+	public ResponseEntity<?> getAttractionInfoByContentId(@RequestParam(value="contentId") Integer contentId) throws Exception {
+		return new ResponseEntity<>(attractionInfoService.getTravelInfoByContentId(contentId), HttpStatus.OK);
 	}
 	
 }

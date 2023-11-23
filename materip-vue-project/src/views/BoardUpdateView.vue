@@ -16,7 +16,18 @@ const board = ref({
   modifiedAt: "",
   maxCount: "",
   currentCount: "",
+  travelSpot: "",
 });
+
+const participants = ref([]);
+const attraction = ref({
+  id: "",
+  sidocode: "",
+  guguncode: "",
+  title: "",
+});
+
+const contentId = ref("");
 
 const fetchData = async () => {
   await axios
@@ -43,6 +54,19 @@ function modify() {
     });
 }
 
+const getTravelSpot = async (item) => {
+  console.log(item.value);
+  await axios
+    .post("/attraction/info/contentid/detail?contentId=" + item.value)
+    .then((response) => {
+      attraction.value = response.data;
+      console.log(response.data);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+};
+
 const items = ref([
   {
     name: "공지사항",
@@ -63,7 +87,13 @@ onMounted(() => {
   // 게시판 정보 가져오기
   fetchData();
   // board.value.author = userInfo.value.id
+
   console.log(board.value);
+});
+
+watch(board, (newboard) => {
+  contentId.value = board.value.travelSpot;
+  getTravelSpot(contentId);
 });
 </script>
 
@@ -75,7 +105,7 @@ onMounted(() => {
         <v-card-title>
           <v-layout align-center justify-center-between>
             <v-icon icon="mdi-pencil"></v-icon>
-            <p style="font-weight: bold">글 수정</p>
+            게시글 수정
           </v-layout>
         </v-card-title>
         <v-form class="mt-5" @submit.prevent="modify">
@@ -92,9 +122,10 @@ onMounted(() => {
               style="display: flex; margin-bottom: 1.5rem; width: fit-content"
             >
             </v-select>
+
             <template v-if="board.boardType === 'recruitment'">
               <div class="count">
-                <p>최대 인원 수</p>
+                최대 인원 수
                 <v-icon icon="mdi-account-group" style="margin: 0 1rem"></v-icon>
 
                 <v-icon
@@ -112,6 +143,14 @@ onMounted(() => {
                 ></v-icon>
               </div>
             </template>
+          </div>
+          <div class="attraction-title">
+            <v-icon
+              icon="mdi-map-marker"
+              style="margin: 0.5rem"
+              color="red-darken-2"
+            ></v-icon>
+            {{ attraction.title }}
           </div>
           <v-text-field
             clearable
@@ -139,7 +178,7 @@ onMounted(() => {
           </v-textarea>
           <div class="button">
             <v-btn
-              color="secondary"
+              color="grey"
               size="large"
               width="fit-content"
               style="text-align: center; margin: 1rem"
@@ -149,7 +188,7 @@ onMounted(() => {
 
             <v-btn
               type="submit"
-              color="light-blue"
+              color="primary"
               size="large"
               width="fit-content"
               style="text-align: center; margin: 1rem"
@@ -171,7 +210,6 @@ onMounted(() => {
 .count {
   display: flex;
   justify-content: center;
-  margin-bottom: 1rem;
   align-items: center;
 }
 
@@ -184,10 +222,23 @@ onMounted(() => {
   display: flex;
 }
 
+.attraction-title {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+i {
+  color: #f09404;
+  margin-right: 1rem;
+}
+
+.v-layout {
+  margin: 0;
+}
+
 p {
   font-family: "Noto Sans KR", sans-serif;
   font-weight: bold;
 }
-
 </style>
-

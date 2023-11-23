@@ -13,4 +13,5 @@ public interface AttractionInfoService {
 	List<AttractionInfo> getTravelListBySido(int sidoCode);
 	List<String> getTravelListBySidoGugun(int sidoCode, int gugunCode);
 	Integer getTravelSpot(AttractionInfo attractionInfo);
+	AttractionInfo getTravelInfoByContentId(int contentId);
 }

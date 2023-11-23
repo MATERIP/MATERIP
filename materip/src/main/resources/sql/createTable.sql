@@ -248,6 +248,8 @@ add column `max_count` int default 0;
 alter table `board`
 add column `current_count` int default 0;
 
+alter table `participants`
+add column `status` int default -1;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

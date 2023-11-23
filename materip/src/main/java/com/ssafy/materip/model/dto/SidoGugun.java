@@ -28,9 +28,9 @@ public class SidoGugun implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
-		FileOutputStream fStreams = new FileOutputStream("C:\\\\Users\\\\82105\\\\Downloads\\\\sido.ser");
+		FileOutputStream fStreams = new FileOutputStream("C:\\\\Users\\\\SSAFY\\\\Downloads\\\\sido.ser");
 		ObjectOutputStream oss = new ObjectOutputStream(fStreams);
-		FileOutputStream fStreamg = new FileOutputStream("C:\\\\Users\\\\82105\\\\Downloads\\\\gugun.ser");
+		FileOutputStream fStreamg = new FileOutputStream("C:\\\\Users\\\\SSAFY\\\\Downloads\\\\gugun.ser");
 		ObjectOutputStream osg = new ObjectOutputStream(fStreamg);
 		
 		
@@ -45,7 +45,7 @@ public class SidoGugun implements Serializable {
 		int idx = 0;
 		try {
 			Object object = jsonParser
-					.parse(new FileReader("C:\\Users\\82105\\Downloads\\korea-administrative-district.json"));
+					.parse(new FileReader("C:\\Users\\SSAFY\\Downloads\\korea-administrative-district.json"));
 
 			JSONObject jsonObject = (JSONObject) object;
 			for (JSONObject obj : (List<JSONObject>) jsonObject.get("data")) {

@@ -210,27 +210,27 @@ const searchAttractionContentId = async () => {
         <v-card-title>
           <v-layout align-center justify-center-between>
             <v-icon icon="mdi-pencil"></v-icon>
-            <p style="font-weight: bold">글쓰기</p>
+            글쓰기
           </v-layout>
         </v-card-title>
         <v-form class="mt-5" @submit.prevent="write">
           <div class="board-title">
             <v-select
+              class="select-board"
               label="게시판 선택"
               variant="underlined"
-              single-line
               clearable
+              hide-details
               :items="items.filter((item) => item.show)"
               item-title="name"
               item-value="value"
               v-model="board.boardType"
-              style="display: flex; margin-bottom: 1.5rem; min-width: 10rem max-width: fit-content"
             >
             </v-select>
             <!-- 모집글인 경우... -->
             <template v-if="board.boardType === 'recruitment'">
               <div class="count">
-                <p>최대 인원 수</p>
+                최대 인원 수
                 <v-icon icon="mdi-account-group" style="margin: 0 1rem"></v-icon>
 
                 <v-icon
@@ -270,34 +270,44 @@ const searchAttractionContentId = async () => {
                 @click="searchAttractionByRegion2(selectedSido, code)"
                 >{{ name }}</v-chip>
             </v-chip-group> -->
+            <div class="select-spot">
+              <v-select
+                class="select-sido"
+                label="시/도 선택"
+                variant="underlined"
+                clearable
+                v-model="selectedSido"
+                :items="Object.keys(sidoCode).sort()"
+                item-text="name"
+                item-value="code"
+                hide-details
+              ></v-select>
 
-            <v-select
-              class="select-sido"
-              label="시/도 선택"
-              v-model="selectedSido"
-              :items="Object.keys(sidoCode).sort()"
-              item-text="name"
-              item-value="code"
-            ></v-select>
+              <v-select
+                class="select-gugun"
+                label="구/군 선택"
+                variant="underlined"
+                clearable
+                v-model="selectedGugun"
+                :items="gugunCode"
+                item-text="name"
+                item-value="code"
+                hide-details
+              ></v-select>
 
-            <v-select
-              class="select-gugun"
-              label="구/군 선택"
-              v-model="selectedGugun"
-              :items="gugunCode"
-              item-text="name"
-              item-value="code"
-            ></v-select>
-
-            <v-select
-              class="select-attraction"
-              v-model="selectedAttraction"
-              label="관광지 선택"
-              :items="attractionList"
-              item-text="title"
-              item-value="contentId"
-            >
-            </v-select>
+              <v-select
+                class="select-attraction"
+                v-model="selectedAttraction"
+                label="관광지 선택"
+                variant="underlined"
+                clearable
+                :items="attractionList"
+                item-text="title"
+                item-value="contentId"
+                hide-details
+              >
+              </v-select>
+            </div>
           </div>
           <v-text-field
             clearable
@@ -357,7 +367,6 @@ const searchAttractionContentId = async () => {
 .count {
   display: flex;
   justify-content: center;
-  margin-bottom: 1rem;
   align-items: center;
 }
 
@@ -368,6 +377,8 @@ const searchAttractionContentId = async () => {
 
 .board-title {
   display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
 }
 
 .button {
@@ -375,20 +386,41 @@ const searchAttractionContentId = async () => {
   justify-content: center;
 }
 
+.select-spot {
+  display: flex;
+}
+.select-board {
+  margin: 0 1rem;
+  min-width: 12rem;
+  max-width: fit-content;
+}
 .select-sido {
   margin: 0 1rem;
-  min-width: 8rem;
+  min-width: 12rem;
   max-width: fit-content;
 }
 
 .select-gugun {
   margin: 0 1rem;
-  min-width: 8rem;
+  min-width: 12rem;
   max-width: fit-content;
 }
 
 .select-attraction {
   min-width: 15rem;
   max-width: fit-content;
+}
+
+.v-text-field {
+  font-family: "Nanum Gothic";
+}
+
+.v-input {
+  margin-left: 0;
+}
+
+i {
+  color: #f09404;
+  margin-right: 1rem;
 }
 </style>

@@ -65,4 +65,11 @@
 		LIMIT 1;
 	</select>
 		
+	<select id="getAttractionInfoByContentId" parameterType="int" resultMap="attractionInfo">
+		SELECT *
+		FROM
+		attraction_info
+		WHERE content_id = #{contentId}
+	</select>
+		
 </mapper>

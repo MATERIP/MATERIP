@@ -22,11 +22,22 @@ const board = ref({
   modifiedAt: "",
   maxCount: "",
   currentCount: "",
+  travelSpot: "",
+});
+
+const contentId = ref();
+const attraction = ref({
+  id: "",
+  sidocode: "",
+  guguncode: "",
+  title: "",
 });
 
 const auth = ref(false);
 const participants = ref(0);
+const paricipantsDetail = ref([]);
 const isJoinable = ref(false);
+const dialog = ref(false);
 
 const fetchData = async () => {
   await axios
@@ -34,7 +45,6 @@ const fetchData = async () => {
     .then((response) => {
       board.value = response.data["board"];
       auth.value = response.data["auth"];
-      // console.log(response);
     })
     .catch(function (error) {
       console.log(error);
@@ -109,11 +119,26 @@ const leave = async () => {
     });
 };
 
+// 참여자 수 가져오기
 const readParticipantsCount = async () => {
   await axios
     .get(`/board/participants/${router.currentRoute.value.params.id}`)
     .then((response) => {
       participants.value = response.data;
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+};
+
+// 참여자 목록 가져오기
+const readParticipantsDetail = async () => {
+  await axios
+    .get(`/board/participants/${router.currentRoute.value.params.id}/detail`)
+    .then((response) => {
+      console.log(response.data);
+      paricipantsDetail.value = response.data["userList"];
+      console.log(paricipantsDetail.value);
     })
     .catch(function (error) {
       console.log(error);
@@ -207,20 +232,47 @@ const updateComment = async (item) => {
     });
 };
 
-//
+const commentRules = [
+  (v) => !!v || "댓글을 입력해주세요",
+  (v) => (v && v.length <= 300) || "댓글은 300자 이내로 입력해주세요",
+];
+
+// 관광지 컨텐츠 아이디로 관광지 정보 가져오기
+const getTravelSpot = async (item) => {
+  console.log(item.value);
+  await axios
+    .post("/attraction/info/contentid/detail?contentId=" + item.value)
+    .then((response) => {
+      attraction.value = response.data;
+      console.log(response.data);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+};
+
 const search = ref("");
 
 onMounted(() => {
   userStore.getUserInfo(userInfo.value.id);
 
   fetchData();
+
   getComments();
   readParticipantsCount();
+  readParticipantsDetail();
   isJoined();
 });
 
 watch(participants, (newCount) => {
   board.value.currentCount = newCount;
+  readParticipantsDetail();
+});
+
+watch(board, (newBoard) => {
+  contentId.value = board.value.travelSpot;
+
+  getTravelSpot(contentId);
 });
 </script>
 
@@ -229,10 +281,14 @@ watch(participants, (newCount) => {
     <v-sheet>
       <v-card class="mx-auto pa-12 pb-8" min-width="80rem" rounded="lg" hover>
         <v-card-item>
-          <v-card-title>
+          <v-card-title style="font-size: xx-large">
             [{{ displayBoardType }}]
             {{ board.title }}
           </v-card-title>
+          <v-card-subtitle hide-details style="font-size: large">
+            <v-icon icon="mdi-map-marker" color="red-darken-2"></v-icon>
+            {{ attraction.title }}
+          </v-card-subtitle>
           <v-card-subtitle hide-details>
             <v-icon icon="mdi-account"></v-icon>
             {{ board.author }} |
@@ -245,6 +301,53 @@ watch(participants, (newCount) => {
             <template v-if="board.boardType === 'recruitment'">
               <v-icon icon="mdi-account-multiple"></v-icon>
               {{ board.currentCount }} / {{ board.maxCount }}
+
+              <v-btn color="primary" variant="plain">
+                참여자 목록 보기
+                <v-dialog v-model="dialog" activator="parent" width="300">
+                  <v-card>
+                    <v-card-text>
+                      <!-- <template v-for="item in paricipantsDetail" :key="item.id">
+                        {{ item.userId }},
+                      </template> -->
+                      <v-list>
+                        <v-list-item v-for="item in paricipantsDetail" :key="item.id">
+                          <template v-slot:prepend>
+                            <template v-if="item.userId === board.author">
+                              <v-icon icon="mdi-account-star"></v-icon>
+                            </template>
+                            <template v-else>
+                              <v-icon icon="mdi-account"></v-icon>
+                            </template>
+                          </template>
+
+                          <v-list-item-title v-text="item.userId"></v-list-item-title>
+                          <template v-slot:append>
+                            <!-- 본인이 작성한 글이고 작성자가 아닌 참여자인 경우 참여자에서 제외 가능 -->
+                            <template
+                              v-if="
+                                item.userId !== board.author &&
+                                userInfo.id === board.author
+                              "
+                            >
+                              <v-icon icon="mdi-cancel" color="red"></v-icon>
+                            </template>
+                          </template>
+                        </v-list-item>
+                      </v-list>
+                    </v-card-text>
+                    <v-card-actions>
+                      <v-btn color="primary" block @click="dialog = false">닫기</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+              </v-btn>
+
+              <!-- [
+              <template v-for="item in paricipantsDetail" :key="item.id">
+                {{ item.userId }} |
+              </template>
+              ] -->
             </template>
           </v-card-subtitle>
         </v-card-item>
@@ -297,24 +400,25 @@ watch(participants, (newCount) => {
       <v-container>
         <v-row>
           <v-col cols="12">
-            <h3>댓글</h3>
-            <v-form @submit.prevent>
+            <h3 class="comment-title">댓글</h3>
+
+            <v-form @submit.prevent="writeComment">
               <v-textarea
-                label="댓글을 남겨보세요"
-                outlined
+                placeholder="댓글을 입력하세요."
+                variant="underlined"
                 v-model="comment.contents"
                 rows="2"
-                clearable
                 auto-grow
                 max-rows="3"
+                :rules="commentRules"
               >
               </v-textarea>
               <div class="button">
                 <v-btn
-                  color="green"
+                  type="submit"
+                  color="primary"
                   style="display: flex; justify-content=flex-end"
-                  variant="outlined"
-                  @click="writeComment"
+                  variant="tonal"
                   >등록</v-btn
                 >
               </div>
@@ -344,7 +448,7 @@ watch(participants, (newCount) => {
           <!-- default -->
           <template v-slot:default="{ items }">
             <v-container class="pa-2" fluid>
-              <v-row v-for="item in items" :key=item.sequence rows="auto">
+              <v-row v-for="item in items" :key="item.sequence" rows="auto">
                 <v-col dense>
                   <v-card class="pb-3" border flat>
                     <v-form @submit.prevent>
@@ -434,5 +538,25 @@ watch(participants, (newCount) => {
 .comments {
   max-height: 250px;
   overflow-y: auto;
+}
+
+h3 {
+  margin-bottom: 1rem;
+}
+
+.v-card-subtitle {
+  margin: 0.5rem 0;
+}
+
+.v-textarea {
+  font-family: "Nanum Gothic";
+}
+
+.v-text-field {
+  font-family: "Nanum Gothic";
+}
+
+i {
+  color: #f09404;
 }
 </style>

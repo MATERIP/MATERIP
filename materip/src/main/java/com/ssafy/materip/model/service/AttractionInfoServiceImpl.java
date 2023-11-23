@@ -50,5 +50,10 @@ public class AttractionInfoServiceImpl implements AttractionInfoService {
 	public Integer getTravelSpot(AttractionInfo attractionInfo) {
 		return attractionInfoDao.getAttractionContentId(attractionInfo);
 	}
+
+	@Override
+	public AttractionInfo getTravelInfoByContentId(int contentId) {
+		return attractionInfoDao.getAttractionInfoByContentId(contentId);
+	}
 	
 }
