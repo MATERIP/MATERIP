@@ -12,6 +12,8 @@ const travelStore = useTravelStore();
 const { userInfo, userId } = storeToRefs(userStore);
 const { isAdmin } = storeToRefs(userStore);
 
+const dialog = ref(false);
+
 const sidoCode = ref([
   {
     name: "",
@@ -36,6 +38,7 @@ const board = ref({
   maxCount: 2,
   currentCount: 0,
   travelSpot: 0,
+  travelDate: null,
 });
 
 const attractionList = ref([]);
@@ -70,7 +73,7 @@ onMounted(() => {
 
   board.value.author = userInfo.value.id;
 
-  // console.log(board.value);
+  console.log(board.value);
 });
 
 watch(
@@ -249,27 +252,6 @@ const searchAttractionContentId = async () => {
               </div>
             </template>
 
-            <!-- 
-            <v-chip-group>
-              <v-chip
-                selected-class="text-orange-accent-4"
-                v-for="(code, name) in sidoCode"
-                :key="code"
-                :value="name"
-                @click="getGugunCode(code), searchAttractionByRegion1(code)"
-                >{{ name }}</v-chip
-              >
-            </v-chip-group>
-
-            <v-chip-group>
-              <v-chip
-                selected-class="text-orange-accent-4"
-                v-for="(code, name) in gugunCode"
-                :key="code"
-                :value="name"
-                @click="searchAttractionByRegion2(selectedSido, code)"
-                >{{ name }}</v-chip>
-            </v-chip-group> -->
             <div class="select-spot">
               <v-select
                 class="select-sido"
@@ -309,6 +291,19 @@ const searchAttractionContentId = async () => {
               </v-select>
             </div>
           </div>
+          <div class="select-date">
+            <v-btn prepend-icon="mdi-calendar" variant="text">
+              여행 날짜 선택
+              <v-dialog v-model="dialog" activator="parent" width="500">
+                <v-card>
+                  <v-date-picker v-model="board.travelDate"> </v-date-picker>
+                  <v-card-actions>
+                    <v-btn color="primary" block @click="dialog = false">닫기</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </v-btn>
+          </div>
           <v-text-field
             clearable
             label="제목"
@@ -316,6 +311,7 @@ const searchAttractionContentId = async () => {
             v-model="board.title"
             variant="outlined"
             required
+            :rules="[(v) => !!v || '제목을 입력하세요.']"
             width="80%"
           >
           </v-text-field>
@@ -331,6 +327,7 @@ const searchAttractionContentId = async () => {
             persistent-counter="true"
             rows="5"
             max-rows="10"
+            :rules="[(v) => !!v || '내용을 입력하세요.']"
           >
           </v-textarea>
           <div class="button">
@@ -409,6 +406,12 @@ const searchAttractionContentId = async () => {
 .select-attraction {
   min-width: 15rem;
   max-width: fit-content;
+}
+
+.select-date {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 1rem;
 }
 
 .v-text-field {

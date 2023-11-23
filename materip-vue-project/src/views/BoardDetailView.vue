@@ -23,6 +23,7 @@ const board = ref({
   maxCount: "",
   currentCount: "",
   travelSpot: "",
+  travelDate: "",
 });
 
 const contentId = ref();
@@ -34,10 +35,12 @@ const attraction = ref({
 });
 
 const auth = ref(false);
-const participants = ref(0);
+// const participants = ref(0);
 const paricipantsDetail = ref([]);
+const paricipantsAllDetail = ref([]);
 const isJoinable = ref(false);
 const dialog = ref(false);
+const auth_dialog = ref(false);
 
 const fetchData = async () => {
   await axios
@@ -96,7 +99,7 @@ const join = async () => {
     .then(() => {
       alert("참여 성공");
       isJoinable.value = false;
-      readParticipantsCount();
+      // readParticipantsCount();
     })
     .catch(function (error) {
       console.log(error);
@@ -112,7 +115,7 @@ const leave = async () => {
     .then(() => {
       alert("참여 취소 성공");
       isJoinable.value = true;
-      readParticipantsCount();
+      // readParticipantsCount();
     })
     .catch(function (error) {
       console.log(error);
@@ -124,7 +127,8 @@ const readParticipantsCount = async () => {
   await axios
     .get(`/board/participants/${router.currentRoute.value.params.id}`)
     .then((response) => {
-      participants.value = response.data;
+      console.log(response.data);
+      board.value.currentCount = response.data;
     })
     .catch(function (error) {
       console.log(error);
@@ -136,9 +140,23 @@ const readParticipantsDetail = async () => {
   await axios
     .get(`/board/participants/${router.currentRoute.value.params.id}/detail`)
     .then((response) => {
-      console.log(response.data);
+      // console.log(response.data);
       paricipantsDetail.value = response.data["userList"];
-      console.log(paricipantsDetail.value);
+      // console.log(paricipantsDetail.value);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+};
+
+// 참여 신청자 전체 목록 가져오기
+const readParticipantsAllDetail = async () => {
+  await axios
+    .get(`/board/participants/${router.currentRoute.value.params.id}/all/detail`)
+    .then((response) => {
+      // console.log(response.data);
+      paricipantsAllDetail.value = response.data["allUserList"];
+      console.log(paricipantsAllDetail.value);
     })
     .catch(function (error) {
       console.log(error);
@@ -155,6 +173,40 @@ const isJoined = async () => {
     .then((response) => {
       isJoinable.value = response.data;
       console.log(`joinable` + response.data);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+};
+
+const accept = async (item) => {
+  await axios
+    .put(`/board/participants/accept`, {
+      boardId: board.value.id,
+      userId: item.userId,
+    })
+    .then(() => {
+      alert("수락 성공");
+      readParticipantsCount();
+      readParticipantsDetail();
+      readParticipantsAllDetail();
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+};
+
+const decline = async (item) => {
+  await axios
+    .put(`/board/participants/decline`, {
+      boardId: board.value.id,
+      userId: item.userId,
+    })
+    .then(() => {
+      alert("거절 성공");
+      readParticipantsCount();
+      readParticipantsDetail();
+      readParticipantsAllDetail();
     })
     .catch(function (error) {
       console.log(error);
@@ -260,14 +312,17 @@ onMounted(() => {
 
   getComments();
   readParticipantsCount();
+  readParticipantsAllDetail();
   readParticipantsDetail();
   isJoined();
 });
 
+/*
 watch(participants, (newCount) => {
-  board.value.currentCount = newCount;
+  // board.value.currentCount = newCount;
   readParticipantsDetail();
 });
+*/
 
 watch(board, (newBoard) => {
   contentId.value = board.value.travelSpot;
@@ -288,6 +343,8 @@ watch(board, (newBoard) => {
           <v-card-subtitle hide-details style="font-size: large">
             <v-icon icon="mdi-map-marker" color="red-darken-2"></v-icon>
             {{ attraction.title }}
+            <v-icon icon="mdi-calendar" color="red-darken-2"></v-icon>
+            {{ board.travelDate }}
           </v-card-subtitle>
           <v-card-subtitle hide-details>
             <v-icon icon="mdi-account"></v-icon>
@@ -304,12 +361,9 @@ watch(board, (newBoard) => {
 
               <v-btn color="primary" variant="plain">
                 참여자 목록 보기
-                <v-dialog v-model="dialog" activator="parent" width="300">
+                <v-dialog v-model="dialog" activator="parent" width="500">
                   <v-card>
                     <v-card-text>
-                      <!-- <template v-for="item in paricipantsDetail" :key="item.id">
-                        {{ item.userId }},
-                      </template> -->
                       <v-list>
                         <v-list-item v-for="item in paricipantsDetail" :key="item.id">
                           <template v-slot:prepend>
@@ -320,19 +374,7 @@ watch(board, (newBoard) => {
                               <v-icon icon="mdi-account"></v-icon>
                             </template>
                           </template>
-
                           <v-list-item-title v-text="item.userId"></v-list-item-title>
-                          <template v-slot:append>
-                            <!-- 본인이 작성한 글이고 작성자가 아닌 참여자인 경우 참여자에서 제외 가능 -->
-                            <template
-                              v-if="
-                                item.userId !== board.author &&
-                                userInfo.id === board.author
-                              "
-                            >
-                              <v-icon icon="mdi-cancel" color="red"></v-icon>
-                            </template>
-                          </template>
                         </v-list-item>
                       </v-list>
                     </v-card-text>
@@ -342,7 +384,57 @@ watch(board, (newBoard) => {
                   </v-card>
                 </v-dialog>
               </v-btn>
+              <!-- 모집글 작성자인 경우 참여 신청자 목록 보기 가능 -->
+              <template v-if="board.author === userInfo.id">
+                |
+                <v-btn color="primary" variant="plain">
+                  참여자 관리
+                  <v-dialog v-model="auth_dialog" activator="parent" width="500">
+                    <v-card>
+                      <v-card-text>
+                        <v-list>
+                          <v-list-item
+                            v-for="item in paricipantsAllDetail"
+                            :key="item.id"
+                          >
+                            <template v-slot:prepend>
+                              <template v-if="item.userId === board.author">
+                                <v-icon icon="mdi-account-star"></v-icon>
+                              </template>
+                              <template v-else>
+                                <v-icon icon="mdi-account"></v-icon>
+                              </template>
+                            </template>
 
+                            <v-list-item-title v-text="item.userId"></v-list-item-title>
+                            <template v-slot:append>
+                              <!-- 참여 신청자의 상태에 따라 아이콘 변경 -->
+                              <template v-if="item.userId !== userInfo.id">
+                                <template v-if="item.status === 1">
+                                  <v-icon icon="mdi-check"></v-icon>
+                                </template>
+                                <template v-if="item.status === 0">
+                                  <v-btn @click="accept(item)"> 수락 </v-btn>
+                                  <v-btn @click="decline(item)"> 거절 </v-btn>
+                                </template>
+                                <template v-if="item.status === -1">
+                                  <v-icon icon="mdi-close"></v-icon>
+                                </template>
+                              </template>
+                              <template v-else> ME! </template>
+                            </template>
+                          </v-list-item>
+                        </v-list>
+                      </v-card-text>
+                      <v-card-actions>
+                        <v-btn color="primary" block @click="auth_dialog = false"
+                          >닫기</v-btn
+                        >
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
+                </v-btn>
+              </template>
               <!-- [
               <template v-for="item in paricipantsDetail" :key="item.id">
                 {{ item.userId }} |
@@ -352,7 +444,7 @@ watch(board, (newBoard) => {
           </v-card-subtitle>
         </v-card-item>
         <v-divider></v-divider>
-        <v-card-text>
+        <v-card-text style="min-height: 8rem">
           {{ board.contents }}
         </v-card-text>
       </v-card>
@@ -526,6 +618,7 @@ watch(board, (newBoard) => {
       </v-card>
     </v-sheet>
   </v-layout>
+  <div style="height: 10rem"></div>
 </template>
 
 <style scoped>
@@ -536,8 +629,9 @@ watch(board, (newBoard) => {
 }
 
 .comments {
-  max-height: 250px;
-  overflow-y: auto;
+  height: max-content;
+  /* max-height: 250px; */
+  /* overflow-y: auto; */
 }
 
 h3 {

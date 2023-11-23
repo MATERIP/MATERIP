@@ -14,7 +14,9 @@
     </RouterLink>
     <v-dialog width="500">
       <template v-slot:activator="{ props }">
-        <v-btn v-bind="props"> <v-icon icon="mdi-briefcase-search"></v-icon> 여행지 검색 </v-btn>
+        <v-btn v-bind="props">
+          <v-icon icon="mdi-briefcase-search"></v-icon> 여행지 검색
+        </v-btn>
       </template>
 
       <template v-slot:default="{ isActive }">
@@ -22,7 +24,7 @@
           <SearchComponent @search="searchFunction" />
           <v-spacer></v-spacer>
 
-          <v-btn text="Close" @click="isActive.value = false"></v-btn>
+          <v-btn text="닫기" style="color: blue" @click="isActive.value = false"></v-btn>
         </v-card>
       </template>
     </v-dialog>
@@ -48,7 +50,10 @@
 
         <template v-if="menu.routeName === 'mypage'">
           <v-list-item>
-            <router-link :to="{ name: menu.routeName, params: { userId: userId } }" class="menu">
+            <router-link
+              :to="{ name: menu.routeName, params: { userId: userId } }"
+              class="menu"
+            >
               <v-btn>
                 <v-icon icon="mdi-account"></v-icon>
                 {{ menu.name }}
@@ -62,30 +67,30 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
-import { storeToRefs } from 'pinia'
-import { useUserStore } from '@/stores/user-store'
-import { useTravelStore } from '@/stores/travel-store'
-import SearchComponent from './SearchComponent.vue'
-const travelStore = useTravelStore()
-const userStore = useUserStore()
-const { logout } = useUserStore()
-const { menuList } = storeToRefs(userStore)
-const { userId } = storeToRefs(userStore)
+import { onMounted, ref } from "vue";
+import { storeToRefs } from "pinia";
+import { useUserStore } from "@/stores/user-store";
+import { useTravelStore } from "@/stores/travel-store";
+import SearchComponent from "./SearchComponent.vue";
+const travelStore = useTravelStore();
+const userStore = useUserStore();
+const { logout } = useUserStore();
+const { menuList } = storeToRefs(userStore);
+const { userId } = storeToRefs(userStore);
 onMounted(() => {
-  travelStore.searchTravelSpot()
-})
+  travelStore.searchTravelSpot();
+});
 
-const inputValue = ref('')
+const inputValue = ref("");
 
-const isSearchModalActive = ref(false)
+const isSearchModalActive = ref(false);
 
 const searchFunction = function () {
-  console.log(inputValue.value)
+  console.log(inputValue.value);
 
   // Close the modal after search
-  isSearchModalActive.value = false
-}
+  isSearchModalActive.value = false;
+};
 </script>
 
 <style scoped>

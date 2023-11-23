@@ -1,44 +1,44 @@
 <script setup>
-import { onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useTravelStore } from '@/stores/travel-store'
+import { onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
+import { useTravelStore } from "@/stores/travel-store";
 
-const travelStore = useTravelStore()
+const travelStore = useTravelStore();
 
 onMounted(() => {
-  travelStore.searchTravelSpot()
-})
-const inputValue = ref('')
+  travelStore.searchTravelSpot();
+});
+const inputValue = ref("");
 
 const search = function () {
-  if (inputValue.value === '') {
-    return
+  if (inputValue.value === "") {
+    return;
   }
-  window.location.href = 'http://localhost:5173/' + 'attraction/' + inputValue.value
-}
+  window.location.href = "http://localhost:5173/" + "attraction/" + inputValue.value;
+};
 
 const sizes = ref([
-  '단풍',
-  '부산',
-  '제주도',
-  '경주',
-  '단양',
-  '서울',
-  '축제',
-  '강릉',
-  '음악',
-  '여수',
-  '음악축제'
-])
-const rules = ref([(value) => !!value || '검색어를 입력하세요'])
+  "단풍",
+  "부산",
+  "제주도",
+  "경주",
+  "단양",
+  "서울",
+  "축제",
+  "강릉",
+  "음악",
+  "여수",
+  "음악축제",
+]);
+const rules = ref([(value) => !!value || "검색어를 입력하세요"]);
 const removeDarkEffect = function () {
   // 입력 필드를 클릭했을 때 어두워지는 효과 제거
-  const inputField = document.querySelector('.v-text-field__slot input')
+  const inputField = document.querySelector(".v-text-field__slot input");
   if (inputField) {
-    inputField.style.backgroundColor = 'transparent'
-    inputField.style.border = '1px solid #ccc' // 필요에 따라 테두리 스타일도 조정할 수 있습니다.
+    inputField.style.backgroundColor = "transparent";
+    inputField.style.border = "1px solid #ccc"; // 필요에 따라 테두리 스타일도 조정할 수 있습니다.
   }
-}
+};
 </script>
 
 <template>
@@ -58,8 +58,17 @@ const removeDarkEffect = function () {
         bg-color="white"
         variant="underlined"
         clearable
-        @click="removeDarkEffect"
       ></v-text-field>
+      <div style="display: flex; justify-content: center; margin-top: 1rem">
+        <v-btn
+          color="#ffc70f"
+          type="submit"
+          size="x-large"
+          style="border-radius: 10%; color: white"
+          elevated-6
+          >검색</v-btn
+        >
+      </div>
     </v-form>
     <div class="space"></div>
     <v-chip-group v-model="inputValue" selected-class="text-orange-accent-4" mandatory>
@@ -76,6 +85,7 @@ v-text-field {
 }
 .searchCmp {
   padding: 1rem;
+  font-family: "KIMM_Bold";
 }
 .space {
   height: 2rem;

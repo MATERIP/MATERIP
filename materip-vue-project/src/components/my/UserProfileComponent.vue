@@ -1,4 +1,5 @@
 <script setup>
+
 import { onMounted, ref, nextTick } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
@@ -19,47 +20,49 @@ onMounted(() => {
   animateProgressBar(likePercent.value)
 
   console.log('auth ' + auth.value)
-  if (likeState.value) {
-    iconColor.value = 'red'
-    iconBgColor.value = 'white'
-  }
-})
 
-const progressValue = ref(0) // 초기 게이지 바 값 (0-100 범위)
-const animationDuration = 2000 // 애니메이션 지속 시간 (2초)
+  if (likeState.value) {
+    iconColor.value = "red";
+    iconBgColor.value = "white";
+  }
+});
+
+const progressValue = ref(0); // 초기 게이지 바 값 (0-100 범위)
+const animationDuration = 2000; // 애니메이션 지속 시간 (2초)
 
 const animateProgressBar = (target) => {
-  const interval = 20 // 애니메이션 갱신 간격 (20ms)
-  const frames = animationDuration / interval
+  const interval = 20; // 애니메이션 갱신 간격 (20ms)
+  const frames = animationDuration / interval;
 
-  const increment = (target - progressValue.value) / frames
+  const increment = (target - progressValue.value) / frames;
 
-  let currentFrame = 0
+  let currentFrame = 0;
 
   const animate = () => {
     if (currentFrame < frames) {
-      progressValue.value += increment
-      currentFrame++
-      requestAnimationFrame(animate)
+      progressValue.value += increment;
+      currentFrame++;
+      requestAnimationFrame(animate);
     } else {
       // 애니메이션 완료
-      progressValue.value = target
+      progressValue.value = target;
     }
-  }
+  };
 
-  animate()
-}
+  animate();
+};
 
 const toggleButton = () => {
   if (likeState.value) {
-    userStore.toggleLikeState()
-    console.log('좋아요 취소')
-    console.log(likeState.value)
-    userStore.deleteLikeState(userInfo.value.id)
-    iconBgColor.value = 'grey'
-    iconColor.value = 'white'
-    console.log(iconBgColor.value + ' ' + iconColor.value)
+    userStore.toggleLikeState();
+    console.log("좋아요 취소");
+    console.log(likeState.value);
+    userStore.deleteLikeState(userInfo.value.id);
+    iconBgColor.value = "grey";
+    iconColor.value = "white";
+    console.log(iconBgColor.value + " " + iconColor.value);
   } else {
+
     userStore.toggleLikeState()
 
     console.log('좋아요')
@@ -76,14 +79,14 @@ const toggleButton = () => {
 }
 
 const goToWithdrawal = () => {
-  var input = confirm('정말 탈퇴하시겠습니까? 탈퇴하시면 모든 정보가 삭제됩니다.')
+  var input = confirm("정말 탈퇴하시겠습니까? 탈퇴하시면 모든 정보가 삭제됩니다.");
   if (input === true) {
-    userStore.withdrawal(userInfo.value.id)
-    alert('탈퇴되었습니다.')
+    userStore.withdrawal(userInfo.value.id);
+    alert("탈퇴되었습니다.");
   } else {
-    alert('탈퇴가 취소되었습니다.')
+    alert("탈퇴가 취소되었습니다.");
   }
-}
+};
 </script>
 
 <template>
@@ -91,10 +94,19 @@ const goToWithdrawal = () => {
     <v-app>
       <v-main>
         <v-container fluid>
-          <v-card max-width="450px" min-width="300px" class="mx-auto bg align-center" elevation="2">
+          <v-card
+            max-width="450px"
+            min-width="300px"
+            class="mx-auto bg align-center"
+            elevation="2"
+          >
             <v-img class="" height="200px" src="src/assets/background.jpg" cover> </v-img>
             <v-row justify="center">
-              <v-col align-self="start" class="d-flex justify-center align-center pa-0" cols="12">
+              <v-col
+                align-self="start"
+                class="d-flex justify-center align-center pa-0"
+                cols="12"
+              >
                 <v-avatar
                   class="profile avatar-center-heigth avatar-shadow"
                   color="grey"
@@ -106,11 +118,11 @@ const goToWithdrawal = () => {
             </v-row>
             <v-list-item color="#0000" class="profile-text-name ma-4 pt-16">
               <v-list-item-content>
-                <v-list-item-title class="text-h3 max-v-list-height">
-                  {{ userInfo.nickname }}</v-list-item-title
+                <v-list-item-title class="text-h2 max-v-list-height">
+                  <div class="nickname">{{ userInfo.nickname }}</div></v-list-item-title
                 >
                 <v-list-item-subtitle class="max-v-list-height">
-                  {{ userInfo.nickname }}
+                  {{ userInfo.name }}
                 </v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
@@ -196,5 +208,9 @@ const goToWithdrawal = () => {
 .custom-btn.v-btn--active {
   background-color: inherit; /* or the color you want to set */
   color: inherit; /* or the color you want to set */
+}
+
+.nickname {
+  font-family: "NPSfontBold";
 }
 </style>

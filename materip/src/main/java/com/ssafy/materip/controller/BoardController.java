@@ -236,6 +236,7 @@ public class BoardController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
+	// recruitment participants
 
 	@ApiOperation(value = "모집글 참가", notes = "모집글 게시판에 참가합니다.")
 	@PostMapping("/participants/join")
@@ -276,6 +277,26 @@ public class BoardController {
 		
 		boolean result = boardService.isJoinable(participants);
 		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "승인 거부, 대기, 승인 포함 모집글 인원 상세 조회", notes = "모집글에 승인 거부, 승인 대기, 승인 포함 모든 사용자 아이디 목록을 반환합니다.")
+	@GetMapping("/participants/{board_id}/all/detail")
+	public ResponseEntity<Map<String, Object>> readAllDetail(@PathVariable("board_id") int boardId) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("allUserList", boardService.getAllParticipantsList(boardId));
+		return new ResponseEntity<Map<String,Object>>(result, HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "참여 신청한 사용자를 승인", notes = "참여 신청한 사용자의 상태를 승인 상태로 변경합니다.")
+	@PutMapping("/participants/accept")
+	public ResponseEntity<?> accept(@RequestBody Participants participants) throws Exception {
+		return new ResponseEntity<>(boardService.accept(participants), HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "참여 신청한 사용자를 승인 거부", notes = "참여 신청한 사용자의 상태를 승인 거부 상태로 변경합니다.")
+	@PutMapping("/participants/decline")
+	public ResponseEntity<?> decline(@RequestBody Participants participants) throws Exception {
+		return new ResponseEntity<>(boardService.decline(participants), HttpStatus.OK);
 	}
 }
 

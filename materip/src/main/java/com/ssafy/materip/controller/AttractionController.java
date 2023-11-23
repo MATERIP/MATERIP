@@ -83,8 +83,6 @@ public class AttractionController {
 	@ApiOperation(value ="시도 코드 목록", notes="시도 코드 목록을 반환합니다.")
 	@GetMapping("/info/sido")
 	public ResponseEntity<?> getSidoList() throws Exception {
-
-
 		FileInputStream fileStream = new FileInputStream(Paths.get("").toAbsolutePath().toString() + "/src/main/resources/sido.ser");
 		ObjectInputStream objectInputStream = new ObjectInputStream(fileStream);
 		

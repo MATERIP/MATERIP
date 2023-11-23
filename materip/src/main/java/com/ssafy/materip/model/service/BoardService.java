@@ -68,9 +68,19 @@ public interface BoardService {
 	// get particpants list
 	List<Participants> getParticipantsList(int boardId) throws Exception;
 	
+	// get all participants list including declined, pending and accepted
+	List<Participants> getAllParticipantsList(int boardId) throws Exception;
+	
 	// leave
 	int leave(Participants participants) throws Exception;
 
+	// check if join-able
 	boolean isJoinable(Participants participants) throws Exception;
 
+	// accept
+	int accept(Participants participants) throws Exception;
+	
+	// decline
+	int decline(Participants participants) throws Exception;
+	
 }

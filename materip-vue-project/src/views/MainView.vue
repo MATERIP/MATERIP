@@ -1,27 +1,30 @@
 <script setup>
-import { ref, watchEffect, onMounted, onBeforeUnmount } from 'vue'
-import VideoBackground from 'vue-responsive-video-background-player'
-const showComponent = ref(false)
-import CarouselComponent from '../components/CarouselComponent.vue'
+import { ref, watchEffect, onMounted, onBeforeUnmount } from "vue";
+import VideoBackground from "vue-responsive-video-background-player";
+const showComponent = ref(false);
+import CarouselComponent from "../components/CarouselComponent.vue";
 onMounted(() => {
   setTimeout(() => {
-    showComponent.value = true
-    scrollToPosition(280)
-  }, 5700)
-})
+    showComponent.value = true;
+    scrollToPosition(280);
+  }, 5700);
+});
 const scrollToPosition = (position) => {
   window.scrollTo({
     top: position,
-    behavior: 'smooth'
-  })
-}
-const position = ref(0)
+    behavior: "smooth",
+  });
+};
+const position = ref(0);
 </script>
 
 <template>
   <div class="backgrd">
     <div class="videoContent">
-      <video-background src="src/assets/sky.mp4" style="max-height: 1200px; height: 1200px">
+      <video-background
+        src="src/assets/sky.mp4"
+        style="max-height: 1200px; height: 1200px"
+      >
       </video-background>
     </div>
     <div class="overlay main-text">
@@ -59,8 +62,8 @@ const position = ref(0)
   <div style="height: 500px"></div>
 </template>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Staatliches&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Staatliches&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100&display=swap");
 
 * {
   margin: 0;
@@ -110,14 +113,6 @@ body {
   z-index: 0;
 }
 
-body {
-  width: 100%;
-  height: 100%;
-  background: #16345a;
-  padding: 0;
-  margin: 0;
-}
-
 .text-box {
   width: 100%;
   height: 100%;
@@ -127,7 +122,7 @@ body {
 }
 
 svg text {
-  font-family: 'Staatliches', cursive;
+  font-family: "Staatliches", cursive;
   font-size: 6em;
   fill: transparent;
   stroke-dasharray: 326px;

@@ -10,6 +10,7 @@ import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import { createPinia } from 'pinia'
 import piniaPluginPersistedState from 'pinia-plugin-persistedstate'
+
 const vuetify = createVuetify({
   components,
   directives,
@@ -20,7 +21,9 @@ const vuetify = createVuetify({
     sets: {
       mdi
     }
-  }
+  },
+
+  
 })
 
 const app = createApp(App)

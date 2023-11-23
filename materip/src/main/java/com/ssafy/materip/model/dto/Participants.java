@@ -4,7 +4,7 @@ public class Participants {
 	public int id;
 	public int boardId;
 	public String userId;
-	public int status;
+	public int status; // -1 : 승인 거절, 0: 승인 대기, 1: 승인
 	
 	public int getId() {
 		return id;
