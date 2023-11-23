@@ -444,7 +444,7 @@ watch(board, (newBoard) => {
           </v-card-subtitle>
         </v-card-item>
         <v-divider></v-divider>
-        <v-card-text>
+        <v-card-text style="min-height: 8rem">
           {{ board.contents }}
         </v-card-text>
       </v-card>
@@ -618,6 +618,7 @@ watch(board, (newBoard) => {
       </v-card>
     </v-sheet>
   </v-layout>
+  <div style="height: 10rem"></div>
 </template>
 
 <style scoped>
@@ -628,8 +629,9 @@ watch(board, (newBoard) => {
 }
 
 .comments {
-  max-height: 250px;
-  overflow-y: auto;
+  height: max-content;
+  /* max-height: 250px; */
+  /* overflow-y: auto; */
 }
 
 h3 {
