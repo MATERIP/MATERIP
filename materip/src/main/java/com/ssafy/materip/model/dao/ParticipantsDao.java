@@ -13,6 +13,8 @@ public interface ParticipantsDao {
 
 	List<Participants> getParticipants(int boardId) throws SQLException;
 
+	List<Participants> getAllParticipants(int boardId) throws SQLException;
+	
 	int removeParticipants(Participants participants) throws SQLException;
 
 	int removeAllParticipants(int boardId) throws SQLException;
@@ -21,5 +23,8 @@ public interface ParticipantsDao {
 	
 	int isJoinable(Participants participants) throws SQLException;
 	
+	int accept(Participants participants) throws SQLException;
+	
+	int decline(Participants participants) throws SQLException;
 }
 

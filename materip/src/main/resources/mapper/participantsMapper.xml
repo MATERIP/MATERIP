@@ -9,46 +9,78 @@
 		<result column="id" property="id" />
 		<result column="board_id" property="boardId" />
 		<result column="user_id" property="userId" />
+		<result column="status" property="status" />
+		<!-- status -1: declined, 0: pending, 1: accepted -->
 	</resultMap>
 
+	<!-- 참여 신청 -->
 	<insert id="addParticipants" parameterType="participants">
 		INSERT INTO
 		participants
-		(board_id, user_id)
-		VALUES (#{boardId}, #{userId})
+		(board_id, user_id, status)
+		VALUES (#{boardId}, #{userId}, 0)
 	</insert>
 
+	<!-- 참여 신청 취소 -->
 	<delete id="removeParticipants" parameterType="participants">
 		DELETE FROM
 		participants
 		WHERE board_id = #{boardId} and user_id = #{userId}
 	</delete>
 	
+	<!-- 모든 참여자 제거 -->
 	<delete id="removeAllParticipants" parameterType="int">
 		DELETE FROM
 		participants
 		WHERE board_id = #{boardId}
 	</delete>
 
+	<!-- 참여중인 참여자 목록 -->
 	<select id="getParticipants" parameterType="int"
 		resultMap="participants">
-		SELECT id, board_id, user_id
+		SELECT id, board_id, user_id, status
 		FROM participants
 		WHERE board_id =
-		#{boardId};
+		#{boardId} AND status = 1;
+	</select>
+	
+	<!-- 거절, 승인 대기, 승인 상태의 모든 참여자 목록 -->
+	<select id="getAllParticipants" parameterType="int" resultMap="participants">
+		SELECT id, board_id, user_id, status
+		FROM participants
+		WHERE board_id = #{board_id};
 	</select>
 
+ 	<!-- 참여중인 참여자 수  -->
 	<select id="getParticipantsCnt" parameterType="int"
 		resultType="int">
 		SELECT COUNT(*)
 		FROM participants
 		WHERE board_id =
-		#{boardId};
+		#{boardId} AND status = 1
 	</select>
 	
+	<!-- 참여 가능한지 여부 -->
 	<select id="isJoinable" parameterType="participants" resultType="int">
 		SELECT COUNT(*)
 		FROM participants
 		WHERE board_id = #{boardId} and user_id = #{userId};
 	</select>
+	
+	<!-- 참여 승인 -->
+	<update id="accept" parameterType="participants">
+		UPDATE
+		participants
+		SET status = 1
+		WHERE board_id = #{boardId} and user_id = #{userId} and status = 0;
+	</update>
+	
+	<!-- 참여 거부 -->
+	<update id="decline" parameterType="participants">
+		UPDATE
+		participants
+		SET status = -1
+		WHERE board_id = #{boardId} and user_id = #{userId} and status = 0;
+	</update>
+	
 </mapper>
