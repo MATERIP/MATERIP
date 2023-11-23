@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar app color="transparent" flat class="px-10">
+  <v-app-bar app color="transparent" flat class="px-10 navigation-bar">
     <v-toolbar-title min-width="10rem">
       <RouterLink to="/">
         <v-img src="../src/assets/orglogo.png" alt="Logo" max-height="32"></v-img>
@@ -91,5 +91,8 @@ const searchFunction = function () {
 <style scoped>
 .v-btn {
   color: black;
+}
+.navigation-bar {
+  z-index: 1000;
 }
 </style>

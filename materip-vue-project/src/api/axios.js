@@ -68,7 +68,7 @@ instance.interceptors.response.use(
         })
       }
     } else if (status == httpStatusCode.FORBIDDEN) {
-      alert(error.response.data.message)
+      alert(error.response.data)
     }
 
     return Promise.reject(error)
