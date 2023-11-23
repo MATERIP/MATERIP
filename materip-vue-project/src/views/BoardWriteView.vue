@@ -2,25 +2,43 @@
 import { ref, onMounted, watch, inject, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "../stores/user-store";
+import { useTravelStore } from "../stores/travel-store";
 import { storeToRefs } from "pinia";
 
 const axios = inject("axios");
 
 const userStore = useUserStore();
+const travelStore = useTravelStore();
 const { userInfo, userId } = storeToRefs(userStore);
 const { isAdmin } = storeToRefs(userStore);
+
+const sidoCode = ref([
+  {
+    name: "",
+    code: "",
+  },
+]);
+
+const gugunCode = ref([]);
+
+const selectedSido = ref();
+const selectedGugun = ref();
+const selectedAttraction = ref();
+const gugunData = ref({});
+const contentId = ref();
 
 const router = useRouter();
 const board = ref({
   title: "",
   contents: "",
-
   author: userId.value,
   boardType: null,
   maxCount: 2,
   currentCount: 0,
+  travelSpot: 0,
 });
 
+const attractionList = ref([]);
 
 const items = ref([
   {
@@ -41,12 +59,12 @@ const items = ref([
 ]);
 
 onMounted(() => {
-
   userStore.getUserInfo(userId.value);
+  getSidoCode();
+
   console.log(userInfo.value.id);
   console.log(isAdmin.value);
   if (isAdmin.value === 1) {
-
     items.value[0].show = true;
   }
 
@@ -57,13 +75,50 @@ onMounted(() => {
 
 watch(
   () => board.value.boardType,
+  (newValue) => {}
+);
+
+watch(
+  () => selectedSido.value,
   (newValue) => {
-    console.log(newValue);
+    // console.log(newValue);
+    // 선택된 시도가 바뀌면 구군 목록을 초기화
+    selectedGugun.value = "";
+
+    // 선택된 시도에 따라 구군 목록을 가져옴
+    getGugunCode(sidoCode.value[selectedSido.value]);
+    // 선택된 시도에 따라 관광지 목록을 가져옴
+    searchAttractionByRegion1(sidoCode.value[selectedSido.value]);
+  }
+);
+
+watch(
+  () => selectedGugun.value,
+  (newValue) => {
+    // console.log(newValue);
+
+    console.log(gugunData.value[selectedGugun.value]);
+
+    // 선택된 구군이 바뀌면 관광지 목록을 초기화
+    selectedAttraction.value = "";
+
+    // 선택된 구군에 따라 관광지 목록을 가져옴
+    if (selectedGugun.value === "") return;
+    searchAttractionByRegion2(
+      sidoCode.value[selectedSido.value],
+      gugunData.value[selectedGugun.value]
+    );
   }
 );
 
 const write = async () => {
-  console.log(board.value);
+  // board.value.travelSpot = selectedAttraction.value;
+
+  // console.log(selectedSido.value + "," + selectedGugun.value);
+  await searchAttractionContentId();
+  // 1초 지연
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  // console.log(board.value);
   await axios
     .post("/board/write", board.value)
     .then(() => {
@@ -79,6 +134,70 @@ const write = async () => {
       console.log(error);
     });
 };
+
+// attraction
+
+// 시도 코드 목록 가져오기
+const getSidoCode = async () => {
+  await axios.get(`/attraction/info/sido`).then((response) => {
+    sidoCode.value = response.data;
+    // console.log(sidoCode.value);
+  });
+};
+
+// 구군 코드 목록 가져오기
+const getGugunCode = async (sidocode) => {
+  // console.log(sidocode)
+  await axios.get(`/attraction/info/gugun?sidocode=${sidocode}`).then((response) => {
+    gugunData.value = response.data;
+    gugunCode.value = Object.keys(response.data).sort();
+    // console.log(gugunCode.value);
+  });
+};
+
+// 시도 코드로 관광지 검색
+const searchAttractionByRegion1 = async (item) => {
+  await axios.get(`/attraction/info/region1?sidocode=${item}`).then((res) => {
+    attractionList.value = res.data;
+    // console.log(attractionList.value);
+  });
+};
+
+// 시도, 구군 코드로 관광지 검색
+const searchAttractionByRegion2 = async (sidocode, guguncode) => {
+  await axios
+    .get(`/attraction/info/region2?guguncode=${guguncode}&sidocode=${sidocode}`)
+    .then((res) => {
+      attractionList.value = res.data;
+      // console.log(attractionList.value);
+    });
+};
+
+const searchAttractionContentId = async () => {
+  await axios
+    .post(`/attraction/info/contentid`, {
+      addr1: "",
+      addr2: "",
+      contentId: null,
+      contentTypeId: 0,
+      firstImage: "",
+      firstImage2: "",
+      gugunCode: gugunData.value[selectedGugun.value],
+      latitude: 0,
+      longitude: 0,
+      mlevel: "string",
+      readcount: 0,
+      sidoCode: sidoCode.value[selectedSido.value],
+      tel: "",
+      title: selectedAttraction.value,
+      zipcode: "",
+    })
+    .then((response) => {
+      console.log(response.data);
+      board.value.travelSpot = response.data;
+      // console.log(attractionList.value);
+    });
+};
 </script>
 
 <template>
@@ -91,26 +210,27 @@ const write = async () => {
         <v-card-title>
           <v-layout align-center justify-center-between>
             <v-icon icon="mdi-pencil"></v-icon>
-            <p style="font-weight: bold">글쓰기</p>
+            글쓰기
           </v-layout>
         </v-card-title>
         <v-form class="mt-5" @submit.prevent="write">
           <div class="board-title">
             <v-select
+              class="select-board"
               label="게시판 선택"
               variant="underlined"
-              single-line
               clearable
+              hide-details
               :items="items.filter((item) => item.show)"
               item-title="name"
               item-value="value"
               v-model="board.boardType"
-              style="display: flex; margin-bottom: 1.5rem; width: 10rem"
             >
             </v-select>
+            <!-- 모집글인 경우... -->
             <template v-if="board.boardType === 'recruitment'">
               <div class="count">
-                <p>최대 인원 수</p>
+                최대 인원 수
                 <v-icon icon="mdi-account-group" style="margin: 0 1rem"></v-icon>
 
                 <v-icon
@@ -128,6 +248,66 @@ const write = async () => {
                 ></v-icon>
               </div>
             </template>
+
+            <!-- 
+            <v-chip-group>
+              <v-chip
+                selected-class="text-orange-accent-4"
+                v-for="(code, name) in sidoCode"
+                :key="code"
+                :value="name"
+                @click="getGugunCode(code), searchAttractionByRegion1(code)"
+                >{{ name }}</v-chip
+              >
+            </v-chip-group>
+
+            <v-chip-group>
+              <v-chip
+                selected-class="text-orange-accent-4"
+                v-for="(code, name) in gugunCode"
+                :key="code"
+                :value="name"
+                @click="searchAttractionByRegion2(selectedSido, code)"
+                >{{ name }}</v-chip>
+            </v-chip-group> -->
+            <div class="select-spot">
+              <v-select
+                class="select-sido"
+                label="시/도 선택"
+                variant="underlined"
+                clearable
+                v-model="selectedSido"
+                :items="Object.keys(sidoCode).sort()"
+                item-text="name"
+                item-value="code"
+                hide-details
+              ></v-select>
+
+              <v-select
+                class="select-gugun"
+                label="구/군 선택"
+                variant="underlined"
+                clearable
+                v-model="selectedGugun"
+                :items="gugunCode"
+                item-text="name"
+                item-value="code"
+                hide-details
+              ></v-select>
+
+              <v-select
+                class="select-attraction"
+                v-model="selectedAttraction"
+                label="관광지 선택"
+                variant="underlined"
+                clearable
+                :items="attractionList"
+                item-text="title"
+                item-value="contentId"
+                hide-details
+              >
+              </v-select>
+            </div>
           </div>
           <v-text-field
             clearable
@@ -187,7 +367,6 @@ const write = async () => {
 .count {
   display: flex;
   justify-content: center;
-  margin-bottom: 1rem;
   align-items: center;
 }
 
@@ -198,6 +377,8 @@ const write = async () => {
 
 .board-title {
   display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
 }
 
 .button {
@@ -205,8 +386,41 @@ const write = async () => {
   justify-content: center;
 }
 
-p {
-  font-family: "Noto Sans KR", sans-serif;
-  font-weight: bold;
+.select-spot {
+  display: flex;
+}
+.select-board {
+  margin: 0 1rem;
+  min-width: 12rem;
+  max-width: fit-content;
+}
+.select-sido {
+  margin: 0 1rem;
+  min-width: 12rem;
+  max-width: fit-content;
+}
+
+.select-gugun {
+  margin: 0 1rem;
+  min-width: 12rem;
+  max-width: fit-content;
+}
+
+.select-attraction {
+  min-width: 15rem;
+  max-width: fit-content;
+}
+
+.v-text-field {
+  font-family: "Nanum Gothic";
+}
+
+.v-input {
+  margin-left: 0;
+}
+
+i {
+  color: #f09404;
+  margin-right: 1rem;
 }
 </style>

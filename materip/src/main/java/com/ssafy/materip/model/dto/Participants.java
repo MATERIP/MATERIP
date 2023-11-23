@@ -4,6 +4,7 @@ public class Participants {
 	public int id;
 	public int boardId;
 	public String userId;
+	public int status;
 	
 	public int getId() {
 		return id;
@@ -23,10 +24,16 @@ public class Participants {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	
+	public int getStatus() {
+		return status;
+	}
+	public void setStatus(int status) {
+		this.status = status;
+	}
 	@Override
 	public String toString() {
-		return "Participants [id=" + id + ", boardId=" + boardId + ", userId=" + userId + "]";
+		return "Participants [id=" + id + ", boardId=" + boardId + ", userId=" + userId + ", status=" + status + "]";
 	}
+	
     
 }

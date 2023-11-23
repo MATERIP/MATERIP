@@ -28,10 +28,24 @@ export const useTravelStore = defineStore(
       }
     }
 
+    const searchByRegion = async () => {
+      await axios.get(`/attraction/info/region`, {
+        sidoCode: '',
+        gugunCode: ''
+      })
+      .then((response) => {
+        console.log(response.data)
+        searchResult.value = response.data
+        return response.data
+      }
+      )
+    }
+
     return {
       searchInput,
       searchTravelSpot,
-      searchResult
+      searchResult,
+      searchByRegion
     }
   },
   {
@@ -39,4 +53,5 @@ export const useTravelStore = defineStore(
       storage: localStorage
     }
   }
+  
 )

@@ -9,4 +9,9 @@ public interface AttractionInfoService {
 	List<String> getTravelNameList();
 	List<AttractionInfo> getTravelList();
 	List<String> getTravelNameSearchList(String title);
+	
+	List<AttractionInfo> getTravelListBySido(int sidoCode);
+	List<String> getTravelListBySidoGugun(int sidoCode, int gugunCode);
+	Integer getTravelSpot(AttractionInfo attractionInfo);
+	AttractionInfo getTravelInfoByContentId(int contentId);
 }

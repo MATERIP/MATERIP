@@ -13,11 +13,11 @@
 		<result column="addr2" property="addr2" />
 		<result column="zipcode" property="zipcode" />
 		<result column="tel" property="tel" />
-		<result column="first_image" property="first_image" />
-		<result column="first_image2" property="first_image2" />
+		<result column="first_image" property="firstImage" />
+		<result column="first_image2" property="firstImage2" />
 		<result column="readcount" property="readcount" />
-		<result column="sido_code" property="sido_code" />
-		<result column="gugun_code" property="gugun_code" />
+		<result column="sido_code" property="sidoCode" />
+		<result column="gugun_code" property="gugunCode" />
 		<result column="latitude" property="latitude" />
 		<result column="longitude" property="longitude" />
 		<result column="mlevel" property="mlevel" />
@@ -36,5 +36,40 @@
 		SELECT title FROM `attraction_info`
 		WHERE title LIKE  CONCAT('%', #{title}, '%');
 	</select>
-
+	
+	<select id="getAttractionInfoList" resultMap="attractionInfo">
+		SELECT content_id, content_type_id, title, addr1, addr2, sido_code, gugun_code, latitude, longitude
+		FROM
+		attraction_info;
+	</select>
+	
+	<select id="getAttractionInfoBySido" parameterType="int" resultMap="attractionInfo">
+		SELECT content_id, content_type_id, title, addr1, addr2, zipcode, tel, sido_code, gugun_code, latitude, longitude
+		FROM
+		attraction_info
+		WHERE sido_code = #{sidoCode};
+	</select>
+	
+	<select id="getAttractionInfoBySidoGugun" parameterType="attractionInfo" resultType="String">
+		SELECT title
+		FROM
+		attraction_info
+		WHERE sido_code = #{sidoCode} AND gugun_code = #{gugunCode};
+	</select>
+	
+	<select id="getAttractionContentId" parameterType="attractionInfo" resultType="Integer">
+		SELECT content_id
+		FROM
+		attraction_info
+		WHERE sido_code = #{sidoCode} AND gugun_code = #{gugunCode} AND title = #{title}
+		LIMIT 1;
+	</select>
+		
+	<select id="getAttractionInfoByContentId" parameterType="int" resultMap="attractionInfo">
+		SELECT *
+		FROM
+		attraction_info
+		WHERE content_id = #{contentId}
+	</select>
+		
 </mapper>
