@@ -11,8 +11,8 @@ public class AttractionInfo {
     String firstImage;
     String firstImage2;
     int readcount;
-    String sidoCode;
-    String gugunCode;
+    int sidoCode;
+    int gugunCode;
     Double latitude;
     Double longitude;
     String mlevel;
@@ -98,19 +98,19 @@ public class AttractionInfo {
         this.readcount = readcount;
     }
 
-    public String getSidoCode() {
+    public int getSidoCode() {
         return sidoCode;
     }
 
-    public void setSidoCode(String sidoCode) {
+    public void setSidoCode(int sidoCode) {
         this.sidoCode = sidoCode;
     }
 
-    public String getGugunCode() {
+    public int getGugunCode() {
         return gugunCode;
     }
 
-    public void setGugunCode(String gugunCode) {
+    public void setGugunCode(int gugunCode) {
         this.gugunCode = gugunCode;
     }
 
@@ -137,4 +137,15 @@ public class AttractionInfo {
     public void setMlevel(String mlevel) {
         this.mlevel = mlevel;
     }
+
+	@Override
+	public String toString() {
+		return "AttractionInfo [contentId=" + contentId + ", contentTypeId=" + contentTypeId + ", title=" + title
+				+ ", addr1=" + addr1 + ", addr2=" + addr2 + ", zipcode=" + zipcode + ", tel=" + tel + ", firstImage="
+				+ firstImage + ", firstImage2=" + firstImage2 + ", readcount=" + readcount + ", sidoCode=" + sidoCode
+				+ ", gugunCode=" + gugunCode + ", latitude=" + latitude + ", longitude=" + longitude + ", mlevel="
+				+ mlevel + "]";
+	}
+    
+    
 }

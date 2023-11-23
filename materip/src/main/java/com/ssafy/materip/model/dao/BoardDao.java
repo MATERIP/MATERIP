@@ -31,4 +31,10 @@ public interface BoardDao {
 	int deleteBoard(int sequence) throws SQLException;
 
 	void updateBoardHits(int boardId) throws SQLException;
+	
+	void increaseBoardCurrentCount(int boardId) throws SQLException;
+	
+	void decreaseBoardCurrentCount(int boardId) throws SQLException;
+
 }
+

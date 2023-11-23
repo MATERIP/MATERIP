@@ -57,7 +57,9 @@ const formatDate = function (item) {
   }
   return item.createdAt
 }
-
+onMounted(() => {
+  console.log(userMateList.value)
+})
 const pageCount = computed(() => Math.ceil(userMateList.value.length / itemsPerPage.value))
 </script>
 

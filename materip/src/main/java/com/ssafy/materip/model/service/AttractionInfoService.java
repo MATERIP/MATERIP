@@ -8,6 +8,10 @@ public interface AttractionInfoService {
     // 여행지 추가
 	List<String> getTravelNameList();
 	List<AttractionInfo> getTravelList();
-	List<AttractionInfo> getTravelNameSearchList(String title);
-	AttractionInfo getAttractionInfo(int contentId);
+	List<String> getTravelNameSearchList(String title);
+	
+	List<AttractionInfo> getTravelListBySido(int sidoCode);
+	List<String> getTravelListBySidoGugun(int sidoCode, int gugunCode);
+	Integer getTravelSpot(AttractionInfo attractionInfo);
+	AttractionInfo getTravelInfoByContentId(int contentId);
 }

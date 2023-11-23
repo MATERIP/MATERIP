@@ -37,9 +37,40 @@
 		WHERE title LIKE  CONCAT('%', #{title}, '%');
 	</select>
 	
-	<select id="getAttractionInfo" parameterType="Integer" resultMap="attractionInfo">
-		SELECT * FROM `attraction_info`
-		WHERE content_id = #{contentId}
+	<select id="getAttractionInfoList" resultMap="attractionInfo">
+		SELECT content_id, content_type_id, title, addr1, addr2, sido_code, gugun_code, latitude, longitude
+		FROM
+		attraction_info;
 	</select>
 	
+	<select id="getAttractionInfoBySido" parameterType="int" resultMap="attractionInfo">
+		SELECT content_id, content_type_id, title, addr1, addr2, zipcode, tel, sido_code, gugun_code, latitude, longitude
+		FROM
+		attraction_info
+		WHERE sido_code = #{sidoCode};
+	</select>
+	
+	<select id="getAttractionInfoBySidoGugun" parameterType="attractionInfo" resultType="String">
+		SELECT title
+		FROM
+		attraction_info
+		WHERE sido_code = #{sidoCode} AND gugun_code = #{gugunCode};
+	</select>
+	
+	<select id="getAttractionContentId" parameterType="attractionInfo" resultType="Integer">
+		SELECT content_id
+		FROM
+		attraction_info
+		WHERE sido_code = #{sidoCode} AND gugun_code = #{gugunCode} AND title = #{title}
+		LIMIT 1;
+	</select>
+		
+	<select id="getAttractionInfoByContentId" parameterType="int" resultMap="attractionInfo">
+		SELECT *
+		FROM
+		attraction_info
+		WHERE content_id = #{contentId}
+	</select>
+		
+
 </mapper>

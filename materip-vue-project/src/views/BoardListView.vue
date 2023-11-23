@@ -1,49 +1,62 @@
 <script setup>
-
-import { ref, computed, watch, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import axios from 'axios'
+import { ref, computed, watch, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import axios from "axios";
 
 const router = useRouter();
-const boardList = ref([])
+const boardList = ref([]);
 const instance = axios.create({
-  baseURL: 'http://localhost:8080/'
-})
+  baseURL: "http://localhost:8080/",
+});
 
 const title = ref({
-  "review" : "여행지 리뷰",
-  "recruitment" : "여행 메이트 모집",
+  review: "여행지 리뷰",
+  recruitment: "여행 메이트 모집",
 });
 const apiRoute = ref({
-  
-  "review" : "/board/getReviewList",
-  "recruitment" : "/board/getRecruitmentList"
-})
-
+  review: "/board/getReviewList",
+  recruitment: "/board/getRecruitmentList",
+});
 
 const writeBtn = ref("글쓰기");
 
-const itemsPerPage = ref(10)
-const page = ref(1)
-const headers = [
-  {
-    align: 'center',
-    key: 'title',
-    sortable: false,
-    title: "제목",
-  },
+const itemsPerPage = ref(10);
+const page = ref(1);
 
+const headers = computed(() => {
+  let baseHeaders = [
+    {
+      align: "center",
+      key: "title",
+      sortable: false,
+      title: "제목",
+    },
 
-  { title: "작성자", key: "author", align: "center", sortable: false },
-  {
-    title: "작성일",
-    key: "createdAt",
-    align: "center",
-    value: (item) => formatDate(item),
-    sortable: false,
-  },
-  { title: "조회", key: "hits", align: "center", sortable: false },
-];
+    { title: "작성자", key: "author", align: "center", sortable: false },
+    {
+      title: "작성일",
+      key: "createdAt",
+      align: "center",
+      value: (item) => formatDate(item),
+      sortable: false,
+    },
+
+    { title: "조회", key: "hits", align: "center", sortable: false },
+  ];
+
+  if (router.currentRoute.value.name === "recruitment") {
+    baseHeaders.push({
+      title: "모집인원",
+      key: "participants",
+      align: "center",
+      sortable: false,
+      value: (item) =>
+        item.boardType !== "recruitment" ? "" : `${item.currentCount}/${item.maxCount}`,
+    });
+  }
+
+  return baseHeaders;
+});
 
 const formatDate = function (item) {
   // console.log(item.createdAt.substring(0, 4))
@@ -62,21 +75,19 @@ const formatDate = function (item) {
     month == item.createdAt.substring(5, 7) &&
     date == item.createdAt.substring(8, 10)
   ) {
-
     item.createdAt = item.createdAt.substring(11, 19);
   } else {
     item.createdAt = item.createdAt.substring(0, 10).replaceAll("-", ".");
-
   }
   return item.createdAt;
 };
 
-const pageCount = computed(() => Math.ceil(boardList.value.length / itemsPerPage.value))
+const pageCount = computed(() => Math.ceil(boardList.value.length / itemsPerPage.value));
 
-const fetchData =  async () => {
+const fetchData = async () => {
   // console.log(router.currentRoute.value.name)
   let api = apiRoute.value[router.currentRoute.value.name];
-  if(api == null){
+  if (api == null) {
     return;
   }
   await instance
@@ -86,23 +97,24 @@ const fetchData =  async () => {
       // console.log(response);
     })
     .catch(function (error) {
-      console.log(error)
-    })
-}
+      console.log(error);
+    });
+};
 
 onMounted(() => {
   fetchData();
 });
 
-watch(() => router.currentRoute.value.name, () => {
-  // console.log(newValue); 
-  fetchData();
-})
-
-
+watch(
+  () => router.currentRoute.value.name,
+  () => {
+    // console.log(newValue);
+    fetchData();
+  }
+);
 
 async function goToDetail(item) {
-  console.log(item)
+  console.log(item);
   // 상세 페이지 이동 전에 조회수를 1 증가시킨다.
   // await updateBoardHits(item);
 
@@ -112,16 +124,12 @@ async function goToDetail(item) {
 const goWrite = () => {
   router.push({ name: "write" });
 };
-
 </script>
 
 <template>
-  
   <div style="height: 8rem"></div>
-  <div>
-    
-  </div>
-  
+  <div></div>
+
   <div
     style="
       display: flex;
@@ -134,7 +142,7 @@ const goWrite = () => {
     <v-btn
       style="align-self: center"
       variant="elevated"
-      color="primary"
+      color="#Fbc507"
       width="fit-content"
       @click="goWrite"
       prepend-icon="mdi-pencil"
@@ -151,11 +159,11 @@ const goWrite = () => {
     style="width: 70%; margin: 0 auto"
     hover
   >
-
-  <template v-slot:item.title="{ item }">
-    <v-btn text @click="goToDetail(item)" variant="flat" :class="[item.boardType]">{{ item.title }}</v-btn>
+    <template v-slot:item.title="{ item }">
+      <v-btn text @click="goToDetail(item)" variant="flat" :class="[item.boardType]">{{
+        item.title
+      }}</v-btn>
     </template>
-
 
     <template v-slot:bottom>
       <div class="text-center pt-2">
@@ -167,8 +175,8 @@ const goWrite = () => {
 
 <style scoped>
 h1 {
-
   margin-top: 0;
+  margin-bottom: 3rem;
   align-self: center;
 }
 
@@ -180,6 +188,4 @@ h1 {
 .v-btn {
   text-transform: none;
 }
-
-
 </style>

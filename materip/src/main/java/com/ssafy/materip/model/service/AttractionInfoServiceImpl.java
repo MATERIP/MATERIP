@@ -27,7 +27,7 @@ public class AttractionInfoServiceImpl implements AttractionInfoService {
 	@Override
 	public List<AttractionInfo> getTravelList() {
 		// TODO Auto-generated method stub
-		return null;
+		return attractionInfoDao.getAttractionInfoList();
 	}
 
 	@Override
@@ -37,10 +37,23 @@ public class AttractionInfoServiceImpl implements AttractionInfoService {
 	}
 
 	@Override
-	public AttractionInfo getAttractionInfo(int contentId) {
-		// TODO Auto-generated method stub
-		return attractionInfoDao.getAttractionInfo(contentId);
+	public List<AttractionInfo> getTravelListBySido(int sidoCode) {
+		return attractionInfoDao.getAttractionInfoBySido(sidoCode);
 	}
 	
+	@Override
+	public List<String> getTravelListBySidoGugun(int sidoCode, int gugunCode) {
+		return attractionInfoDao.getAttractionInfoBySidoGugun(sidoCode, gugunCode);
+	}
+
+	@Override
+	public Integer getTravelSpot(AttractionInfo attractionInfo) {
+		return attractionInfoDao.getAttractionContentId(attractionInfo);
+	}
+
+	@Override
+	public AttractionInfo getTravelInfoByContentId(int contentId) {
+		return attractionInfoDao.getAttractionInfoByContentId(contentId);
+	}
 	
 }

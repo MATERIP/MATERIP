@@ -14,7 +14,10 @@
 		<result column="modified_at" property="modifiedAt" />
 		<result column="hits" property="hits" />
 		<result column="board_type" property="boardType" />
+		<result column="travel_spot" property="travelSpot" />
 		<result column="travel_date" property="travelDate" />
+		<result column="max_count" property="maxCount" />
+		<result column="current_count" property="currentCount" />
 	</resultMap>
 
 
@@ -22,17 +25,17 @@
 		INSERT INTO board
 		(title,
 		author, contents, created_at, modified_at, hits, board_type,
-		travel_date)
+		travel_date, travel_spot, max_count, current_count)
 		VALUES
 		(#{title}, #{author}, #{contents}, now(), now(), 0,
-		#{boardType}, #{travelDate})
+		#{boardType}, #{travelDate}, #{travelSpot}, #{maxCount}, 1)
 	</insert>
 
 	<update id="updateBoard" parameterType="board">
 		UPDATE board
 		SET title =
 		#{title}, contents = #{contents} , modified_at =
-		now(), travel_date = #{travelDate}
+		now(), travel_spot = #{travelSpot}, travel_date = #{travelDate}, max_count = #{maxCount}
 		WHERE id = #{id}
 	</update>
 
@@ -45,7 +48,7 @@
 	<select id="readAllBoards" resultType="Board" resultMap="board">
 		SELECT
 		id, title, author, contents,created_at, modified_at, hits, board_type,
-		travel_date
+		travel_date, travel_spot, max_count, current_count
 		FROM board
 		ORDER BY board_type
 		DESC
@@ -54,32 +57,32 @@
 	<select id="readMateBoardsByUserId" parameterType="String" resultType="Board" resultMap="board">
 		SELECT
 		id, title, author, contents,created_at, modified_at, hits, board_type,
-		travel_date
+		travel_date, travel_spot, max_count, current_count
 		FROM board
 		WHERE author = #{user_id}
 		and
 		board_type = 'recruitment'
-		ORDER BY board_type
+		ORDER BY created_at
 		DESC
 	</select>
 
 	<select id="readReviewBoardsByUserId" parameterType="String" resultType="Board" resultMap="board">
 		SELECT
 		id, title, author, contents,created_at, modified_at, hits, board_type,
-		travel_date
+		travel_date, travel_spot
 		FROM board
 		WHERE
 		author = #{user_id}
 		and
 		board_type = 'review'
-		ORDER BY board_type
+		ORDER BY created_at
 		DESC
 	</select>
 	
 	<select id="readAllReview" resultType="board" resultMap="board">
 		SELECT
-		id, title, author, contents,created_at, modified_at, hits, board_type,
-		travel_date
+		id, title, author, contents, created_at, modified_at, hits, board_type,
+		travel_date, travel_spot
 		FROM board
 		WHERE board_type != 'recruitment'
 		ORDER BY board_type
@@ -89,7 +92,7 @@
 	<select id="readAllRecruitment" resultType="board" resultMap="board">
 		SELECT
 		id, title, author, contents,created_at, modified_at, hits, board_type,
-		travel_date
+		travel_date, travel_spot, max_count, current_count
 		FROM board
 		WHERE board_type != 'review'
 		ORDER BY board_type
@@ -99,7 +102,7 @@
 	<select id="readBoardById" parameterType="int" resultMap="board">
 		SELECT
 		id, title, author, contents, created_at, modified_at, hits, board_type,
-		travel_date
+		travel_date, travel_spot, max_count, current_count
 		FROM board
 		WHERE id = #{id}
 	</select>
@@ -110,4 +113,15 @@
 		WHERE id = #{id}
 	</update>
 	
+	<update id="increaseBoardCurrentCount" parameterType="int">
+		UPDATE board
+		SET current_count = current_count + 1
+		WHERE id = #{id}
+	</update>
+	
+	<update id="decreaseBoardCurrentCount" parameterType="int">
+		UPDATE board
+		SET current_count = current_count - 1
+		WHERE id = #{id}
+	</update>
 </mapper>

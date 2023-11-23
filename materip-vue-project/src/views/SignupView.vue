@@ -57,7 +57,7 @@ const userInfo = ref({
   nickname: "",
   birth: "",
   tel: "",
-  gender: "",
+  gender: "0",
 });
 const message = ref("");
 const color = ref("");
@@ -70,7 +70,7 @@ const instance = axios.create({
 function signup() {
   console.log(userInfo.value);
   instance
-    .post("/admin/user/signup", userInfo.value)
+    .post("/user/signup", userInfo.value)
     .then(() => {
       // userInfo.value = response.data;
       // console.log(response);
@@ -90,7 +90,7 @@ function idCheck() {
   hasInput.value = true;
   // console.log(userInfo.value.id)
   instance
-    .post("/admin/user", { id: userInfo.value.id })
+    .post("/user", { id: userInfo.value.id })
     .then(function (response) {
       //console.log(response.data);
       if (response.data == 1) {
@@ -112,6 +112,42 @@ function idCheck() {
     });
 }
 console.log(userInfo.value.id);
+
+const idRules = [
+  (value) => !!value || "아이디를 입력하세요!",
+  (value) => value.length >= 5 || "아이디는 최소 5자 이상이어야 합니다.",
+  (value) =>
+    /^[A-Za-z0-9]+$/.test(value) || "아이디는 영어 대소문자와 숫자만 포함할 수 있습니다.",
+];
+
+const passwordRules = [
+  (value) => !!value || "비밀번호를 입력하세요!",
+  (value) => value.length >= 5 || "비밀번호는 최소 5자 이상이어야 합니다.",
+];
+
+const emailRules = [
+  (value) => !!value || "이메일을 입력하세요!",
+  (value) => {
+    const pattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    return pattern.test(value) || "유효한 이메일 주소를 입력하세요!";
+  },
+];
+
+const nameRules = [
+  (value) => !!value || "이름을 입력하세요!",
+  (value) => /^[\uAC00-\uD7A3]+$/.test(value) || "이름은 한글만 가능합니다.",
+];
+
+const nicknameRules = [
+  (value) => !!value || "닉네임을 입력하세요!",
+  (value) => value.length >= 5 || "닉네임은 5글자 이상이어야 합니다.",
+  (value) => /^[a-zA-Z0-9가-힣]+$/.test(value) || "특수문자는 사용할 수 없습니다.",
+];
+
+const telRules = [
+  (value) => !!value || "휴대전화번호를 입력하세요!",
+  (value) => /^[0-9]{3}-[0-9]{4}-[0-9]{4}$/.test(value) || "올바른 형식이 아닙니다.",
+];
 </script>
 
 <template>
@@ -132,6 +168,7 @@ console.log(userInfo.value.id);
             variant="solo"
             v-model="userInfo.id"
             required
+            :rules="idRules"
             @keyup="idCheck"
           >
             <template v-if="hasInput" v-slot:append-inner>
@@ -150,10 +187,9 @@ console.log(userInfo.value.id);
             type="password"
             prepend-inner-icon="mdi-lock-outline"
             variant="solo"
-
             v-model="userInfo.password"
-
             required
+            :rules="passwordRules"
           ></v-text-field>
           <v-text-field
             density="comfortable"
@@ -163,16 +199,16 @@ console.log(userInfo.value.id);
             variant="solo"
             v-model="userInfo.email"
             required
+            :rules="emailRules"
           ></v-text-field>
           <v-text-field
             density="comfortable"
             label="이름"
             prepend-inner-icon="mdi-account"
             variant="solo"
-
             v-model="userInfo.name"
-
             required
+            :rules="nameRules"
           ></v-text-field>
           <v-text-field
             density="comfortable"
@@ -182,9 +218,7 @@ console.log(userInfo.value.id);
             variant="solo"
             v-model="userInfo.nickname"
             required
-            lazy-validation="between:3, 15"
-            validation-visibility="live"
-
+            :rules="nicknameRules"
           ></v-text-field>
           <v-text-field
             density="comfortable"
@@ -201,20 +235,19 @@ console.log(userInfo.value.id);
             required
             hide-details
             style="display: flex; justify-content: space-around"
+            v-model="userInfo.gender"
           >
             <v-radio
               true-icon="mdi-gender-male"
               label="남자"
               color="blue"
               value="0"
-              v-model="userInfo.gender"
             ></v-radio>
             <v-radio
               true-icon="mdi-gender-female"
               label="여자"
               color="red"
               value="1"
-              v-model="userInfo.gender"
             ></v-radio>
           </v-radio-group>
 
@@ -227,6 +260,7 @@ console.log(userInfo.value.id);
             prepend-inner-icon="mdi-cellphone"
             variant="solo"
             required
+            :rules="telRules"
             v-model="userInfo.tel"
           ></v-text-field>
           <v-divider></v-divider>
@@ -243,5 +277,9 @@ console.log(userInfo.value.id);
 div {
   text-align: center;
   align-self: center;
+}
+
+.v-text-field {
+  font-family: "NaNum Gothic", sans-serif;
 }
 </style>

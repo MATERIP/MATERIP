@@ -49,6 +49,7 @@ export const useUserStore = defineStore(
     const login = async (userInfo) => {
       // 서버로 요청
       console.log(userInfo)
+      console.log(userId)
       await axios.post('/user/login', userInfo).then((response) => {
         console.log(response)
         const accessToken = response.data['accessToken']
@@ -63,17 +64,17 @@ export const useUserStore = defineStore(
         // 메뉴 표시를 수정.
         alert('로그인!')
         changeUserInfoState({
-          id: 'asdf',
-          password: 'asdf',
-          email: 'string',
-          name: 'string',
-          nickname: 'string',
-          tel: 'string',
-          birth: '2021-12-11',
+          id: response.data['userId'],
+          password: '',
+          email: '',
+          name: '',
+          nickname: '',
+          tel: '',
+          birth: '',
           gender: 0,
           admin: 0,
-          joinDate: '2023-11-14T13:07:57',
-          modifiedAt: '2023-11-14T13:07:57'
+          joinDate: '',
+          modifiedAt: ''
         })
         changeMenuState()
         changeUserState(response.data['userId'], response.data['isAdmin'])
