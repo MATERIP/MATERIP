@@ -25,6 +25,8 @@ public interface UserService {
 	int readUserlikesCount(String userId) throws Exception;
 	
 	List<String> readUserlikes(String userId) throws Exception;
-	
+
+	int getRankUserlikes(String userId) throws Exception;
+
 	User login(User user) throws Exception;
 }

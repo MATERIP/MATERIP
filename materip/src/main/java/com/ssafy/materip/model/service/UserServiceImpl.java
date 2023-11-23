@@ -87,4 +87,9 @@ public class UserServiceImpl implements UserService {
 		return userlikesDao.readUserlikes(userId);
 	}
 
+	@Override
+	public int getRankUserlikes(String userId) throws Exception {
+		return userlikesDao.getRankUserlikes(userId);
+	}
+
 }

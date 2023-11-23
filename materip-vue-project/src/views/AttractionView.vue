@@ -1,13 +1,18 @@
 <script setup>
-import { onMounted, ref, computed } from "vue";
-import axios from "axios";
-import { useRoute } from "vue-router";
-import router from "../router";
-const route = useRoute();
-const attractionName = route.params.attractionName;
+import { onMounted, ref, computed } from 'vue'
+import axios from 'axios'
+import { useRoute } from 'vue-router'
+import router from '../router'
+import SearchMapComponent from '../components/SearchMapComponent.vue'
+const route = useRoute()
+const attractionName = route.params.attractionName
+const attractionMapCoord = ref([])
+const attractionMapTitle = ref([])
+const attractionMapContentId = ref([])
+const attractionList = ref([])
 
-const attractionList = ref([]);
 onMounted(() => {
+  title.value = "#'" + attractionName + "' 검색 결과"
   axios({
     baseURL: "",
     method: "get",
@@ -17,18 +22,23 @@ onMounted(() => {
       "Content-Type": "application/json; charset=utf-8",
     },
   }).then(function (response) {
-    console.log(response.data);
-    attractionList.value = response.data;
-  });
-});
+    console.log(response.data)
+    attractionList.value = response.data
+    console.log(Object.keys(attractionList.value[0]))
+    response.data.forEach((attr) => {
+      attractionMapCoord.value.push([attr.mapX, attr.mapY])
+      attractionMapTitle.value.push(attr.title)
+      attractionMapContentId.value.push(attr.contentId)
+    })
+  })
 
-const title = ref({
-  review: "여행지 리뷰",
-  recruitment: "여행 메이트 모집",
-});
+  // console.log(attractionMapInfo.value)
+})
 
-const itemsPerPage = ref(10);
-const page = ref(1);
+const title = ref('')
+
+const itemsPerPage = ref(10)
+const page = ref(1)
 const headers = [
   {
     title: "🖼️🖼️🖼️",
@@ -70,6 +80,40 @@ const goToDetail = function (contentId) {
 
 <template>
   <div style="height: 8rem"></div>
+  <div
+    style="
+      margin-left: 15%;
+      margin-right: 15%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    "
+  >
+    <h1>{{ title }}</h1>
+    <v-dialog width="900">
+      <template v-slot:activator="{ props }">
+        <v-btn v-bind="props" text="지도로 찾기"> </v-btn>
+      </template>
+
+      <template v-slot:default="{ isActive }">
+        <v-card style="display: flex; justify-content: center">
+          <h1 style="margin: 40px">{{ title }}</h1>
+          <div class="map"><SearchMapComponent></SearchMapComponent></div>
+          <div class="modalcard">
+            <v-btn
+              id="closebtn"
+              text="닫기"
+              color="rgb(255, 221, 0)"
+              style="width: 100px; margin-bottom: 40px; align-self: center"
+              @click="isActive.value = false"
+            ></v-btn>
+          </div>
+        </v-card>
+      </template>
+    </v-dialog>
+  </div>
+
+  <div style="height: 1rem"></div>
   <v-data-table
     v-model:page="page"
     :headers="headers"
@@ -104,4 +148,17 @@ const goToDetail = function (contentId) {
   </v-data-table>
 </template>
 
-<style scoped></style>
+<style scoped>
+.map {
+  padding: 0px;
+  margin: 0px 0px 30px 0px;
+}
+.map > div {
+  display: flex;
+  justify-content: center;
+}
+.modalcard {
+  display: flex;
+  justify-content: center;
+}
+</style>

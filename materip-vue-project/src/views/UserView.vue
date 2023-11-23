@@ -31,6 +31,9 @@ onMounted(() => {
   userStore.getLikeState(userId)
   console.log('~~~~~~~~~~~~~~~')
   console.log(likeState.value)
+
+  userStore.getLikeRank(userId)
+  userStore.getLikeCnt(userId)
 })
 const goToReview = () => {
   reviewShow.value = true

@@ -17,4 +17,6 @@ public interface UserlikesDao {
 	
 	// '좋아요' 기록 삭제	
 	int deleteUserlikes(String userId, String likedBy);
+
+	int getRankUserlikes(String userId);
 }

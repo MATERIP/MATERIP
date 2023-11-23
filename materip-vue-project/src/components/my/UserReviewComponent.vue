@@ -55,7 +55,13 @@ const formatDate = function (item) {
   }
   return item.createdAt
 }
+async function goToDetail(item) {
+  console.log(item)
+  // 상세 페이지 이동 전에 조회수를 1 증가시킨다.
+  // await updateBoardHits(item);
 
+  router.push({ name: 'boardDetail', params: { id: item.id } })
+}
 const pageCount = computed(() => Math.ceil(userReviewList.value.length / itemsPerPage.value))
 </script>
 
@@ -74,6 +80,11 @@ const pageCount = computed(() => Math.ceil(userReviewList.value.length / itemsPe
       <div class="text-center pt-2">
         <v-pagination v-model="page" :length="pageCount"></v-pagination>
       </div>
+    </template>
+    <template v-slot:item.title="{ item }">
+      <v-btn text @click="goToDetail(item)" variant="flat" :class="[item.boardType]">{{
+        item.title
+      }}</v-btn>
     </template>
   </v-data-table>
 </template>

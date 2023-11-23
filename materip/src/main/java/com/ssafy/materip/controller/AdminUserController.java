@@ -212,13 +212,13 @@ public class AdminUserController {
 	}
 
 	@ApiOperation(value = "좋아요 수 확인", notes = "사용자의 좋아요 수를 반환합니다.")
-	@GetMapping(value = "/{userid}/like")
+	@GetMapping(value = "/likecnt/{userid}")
 	public ResponseEntity<?> getUserlikesCount(@PathVariable("userid") String userId) throws Exception {
 		return new ResponseEntity<>(userService.readUserlikesCount(userId), HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "좋아요 수 자세히 보기", notes = "좋아요를 누른 사용자 아이디를 모두 반환합니다.")
-	@GetMapping(value = "/{userid}/like/detail")
+	@GetMapping(value = "/like/detail/{userid}")
 	public ResponseEntity<?> getUserlikes(@PathVariable("userid") String userId) throws Exception {
 		return new ResponseEntity<>(userService.readUserlikes(userId), HttpStatus.OK);
 	}
@@ -229,6 +229,16 @@ public class AdminUserController {
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		result.put("likeState", userService.readUserlikes(userlikes.getId()).contains(userlikes.getLikedBy()));
 		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+
+	@ApiOperation(value = "좋아요 랭킹", notes = "좋아요 랭킹을 반환합니다.")
+	@GetMapping(value = "/like/rank/{userid}")
+	public ResponseEntity<?> getRankUserlikes(@PathVariable("userid") String userId) throws Exception {
+		HashMap<String, Object> result = new HashMap<String, Object>();
+		result.put("rank", userService.getRankUserlikes(userId) + 1);
+		result.put("total", userService.getUserList().size());
+		return new ResponseEntity<>(result, HttpStatus.OK);
+
 	}
 
 }

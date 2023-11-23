@@ -27,4 +27,12 @@
 		DELETE FROM userlikes
 		WHERE id = #{userId} AND liked_by = #{likedBy}
 	</delete>
+
+
+	<select id="getRankUserlikes" resultType="Integer">
+		select count(id) from
+		(select count(liked_by) as ranking_score, id from userlikes group by id) as A
+		where ranking_score > (select ranking_score
+		from (select count(liked_by) as ranking_score, id from userlikes group by id) as B  where id = #{userId});
+	</select>
 </mapper>
