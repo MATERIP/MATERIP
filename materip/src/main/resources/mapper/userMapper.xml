@@ -46,7 +46,7 @@
 	<select id="readUser" resultMap="user">
 		SELECT
 		id,
-		email, name, nickname, tel, birth, gender, join_date,
+		email, name, nickname, tel, birth, gender, admin, join_date, 
 		modified_at
 		FROM
 		users
@@ -56,7 +56,7 @@
 	<update id="updateUser" parameterType="user">
 		UPDATE users
 		SET email =
-		#{email}, nickname = #{nickname}, tel = #{tel}, modified_at = now()
+		#{email}, nickname = #{nickname}, name=#{name}, password = #{password}, tel = #{tel}, gender = #{gender}, modified_at = now()
 		WHERE id = #{id}
 	</update>
 

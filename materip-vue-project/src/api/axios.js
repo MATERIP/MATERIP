@@ -44,7 +44,7 @@ instance.interceptors.response.use(
 
     // 페이지가 새로고침되어 저장된 accessToken이 없어진 경우.
     // 토큰 자체가 만료되어 더 이상 진행할 수 없는 경우.
-    if (status == httpStatusCode.UNAUTHORIZED) {
+    if (status == httpStatusCode.UNAUTHORIZED && error.response.data['message'] === undefined) {
       // 요청 상태 저장
       const originalRequest = config
 
@@ -55,7 +55,7 @@ instance.interceptors.response.use(
 
         // 에러가 발생했던 컴포넌트의 axios로 이동하고자하는 경우
         // 반드시 return을 붙여주어야한다.
-        return await instance.post('/slient-refresh').then((response) => {
+        return await instance.post('/silent-refresh').then((response) => {
           const newAccessToken = response.data.Authorization
 
           instance.defaults.headers.common['Authorization'] = newAccessToken
@@ -68,7 +68,8 @@ instance.interceptors.response.use(
         })
       }
     } else if (status == httpStatusCode.FORBIDDEN) {
-      alert(error.response.data.message)
+      alert(error.response.data)
+    } else if (error.response.data) {
     }
 
     return Promise.reject(error)

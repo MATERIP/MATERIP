@@ -10,6 +10,7 @@ import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import { createPinia } from 'pinia'
 import piniaPluginPersistedState from 'pinia-plugin-persistedstate'
+
 const vuetify = createVuetify({
   components,
   directives,
@@ -20,13 +21,15 @@ const vuetify = createVuetify({
     sets: {
       mdi
     }
-  }
+  },
+
+  
 })
 
 const app = createApp(App)
 
 // pinia-plugin-persistedstate
-import { instance} from '@/api/axios'
+import { instance } from '@/api/axios'
 
 app.provide('axios', instance)
 app.use(createPinia().use(piniaPluginPersistedState))
@@ -34,5 +37,4 @@ app.use(router)
 app.use(vuetify)
 app.use(aliases)
 app.use(mdi)
-
 app.mount('#app')

@@ -2,12 +2,16 @@ package com.ssafy.materip.model.dto;
 
 import java.sql.Timestamp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class Comments {
 	public int sequence;
 	public int articleId;
 	public String author;
 	public String contents;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/seoul")
 	public Timestamp createdAt;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/seoul")
 	public Timestamp modifiedAt;
 
 	public int getSequence() {

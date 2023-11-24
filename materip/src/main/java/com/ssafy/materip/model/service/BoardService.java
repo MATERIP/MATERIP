@@ -2,6 +2,7 @@ package com.ssafy.materip.model.service;
 
 import com.ssafy.materip.model.dto.Board;
 import com.ssafy.materip.model.dto.Comments;
+import com.ssafy.materip.model.dto.Participants;
 
 import java.util.List;
 
@@ -19,13 +20,27 @@ public interface BoardService {
 	// get Board List
 	List<Board> getBoardList() throws Exception;
 	
+	// get Review List
+	List<Board> getReviewList() throws Exception;
+	
+	// get Recruitment List
+	List<Board> getRecruitmentList() throws Exception;
+
+
+	
 	// get Board By Id
 	Board getBoardById(int boardId) throws Exception; 
 	
+	// update Board hits by Id
+	void updateBoardHits(int boardId) throws Exception;
+	
+	List<Board> getReviewListById(String userId) throws Exception;
+
+	List<Board> getMateListById(String userId) throws Exception;
 	// Comment
 
 	// add comment
-	int writeComment(Comments comments, int article_id) throws Exception;
+	int writeComment(Comments comments) throws Exception;
 
 	// remove comment
 	int removeComment(int sequence) throws Exception;
@@ -38,17 +53,34 @@ public interface BoardService {
 	
 	// get comment count
 	int getCommentCnt(int board_id);
-//
-//    // get comment count from board id when board list show
-//    int getCommentCntByBoardId(String board_id);
-//
-//    // add participants by board_id and user_id ,
-//    // when the board created , we have to add author as participants
-//    int addParticipants(String board_id, String user_id);
-//
-//    // show the participants cnt by board id
-//    int getParticipantsCnt(String board_id);
-
 	
+	// get comment
+	Comments getComment(int sequence) throws Exception;
+	
+	// Participants
+	
+	// join
+	int join(Participants participants) throws Exception;
 
+	// get particpants count
+	int getParticipantsCount(int boardId) throws Exception;
+	
+	// get particpants list
+	List<Participants> getParticipantsList(int boardId) throws Exception;
+	
+	// get all participants list including declined, pending and accepted
+	List<Participants> getAllParticipantsList(int boardId) throws Exception;
+	
+	// leave
+	int leave(Participants participants) throws Exception;
+
+	// check if join-able
+	boolean isJoinable(Participants participants) throws Exception;
+
+	// accept
+	int accept(Participants participants) throws Exception;
+	
+	// decline
+	int decline(Participants participants) throws Exception;
+	
 }
